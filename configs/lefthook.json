@@ -1,0 +1,23 @@
+{
+  "$schema": "../node_modules/lefthook/schema.json",
+  "pre-commit": {
+    "parallel": true,
+    "commands": {
+      "typescript": {
+        "glob": "*.{ts,tsx}",
+        "run": "tsc --pretty --noEmit && @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}",
+        "stage_fixed": true
+      },
+      "javascript": {
+        "glob": "*.{js,jsx}",
+        "run": "@biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}",
+        "stage_fixed": true
+      },
+      "json": {
+        "glob": "*.json",
+        "run": "@biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}",
+        "stage_fixed": true
+      }
+    }
+  }
+}

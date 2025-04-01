@@ -1,0 +1,12 @@
+{
+  "name": "kvalita",
+  "version": "1.0.0",
+  "description": "Shared linter configurations for TypeScript projects.",
+  "author": "Maciej Lamberski",
+  "license": "MIT",
+  "peerDependencies": {
+    "@biomejs/biome": "^2.0.0-beta.1",
+    "lefthook": "^1.11.6",
+    "typescript": "^5.8.2"
+  }
+}

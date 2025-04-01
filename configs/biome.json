@@ -1,0 +1,28 @@
+{
+  "$schema": "../node_modules/@biomejs/biome/configuration_schema.json",
+  "formatter": {
+    "useEditorconfig": true,
+    "formatWithErrors": true,
+    "lineWidth": 100
+  },
+  "javascript": {
+    "formatter": {
+      "semicolons": "asNeeded",
+      "quoteStyle": "single"
+    }
+  },
+  "html": {
+    "formatter": {
+      "enabled": true
+    }
+  },
+  "css": {
+    "formatter": {
+      "enabled": true,
+      "quoteStyle": "single"
+    },
+    "linter": {
+      "enabled": true
+    }
+  }
+}

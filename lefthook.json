@@ -1,0 +1,4 @@
+{
+  "$schema": "https://json.schemastore.org/lefthook.json",
+  "extends": ["./configs/lefthook.json"]
+}
