@@ -11,18 +11,25 @@
       "quoteStyle": "single"
     }
   },
-  "html": {
-    "formatter": {
-      "enabled": true
-    }
-  },
   "css": {
     "formatter": {
-      "enabled": true,
       "quoteStyle": "single"
-    },
-    "linter": {
-      "enabled": true
+    }
+  },
+  "linter": {
+    "rules": {
+      "style": {
+        "noParameterAssign": "warn",
+        "useConsistentArrayType": {
+          "level": "error",
+          "options": {
+            "syntax": "generic"
+          }
+        }
+      },
+      "complexity": {
+        "useArrowFunction": "error"
+      }
     }
   }
 }
