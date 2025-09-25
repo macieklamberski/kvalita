@@ -23,7 +23,7 @@
   "commit-msg": {
     "commands": {
       "commitlint": {
-        "run": "bunx commitlint --config commitlint.json --edit {1}"
+        "run": "bunx commitlint --config ./commitlint.json --edit {1}"
       }
     }
   }

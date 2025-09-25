@@ -11,6 +11,7 @@
   },
   "author": "Maciej Lamberski",
   "license": "MIT",
+  "type": "commonjs",
   "files": [
     "configs"
   ],
@@ -23,9 +24,10 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
-    "@commitlint/cli": "^19.8.1",
-    "@commitlint/config-conventional": "^19.8.1",
+    "@commitlint/cli": "^20.0.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "conventional-changelog-conventionalcommits": "^9.1.0",
+    "lefthook": "^1.13.4",
     "semantic-release": "^24.2.9",
     "typescript": "^5.9.2"
   }

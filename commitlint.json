@@ -1,3 +1,3 @@
 {
-  "extends": "./configs/commitlint.json"
+  "extends": ["./configs/commitlint.json"]
 }
