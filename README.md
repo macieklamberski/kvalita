@@ -10,23 +10,20 @@ Kvalita provides reusable, opinionated configurations for maintaining consistent
 ## Installation
 
 ```bash
-npm install --save-dev kvalita
+bun add -d kvalita
 ```
 
-### Peer Dependencies
-
-The following packages need to be installed separately depending on which configurations you use:
-
-```bash
-# For Biome configuration
-npm install -D @biomejs/biome
-# For commitlint configuration
-npm install -D @commitlint/cli @commitlint/config-conventional
-```
+Each configuration can be used independently - install only what your project needs.
 
 ## Usage
 
 ### Biome Configuration
+
+Install the required dependencies:
+
+```bash
+bun add -d @biomejs/biome
+```
 
 Create a `biome.json` file in your project root:
 
@@ -37,6 +34,12 @@ Create a `biome.json` file in your project root:
 ```
 
 ### Commitlint Configuration
+
+Install the required dependencies:
+
+```bash
+bun add -d @commitlint/cli @commitlint/config-conventional
+```
 
 Create a `commitlint.json` file in your project root:
 
