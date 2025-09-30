@@ -1,35 +1,36 @@
 {
-  "$schema": "../node_modules/@biomejs/biome/configuration_schema.json",
-  "formatter": {
-    "useEditorconfig": true,
-    "formatWithErrors": true,
-    "lineWidth": 100
-  },
-  "javascript": {
-    "formatter": {
-      "semicolons": "asNeeded",
-      "quoteStyle": "single"
-    }
-  },
-  "css": {
-    "formatter": {
-      "quoteStyle": "single"
-    }
-  },
-  "linter": {
-    "rules": {
-      "style": {
-        "noParameterAssign": "warn",
-        "useConsistentArrayType": {
-          "level": "error",
-          "options": {
-            "syntax": "generic"
-          }
-        }
-      },
-      "complexity": {
-        "useArrowFunction": "error"
-      }
-    }
-  }
+	"$schema": "../node_modules/@biomejs/biome/configuration_schema.json",
+	"root": false,
+	"formatter": {
+		"useEditorconfig": true,
+		"formatWithErrors": true,
+		"lineWidth": 100
+	},
+	"javascript": {
+		"formatter": {
+			"semicolons": "asNeeded",
+			"quoteStyle": "single"
+		}
+	},
+	"css": {
+		"formatter": {
+			"quoteStyle": "single"
+		}
+	},
+	"linter": {
+		"rules": {
+			"style": {
+				"noParameterAssign": "warn",
+				"useConsistentArrayType": {
+					"level": "error",
+					"options": {
+						"syntax": "generic"
+					}
+				}
+			},
+			"complexity": {
+				"useArrowFunction": "error"
+			}
+		}
+	}
 }
