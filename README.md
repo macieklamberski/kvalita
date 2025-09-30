@@ -13,7 +13,7 @@ Kvalita provides reusable, opinionated configurations for maintaining consistent
 bun add -d kvalita
 ```
 
-Each configuration can be used independently - install only what your project needs.
+Each configuration can be used independently - import only what your project needs.
 
 ## Usage
 
@@ -48,3 +48,21 @@ Create a `commitlint.json` file in your project root:
   "extends": ["kvalita/commitlint"]
 }
 ```
+
+### Semantic Release Configuration
+
+Install the required dependencies:
+
+```bash
+bun add -d semantic-release conventional-changelog-conventionalcommits
+```
+
+Create a `release.json` file in your project root:
+
+```json
+{
+  "extends": "kvalita/semantic-release"
+}
+```
+
+This configuration uses the `conventionalcommits` preset, which supports the `feat!:` syntax for breaking changes.

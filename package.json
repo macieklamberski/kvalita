@@ -17,7 +17,8 @@
   ],
   "exports": {
     "./biome": "./configs/biome.json",
-    "./commitlint": "./configs/commitlint.json"
+    "./commitlint": "./configs/commitlint.json",
+    "./semantic-release": "./configs/semantic-release.json"
   },
   "scripts": {
     "prepare": "lefthook install"
