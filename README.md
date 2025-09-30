@@ -17,7 +17,7 @@ Each configuration can be used independently - import only what your project nee
 
 ## Usage
 
-### Biome Configuration
+### [Biome](https://github.com/biomejs/biome) Configuration
 
 Install the required dependencies:
 
@@ -33,7 +33,7 @@ Create a `biome.json` file in your project root:
 }
 ```
 
-### Commitlint Configuration
+### [Commitlint](https://github.com/conventional-changelog/commitlint) Configuration
 
 Install the required dependencies:
 
@@ -49,7 +49,7 @@ Create a `commitlint.json` file in your project root:
 }
 ```
 
-### Semantic Release Configuration
+### [Semantic Release](https://github.com/semantic-release/semantic-release) Configuration
 
 Install the required dependencies:
 
