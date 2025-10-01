@@ -5,13 +5,12 @@
     "type": "git",
     "url": "https://github.com/macieklamberski/kvalita.git"
   },
-  "homepage": "https://github.com/macieklamberski/kvalita#readme",
+  "homepage": "https://github.com/macieklamberski/kvalita",
   "bugs": {
     "url": "https://github.com/macieklamberski/kvalita/issues"
   },
   "author": "Maciej Lamberski",
   "license": "MIT",
-  "type": "commonjs",
   "files": [
     "configs"
   ],
