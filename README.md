@@ -36,7 +36,7 @@ Create a `commitlint.json` file in your project root:
 
 ```json
 {
-  "extends": ["kvalita/commitlint"]
+  "extends": ["./node_modules/kvalita/configs/commitlint.json"]
 }
 ```
 
