@@ -51,3 +51,22 @@ Create a `release.json` file in your project root:
 ```
 
 This configuration uses the `conventionalcommits` preset, which supports the `feat!:` syntax for breaking changes.
+
+### [Lefthook](https://github.com/evilmartians/lefthook) Configuration
+
+Create a `lefthook.json` file in your project root and extend the hooks you need:
+
+```json
+{
+  "extends": [
+    "node_modules/kvalita/configs/lefthook-biome.json",
+    "node_modules/kvalita/configs/lefthook-typescript.json",
+    "node_modules/kvalita/configs/lefthook-commitlint.json"
+  ]
+}
+```
+
+**Available hooks:**
+- `lefthook-biome.json` - Lints and formats staged files with Biome (pre-commit)
+- `lefthook-typescript.json` - Type checks TypeScript files (pre-commit)
+- `lefthook-commitlint.json` - Validates commit messages (commit-msg)

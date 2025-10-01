@@ -1,6 +1,7 @@
 {
-  "extends": ["@commitlint/config-conventional"],
-  "rules": {
-    "subject-case": [2, "always", "sentence-case"]
-  }
+	"$schema": "https://json.schemastore.org/commitlintrc.json",
+	"extends": ["@commitlint/config-conventional"],
+	"rules": {
+		"subject-case": [2, "always", "sentence-case"]
+	}
 }

@@ -1,0 +1,11 @@
+{
+	"$schema": "https://json.schemastore.org/lefthook.json",
+	"pre-commit": {
+		"commands": {
+			"typescript": {
+				"glob": "*.{ts,tsx}",
+				"run": "bunx tsc --noEmit"
+			}
+		}
+	}
+}

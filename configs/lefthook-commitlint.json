@@ -1,0 +1,10 @@
+{
+	"$schema": "https://json.schemastore.org/lefthook.json",
+	"commit-msg": {
+		"commands": {
+			"lint:commitlint": {
+				"run": "bunx commitlint --config ./commitlint.json --edit {1}"
+			}
+		}
+	}
+}
