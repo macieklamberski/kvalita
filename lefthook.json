@@ -3,17 +3,17 @@
   "pre-commit": {
     "parallel": true,
     "commands": {
-      "typescript": {
+      "lint:typescript": {
         "glob": "*.{ts,tsx}",
         "run": "bunx @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}",
         "stage_fixed": true
       },
-      "javascript": {
+      "lint:javascript": {
         "glob": "*.{js,jsx}",
         "run": "bunx @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}",
         "stage_fixed": true
       },
-      "json": {
+      "lint:json": {
         "glob": "*.json",
         "run": "bunx @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}",
         "stage_fixed": true
@@ -22,7 +22,7 @@
   },
   "commit-msg": {
     "commands": {
-      "commitlint": {
+      "lint:commit": {
         "run": "bunx commitlint --config ./commitlint.json --edit {1}"
       }
     }

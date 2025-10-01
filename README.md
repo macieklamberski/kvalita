@@ -13,17 +13,14 @@ Kvalita provides reusable, opinionated configurations for maintaining consistent
 bun add -d kvalita
 ```
 
-Each configuration can be used independently - import only what your project needs.
+This will automatically install all required dependencies.
+
+> [!NOTE]
+> All tools are installed together for simplicity, even if you only use some of the configurations. This ensures all CLIs and configs work correctly and avoids resolution issues.
 
 ## Usage
 
 ### [Biome](https://github.com/biomejs/biome) Configuration
-
-Install the required dependencies:
-
-```bash
-bun add -d @biomejs/biome
-```
 
 Create a `biome.json` file in your project root:
 
@@ -35,12 +32,6 @@ Create a `biome.json` file in your project root:
 
 ### [Commitlint](https://github.com/conventional-changelog/commitlint) Configuration
 
-Install the required dependencies:
-
-```bash
-bun add -d @commitlint/cli @commitlint/config-conventional
-```
-
 Create a `commitlint.json` file in your project root:
 
 ```json
@@ -50,12 +41,6 @@ Create a `commitlint.json` file in your project root:
 ```
 
 ### [Semantic Release](https://github.com/semantic-release/semantic-release) Configuration
-
-Install the required dependencies:
-
-```bash
-bun add -d semantic-release conventional-changelog-conventionalcommits
-```
 
 Create a `release.json` file in your project root:
 

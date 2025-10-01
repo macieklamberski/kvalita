@@ -23,6 +23,13 @@
   "scripts": {
     "prepare": "lefthook install"
   },
+  "peerDependencies": {
+    "@biomejs/biome": ">=2.0.0",
+    "@commitlint/cli": ">=19.0.0",
+    "@commitlint/config-conventional": ">=19.0.0",
+    "conventional-changelog-conventionalcommits": ">=8.0.0",
+    "semantic-release": ">=23.0.0"
+  },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
     "@commitlint/cli": "^20.1.0",
