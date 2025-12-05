@@ -1,5 +1,4 @@
 {
-  "$schema": "https://json.schemastore.org/lefthook.json",
   "extends": [
     "configs/lefthook-biome.json",
     "configs/lefthook-typescript.json",

@@ -1,4 +1,3 @@
 {
-  "$schema": "https://json.schemastore.org/commitlintrc.json",
   "extends": ["./configs/commitlint.json"]
 }
