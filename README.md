@@ -52,6 +52,16 @@ Create a `release.json` file in your project root:
 
 This configuration uses the `conventionalcommits` preset, which supports the `feat!:` syntax for breaking changes.
 
+> [!IMPORTANT]
+> This config enables [npm provenance](https://docs.npmjs.com/generating-provenance-statements). Your CI workflow needs `id-token: write` permission:
+> ```yaml
+> permissions:
+>   contents: write
+>   issues: write
+>   pull-requests: write
+>   id-token: write
+> ```
+
 ### [Lefthook](https://github.com/evilmartians/lefthook) Configuration
 
 Create a `lefthook.json` file in your project root and extend the hooks you need:
