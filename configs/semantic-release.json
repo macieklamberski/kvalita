@@ -5,10 +5,11 @@
 			"@semantic-release/commit-analyzer",
 			{
 				"preset": "conventionalcommits",
-				"parserOpts": {
-					"breakingHeaderPattern": "^(\\w*)(?:\\((.*)\\))?!: (.*)$"
-				},
-				"releaseRules": [{ "breaking": true, "release": "major" }]
+				"releaseRules": [
+					{ "breaking": true, "release": "major" },
+					{ "type": "feat!", "release": "major" },
+					{ "type": "fix!", "release": "major" }
+				]
 			}
 		],
 		["@semantic-release/release-notes-generator", { "preset": "conventionalcommits" }],
