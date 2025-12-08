@@ -1,15 +1,16 @@
 {
 	"$schema": "https://json.schemastore.org/semantic-release.json",
+	"branches": [
+		"main",
+		{ "name": "beta", "channel": "beta", "prerelease": "beta" },
+		{ "name": "next", "channel": "next", "prerelease": "next" }
+	],
 	"plugins": [
 		[
 			"@semantic-release/commit-analyzer",
 			{
 				"preset": "conventionalcommits",
-				"releaseRules": [
-					{ "breaking": true, "release": "major" },
-					{ "type": "feat!", "release": "major" },
-					{ "type": "fix!", "release": "major" }
-				]
+				"releaseRules": [{ "breaking": true, "release": "major" }]
 			}
 		],
 		["@semantic-release/release-notes-generator", { "preset": "conventionalcommits" }],

@@ -42,17 +42,17 @@ Create a `commitlint.json` file in your project root:
 
 ### [Semantic Release](https://github.com/semantic-release/semantic-release) Configuration
 
-Create a `release.json` file in your project root:
+Use the `--extends` flag in your CI workflow:
 
-```json
-{
-  "extends": "kvalita/semantic-release"
-}
+```yaml
+- name: Release
+  run: bunx semantic-release --extends kvalita/semantic-release
 ```
 
-This configuration uses the `conventionalcommits` preset, which supports the `feat!:` syntax for breaking changes.
-
-It also enables [npm provenance](https://docs.npmjs.com/generating-provenance-statements). Your CI workflow needs `id-token: write` permission for publishing to work.
+This configuration includes:
+- Branches: `main`, `next` (prerelease), `beta` (prerelease)
+- `conventionalcommits` preset with `feat!:` syntax for breaking changes
+- [npm provenance](https://docs.npmjs.com/generating-provenance-statements) (requires `id-token: write` permission)
 
 ### [Lefthook](https://github.com/evilmartians/lefthook) Configuration
 

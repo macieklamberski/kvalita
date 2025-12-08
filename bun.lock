@@ -6,10 +6,10 @@
       "name": "kvalita",
       "devDependencies": {
         "@biomejs/biome": "^2.3.8",
-        "@commitlint/cli": "^20.1.0",
-        "@commitlint/config-conventional": "^20.0.0",
+        "@commitlint/cli": "^20.2.0",
+        "@commitlint/config-conventional": "^20.2.0",
         "conventional-changelog-conventionalcommits": "^9.1.0",
-        "lefthook": "^2.0.5",
+        "lefthook": "^2.0.8",
         "semantic-release": "^25.0.2",
         "typescript": "^5.9.3",
       },
