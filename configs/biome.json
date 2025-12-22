@@ -1,36 +1,38 @@
 {
-	"$schema": "https://biomejs.dev/schemas/latest/schema.json",
-	"root": false,
-	"formatter": {
-		"useEditorconfig": true,
-		"formatWithErrors": true,
-		"lineWidth": 100
-	},
-	"javascript": {
-		"formatter": {
-			"semicolons": "asNeeded",
-			"quoteStyle": "single"
-		}
-	},
-	"css": {
-		"formatter": {
-			"quoteStyle": "single"
-		}
-	},
-	"linter": {
-		"rules": {
-			"style": {
-				"noParameterAssign": "warn",
-				"useConsistentArrayType": {
-					"level": "error",
-					"options": {
-						"syntax": "generic"
-					}
-				}
-			},
-			"complexity": {
-				"useArrowFunction": "error"
-			}
-		}
-	}
+  "$schema": "https://biomejs.dev/schemas/latest/schema.json",
+  "root": false,
+  "formatter": {
+    "formatWithErrors": true,
+    "lineWidth": 100,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf"
+  },
+  "javascript": {
+    "formatter": {
+      "semicolons": "asNeeded",
+      "quoteStyle": "single"
+    }
+  },
+  "css": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
+  "linter": {
+    "rules": {
+      "style": {
+        "noParameterAssign": "warn",
+        "useConsistentArrayType": {
+          "level": "error",
+          "options": {
+            "syntax": "generic"
+          }
+        }
+      },
+      "complexity": {
+        "useArrowFunction": "error"
+      }
+    }
+  }
 }
