@@ -54,16 +54,6 @@ This configuration includes:
 - `conventionalcommits` preset with `feat!:` syntax for breaking changes
 - [npm provenance](https://docs.npmjs.com/generating-provenance-statements) (requires `id-token: write` permission)
 
-#### Dry Run
-
-To preview the next version without publishing (e.g., in PR checks):
-
-```bash
-bunx semantic-release --dry-run --extends kvalita/semantic-release-dry-run
-```
-
-This only runs the commit analyzer — no npm or GitHub tokens required.
-
 ### [Lefthook](https://github.com/evilmartians/lefthook) Configuration
 
 Create a `lefthook.json` file in your project root and extend the hooks you need:
