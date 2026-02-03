@@ -50,9 +50,19 @@ Use the `--extends` flag in your CI workflow:
 ```
 
 This configuration includes:
-- Branches: `main`, `next` (prerelease), `beta` (prerelease)
+- Branches: `main`, `next` (prerelease), `beta` (prerelease), `alpha` (prerelease)
 - `conventionalcommits` preset with `feat!:` syntax for breaking changes
 - [npm provenance](https://docs.npmjs.com/generating-provenance-statements) (requires `id-token: write` permission)
+
+#### Dry Run
+
+To preview the next version without publishing (e.g., in PR checks):
+
+```bash
+bunx semantic-release --dry-run --extends kvalita/semantic-release-dry-run
+```
+
+This only runs the commit analyzer — no npm or GitHub tokens required.
 
 ### [Lefthook](https://github.com/evilmartians/lefthook) Configuration
 

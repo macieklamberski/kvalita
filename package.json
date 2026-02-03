@@ -17,7 +17,8 @@
   "exports": {
     "./biome": "./configs/biome.json",
     "./commitlint": "./configs/commitlint.json",
-    "./semantic-release": "./configs/semantic-release.json"
+    "./semantic-release": "./configs/semantic-release.json",
+    "./semantic-release-dry-run": "./configs/semantic-release-dry-run.json"
   },
   "scripts": {
     "prepare": "lefthook install"
