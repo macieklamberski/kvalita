@@ -72,3 +72,20 @@ Create a `lefthook.json` file in your project root and extend the hooks you need
 - `lefthook-biome.json` - Lints and formats staged files with Biome (pre-commit)
 - `lefthook-typescript.json` - Type checks TypeScript files (pre-commit)
 - `lefthook-commitlint.json` - Validates commit messages (commit-msg)
+
+## Agentic Coding
+
+### Skills
+
+This package includes agent skills for code formatting and test writing conventions.
+
+**Available skills:**
+- `formatting` - Code formatting rules not handled by auto-formatters (arrow functions, exports, types, naming, comments, JSX)
+- `testing` - Best practices, structure, coverage categories, and formatting conventions for writing tests
+
+To make them available globally in [Claude Code](https://docs.anthropic.com/en/docs/claude-code), symlink the skills directory:
+
+```bash
+ln -s /path/to/kvalita/skills/formatting ~/.claude/skills/formatting
+ln -s /path/to/kvalita/skills/testing ~/.claude/skills/testing
+```
