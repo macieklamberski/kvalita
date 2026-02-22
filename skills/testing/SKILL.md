@@ -9,6 +9,12 @@ Detect the test library from project (bun:test, vitest, jest, etc.) and use its 
 
 For general code formatting rules (arrow functions, naming, exports, etc.), see the `formatting` skill.
 
+## File Conventions
+
+- Test files use `*.test.ts` naming (not `*.spec.ts`)
+- Co-locate tests next to their source file (not in `__tests__/` directories)
+- Example: `helpers/urls.ts` → `helpers/urls.test.ts`
+
 ## Structure: Flat vs Nested
 
 **Flat** — for pure/simple functions (parsers, validators, formatters):

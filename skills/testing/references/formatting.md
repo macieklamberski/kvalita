@@ -133,6 +133,15 @@ expect(fn(value)).toEqual(expected)
 
 **G3.** Use `.toBeUndefined()` for undefined returns
 
+**G3a.** Use `.toBeCloseTo(expected, decimalPlaces)` for floating-point comparisons (division, currency conversion), never `.toBe()`:
+```typescript
+// Correct
+expect(convertedPrice).toBeCloseTo(409.09, 1)
+
+// Wrong — floating-point precision will cause flaky failures
+expect(convertedPrice).toBe(409.09)
+```
+
 **G4.** Multiple assertions in one test are acceptable for testing same function with multiple similar inputs (e.g., null, undefined, string, number)
 
 **G5.** ALWAYS assert the whole return object at once using `expected` + `.toEqual()` — NEVER assert individual properties separately. For complex or non-deterministic parts of the object, use `expect.any()`, `expect.objectContaining()`, `expect.stringContaining()`, `expect.arrayContaining()`, etc. When a type exists that represents the expected value, annotate `expected` with it (e.g. `const expected: FetchFeedResult = { ... }`).
