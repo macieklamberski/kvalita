@@ -24,20 +24,20 @@
     "prepare": "lefthook install"
   },
   "peerDependencies": {
-    "@biomejs/biome": ">=2.4.4",
-    "@commitlint/cli": ">=20.4.2",
-    "@commitlint/config-conventional": ">=20.4.2",
-    "conventional-changelog-conventionalcommits": ">=9.1.0",
-    "lefthook": ">=2.1.1",
+    "@biomejs/biome": ">=2.4.7",
+    "@commitlint/cli": ">=20.5.0",
+    "@commitlint/config-conventional": ">=20.5.0",
+    "conventional-changelog-conventionalcommits": ">=9.3.0",
+    "lefthook": ">=2.1.4",
     "semantic-release": ">=25.0.3",
     "typescript": ">=5.9.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.4",
-    "@commitlint/cli": "^20.4.2",
-    "@commitlint/config-conventional": "^20.4.2",
-    "conventional-changelog-conventionalcommits": "^9.1.0",
-    "lefthook": "^2.1.1",
+    "@biomejs/biome": "^2.4.7",
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "conventional-changelog-conventionalcommits": "^9.3.0",
+    "lefthook": "^2.1.4",
     "semantic-release": "^25.0.3",
     "typescript": "^5.9.3"
   }
