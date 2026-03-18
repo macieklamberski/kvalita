@@ -90,6 +90,7 @@ Implement the most critical tests first (happy paths). Use `.todo` for the rest.
 - **Mock at boundaries only** — mock external services (HTTP, email, payment), never your own DB or internal modules. Prefer stubs/spies over mocks (verify state, not calls).
 - **Each test is self-contained** — never rely on test execution order. No shared mutable state. Reset mocks in beforeEach.
 - **Hard-code expected values** — never compute them with string concat, loops, or conditionals in test code.
+- **Type expected values explicitly** — use `const expected: Array<MyType> = [...]` instead of `as const`. Explicit type annotations keep arrays mutable (avoiding readonly conflicts with matchers) while still narrowing literal/discriminated union types.
 - **Use realistic data** — not `"foo"`/`"bar"`. Include only data relevant to the specific test.
 - **One behavior per test** — no piggyback assertions testing unrelated things.
 - **Convert production bugs to regression tests** — every bug gets a test before fixing.
