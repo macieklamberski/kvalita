@@ -19,19 +19,81 @@
       "quoteStyle": "single"
     }
   },
+  "assist": {
+    "actions": {
+      "source": {
+        "useSortedAttributes": "on",
+        "useSortedProperties": "on"
+      }
+    }
+  },
   "linter": {
     "rules": {
       "style": {
-        "noParameterAssign": "warn",
+        "noCommonJs": "error",
+        "noDoneCallback": "error",
+        "noImplicitBoolean": "error",
+        "noInferrableTypes": "error",
+        "noNestedTernary": "error",
+        "noParameterAssign": "error",
+        "noSubstr": "error",
+        "noUnusedTemplateLiteral": "error",
+        "noUselessElse": "error",
+        "noYodaExpression": "error",
+        "useBlockStatements": "error",
+        "useCollapsedElseIf": "error",
+        "useConsistentBuiltinInstantiation": "error",
+        "useConsistentTypeDefinitions": {
+          "level": "error",
+          "options": {
+            "style": "type"
+          }
+        },
         "useConsistentArrayType": {
           "level": "error",
           "options": {
             "syntax": "generic"
           }
-        }
+        },
+        "useDefaultParameterLast": "error",
+        "useForOf": "error",
+        "useFragmentSyntax": "error",
+        "useNumberNamespace": "error",
+        "useObjectSpread": "error",
+        "useSelfClosingElements": "error",
+        "useShorthandAssign": "error",
+        "useSingleVarDeclarator": "error",
+        "useExplicitLengthCheck": "error",
+        "useThrowNewError": "error",
+        "useThrowOnlyError": "error",
+        "useTrimStartEnd": "error"
       },
       "complexity": {
+        "noExcessiveNestedTestSuites": "error",
+        "noForEach": "error",
+        "noUselessCatchBinding": "error",
+        "noUselessStringConcat": "error",
+        "noUselessUndefined": "error",
         "useArrowFunction": "error"
+      },
+      "correctness": {
+        "noReactPropAssignments": "error",
+        "useJsonImportAttributes": "error"
+      },
+      "suspicious": {
+        "noConsole": "warn",
+        "noEmptySource": "error",
+        "noVar": "error",
+        "useAwait": "error",
+        "useErrorMessage": "error"
+      },
+      "performance": {
+        "noAwaitInLoops": "warn",
+        "noDelete": "error",
+        "useTopLevelRegex": "error"
+      },
+      "security": {
+        "noSecrets": "error"
       }
     }
   }
