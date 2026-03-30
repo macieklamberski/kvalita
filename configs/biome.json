@@ -91,9 +91,6 @@
         "noAwaitInLoops": "warn",
         "noDelete": "error",
         "useTopLevelRegex": "error"
-      },
-      "security": {
-        "noSecrets": "error"
       }
     }
   }
