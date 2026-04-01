@@ -81,7 +81,6 @@
         "useJsonImportAttributes": "error"
       },
       "suspicious": {
-        "noConsole": "warn",
         "noEmptySource": "error",
         "noVar": "error",
         "useAwait": "error",
