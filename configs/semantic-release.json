@@ -2,6 +2,7 @@
   "$schema": "https://json.schemastore.org/semantic-release.json",
   "branches": [
     "main",
+    { "name": "rc", "channel": "rc", "prerelease": "rc" },
     { "name": "beta", "channel": "beta", "prerelease": "beta" },
     { "name": "alpha", "channel": "alpha", "prerelease": "alpha" },
     { "name": "next", "channel": "next", "prerelease": "next" }
