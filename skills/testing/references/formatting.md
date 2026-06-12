@@ -178,6 +178,31 @@ const result = resolveFeedProtocol(value)
 expect(result).toBe(expected)
 ```
 
+Inlining applies only to simple calls that keep the whole `expect()` statement on one line (within the formatter line width). When it does not fit:
+
+```typescript
+// Bulky input - hoist it into `value`, keep the call inlined
+const value = makeCard({ name: '   ', baseUrl: 'https://thereader.example.com' })
+
+expect(await extract(value)).toBeUndefined()
+
+// Call still wraps even with hoisted input - extract the output into `result`
+const result = await discoverFeeds(value, { methods: ['html'], fetchFn, resolveUrlFn })
+
+expect(result).toEqual(expected)
+```
+
+**G6a.** Decompose dense chained subjects (optional chaining, multi-step DOM traversal) into a named intermediate variable, even when the statement fits on one line:
+```typescript
+// Good - the asserted thing has a name
+const parentTagName = document.querySelector('path')?.parentElement?.tagName.toLowerCase()
+
+expect(parentTagName).toBe('svg')
+
+// Avoid - dense chain inside expect()
+expect(document.querySelector('path')?.parentElement?.tagName.toLowerCase()).toBe('svg')
+```
+
 **G7.** When expected value is a boolean, inline it directly in `.toBe()` - no `expected` variable needed
 
 **G8.** Do NOT use `await` with `expect(...).rejects.toThrow()` in Bun tests — Bun handles promise-based assertions automatically
@@ -230,20 +255,18 @@ expect(fn(null)).toBeUndefined()
 
 ## J. Data-Driven Tests
 
-**J1.** Use `it.each` or loop-based patterns for testing many inputs against the same logic:
+**J1.** Use `it.each` for testing many inputs against the same logic:
 ```typescript
-// Using it.each
 it.each(Object.entries(validCases))('should parse valid date %s', (value, expected) => {
   expect(resolveDate(value)?.toISOString()).toBe(expected)
 })
 
-// Using for loop
-for (const url of safeUrls) {
-  it(`should allow safe public URL: ${url}`, () => {
-    expect(isSafePublicUrl(url)).toBe(true)
-  })
-}
+it.each(safeUrls)('should allow safe public URL: %s', (value) => {
+  expect(isSafePublicUrl(value)).toBe(true)
+})
 ```
+
+A `for` loop generating `it` blocks is a fallback only for cases `it.each` cannot express, such as fixtures that must be loaded or derived per case at collection time.
 
 **J2.** Use data-driven patterns only when all test cases share identical assertion logic. If assertions differ, use separate `it` blocks.
 
