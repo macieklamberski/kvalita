@@ -284,4 +284,63 @@ A `for` loop generating `it` blocks is a fallback only for cases `it.each` canno
 
 ---
 
+## K. Multi-line XML/HTML Fixtures
+
+**K1.** Both backticks of a multi-line fixture literal sit on their own lines: content starts on the line after the opening backtick, and the closing backtick gets its own line.
+
+**K2.** Indent fixture content along with the surrounding code (one level deeper than the declaration), as long as the test does not depend on the exact string: input to a whitespace-tolerant parser, or a compacting/dedenting helper that guarantees the exact value. Expected values compared byte-exactly (e.g. generated XML asserted with `toBe`) keep their exact form even when that means no indentation.
+
+```typescript
+// Correct
+const value = `
+  <?xml version="1.0" encoding="UTF-8"?>
+  <opml version="2.0">
+    <body>
+      <outline text="Feed" type="rss" xmlUrl="https://example.com/feed.xml" />
+    </body>
+  </opml>
+`
+
+// Avoid - content glued to the opening backtick, fixture dedented to column 0
+const value = `<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <body>
+    <outline text="Feed" type="rss" xmlUrl="https://example.com/feed.xml" />
+  </body>
+</opml>`
+```
+
+**K3.** Tagged fixture templates (e.g. `html`) exist for fixtures that need formatting and are always block form (content starts after the opening backtick, closing backtick on its own line). A fixture short enough for one line stays a plain string; never wrap it in an inline tagged template. Fixtures with multiple top-level elements always use the block form with one top-level element per line, even when they would fit on one line:
+
+```typescript
+// Correct
+const expected = '<img>'
+
+const expected = html`
+  <ol><li>a</li></ol>
+  <ol reversed><li>b</li></ol>
+`
+
+// Avoid
+const expected = html`<img>`
+const expected = html`<ol><li>a</li></ol><ol reversed><li>b</li></ol>`
+const expected = `<ol><li>a</li></ol><ol reversed><li>b</li></ol>`
+```
+
+**K4.** When a tag is too long for one line, break it one attribute per line with the closing `>` on its own line at the tag's indent level:
+
+```typescript
+const expected = html`
+  <div
+    data-bookmark-provider="ghost"
+    data-bookmark-url="https://example.com/post"
+    data-bookmark-title="Post title"
+  >
+    <a href="https://example.com/post">Post title</a>
+  </div>
+`
+```
+
+---
+
 **Note:** Import order and formatting is handled by auto-formatters (Biome/Prettier) and should not be manually enforced in these guidelines.
