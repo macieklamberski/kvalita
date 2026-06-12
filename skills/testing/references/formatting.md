@@ -168,6 +168,18 @@ expect(result.body).toBe('feed content')
 
 When a specific sub-value needs a precise check that matchers can't express (e.g. `headers.get('content-type')`), add ONE extra assertion after the full-object assert — but the full-object assert must still come first.
 
+**G5a.** The same principle applies to functions returning strings (e.g. HTML transforms): when the fixture is small, assert the full output via `const expected`. Substring matchers (`toContain` and friends) are only for targeting a fragment of a large fixture, and their long fragment strings are hoisted into `const expected` so the statement stays on one line:
+```typescript
+// Good - full output asserted
+const value = '<div data-embed-avatar="https://cdn.example.com/avatar.jpg"></div>'
+const expected = '<div data-embed-avatar="https://proxy.example.com/avatar.jpg"></div>'
+
+expect(await transform(value)).toBe(expected)
+
+// Avoid - substring check on a small fixture leaves the rest of the output unverified
+expect(await transform(value)).toContain('data-embed-avatar="https://proxy.example.com/avatar.jpg"')
+```
+
 **G6.** Inline simple function calls directly in expect() - no intermediate `result` variable needed
 ```typescript
 // Good - inlined
