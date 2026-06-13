@@ -118,6 +118,24 @@ const createUser = (overrides = {}) => ({
 const value = createUser({ email: '' })
 ```
 
+In TypeScript, give the factory an explicit return type and typed overrides so fixtures stay type-checked. This lets you build valid objects for typed functions without reaching for `@ts-expect-error` or `as` at the call site. Those suppressions hide real errors (a typo in a field you did set passes silently) and rot quietly when the type changes.
+
+```typescript
+const createUser = (overrides: Partial<User> = {}): User => ({
+  id: 'user-1',
+  name: 'Alice',
+  email: 'alice@example.com',
+  ...overrides,
+})
+
+// Avoid: forcing a partial object through a typed function
+// @ts-expect-error: partial test data
+await updateUser({ name: 'Alice' })
+
+// Prefer: a fully-typed fixture, checked by the compiler
+await updateUser(createUser({ name: 'Alice' }))
+```
+
 ---
 
 ## 5. What NOT to Test
