@@ -201,6 +201,18 @@ export type InternalConfig = {}
 export const processData = (input) => {}
 ```
 
+**Lint-suppression comments:**
+The reason after a `biome-ignore` (or similar) directive is a normal comment sentence — sentence case, ending with a period. The rule identifier is metadata, not the start of the sentence:
+```typescript
+// Correct
+// biome-ignore lint/suspicious/noForIn: Plain object; avoids per-call Object.keys allocation.
+for (const key in object) {
+}
+
+// Avoid - lowercase reason
+// biome-ignore lint/suspicious/noForIn: plain object; avoids per-call Object.keys allocation.
+```
+
 ---
 
 ## 9. Array Type Syntax
