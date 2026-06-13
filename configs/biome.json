@@ -40,7 +40,6 @@
       "style": {
         "noCommonJs": "error",
         "noDoneCallback": "error",
-        "noExcessiveClassesPerFile": "error",
         "noImplicitBoolean": "error",
         "noInferrableTypes": "error",
         "noMultiAssign": "error",

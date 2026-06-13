@@ -11,9 +11,11 @@ Consumers currently resolve Biome 2.4.x transitively (peer `^2.2.7` historically
 Zero violations everywhere — pure ratchet, nothing to fix:
 
 - `suspicious/noProto`, `suspicious/noDuplicatedSpreadProps`, `suspicious/noParametersOnlyUsedInRecursion`
-- `style/noMultilineString`, `style/noMultiAssign`, `style/noExcessiveClassesPerFile`, `style/useConsistentEnumValueType`, `style/useSpreadOverApply`
+- `style/noMultilineString`, `style/noMultiAssign`, `style/useConsistentEnumValueType`, `style/useSpreadOverApply`
 - `complexity/noRedundantDefaultExport`
 - `security/noScriptUrl`, `performance/noSyncScripts`, `a11y/noAmbiguousAnchorText`
+
+Dropped after rollout: `style/noExcessiveClassesPerFile`. The audit marked it zero-violations, but that was a false zero — the feedsmith audit pass only counted error/warning diagnostics and missed the info-level hit on `src/common/errors.ts` (4 classes in one file). Enforcing it forced splitting that file, which is too invasive for a shared style config. Removed in the 1.15.1 patch.
 
 ## Enabled with pending fixes (clean up per project during the 2.5 upgrade)
 
