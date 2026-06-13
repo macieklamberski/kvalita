@@ -24,7 +24,7 @@
     "prepare": "lefthook install"
   },
   "peerDependencies": {
-    "@biomejs/biome": "^2.2.7",
+    "@biomejs/biome": "^2.5.0",
     "@commitlint/cli": "^20.0.0 || ^21.0.0",
     "@commitlint/config-conventional": "^20.0.0 || ^21.0.0",
     "conventional-changelog-conventionalcommits": "^9.0.0",
@@ -33,7 +33,7 @@
     "typescript": "^6.0.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.16",
+    "@biomejs/biome": "^2.5.0",
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
     "conventional-changelog-conventionalcommits": "^9.3.1",
