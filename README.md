@@ -82,10 +82,12 @@ This package includes agent skills for code formatting and test writing conventi
 **Available skills:**
 - `formatting` - Code formatting rules not handled by auto-formatters (arrow functions, exports, types, naming, comments, JSX)
 - `testing` - Best practices, structure, coverage categories, and formatting conventions for writing tests
+- `pr-create` - Author, open, and watch a PR through CI and the Codecov coverage report
 
 To make them available globally in [Claude Code](https://docs.anthropic.com/en/docs/claude-code), symlink the skills directory:
 
 ```bash
 ln -s /path/to/kvalita/skills/formatting ~/.claude/skills/formatting
 ln -s /path/to/kvalita/skills/testing ~/.claude/skills/testing
+ln -s /path/to/kvalita/skills/pr-create ~/.claude/skills/pr-create
 ```
