@@ -213,6 +213,23 @@ for (const key in object) {
 // biome-ignore lint/suspicious/noForIn: plain object; avoids per-call Object.keys allocation.
 ```
 
+**CSS comments:**
+Single-line comments stay on one line with `/* ... */`. Multi-line comments use the starred block form, with each line prefixed by ` * ` and the opening `/*` and closing `*/` on their own lines:
+```css
+/* A single-line comment stays inline. */
+.button {
+  color: red;
+}
+
+/*
+ * A comment that spans more than one line opens and closes on its own lines,
+ * with every line prefixed by an asterisk.
+ */
+.card {
+  padding: 1rem;
+}
+```
+
 ---
 
 ## 9. Array Type Syntax
