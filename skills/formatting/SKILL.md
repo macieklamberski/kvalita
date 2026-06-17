@@ -358,3 +358,30 @@ Place event handlers (`on*` attributes) last:
   Submit
 </Button>
 ```
+
+---
+
+## 17. Regex Constants
+
+**Use the `*Regex` suffix** for regex-valued constants, not `*Pattern`:
+```typescript
+// Correct
+const footnoteClassRegex = /footnote/i
+const permalinkLabelRegex = /^[#¶§❡]+$/u
+
+// Avoid
+const footnotePattern = /footnote/i
+```
+
+**Keep consecutive regex declarations together** — no blank line between them — so a run of patterns reads as one block. A comment starts a new group:
+```typescript
+// Correct
+const footnoteClassRegex = /footnote/i
+const bracketedNumberRegex = /^\[\d+\]$/
+const whitespaceRegex = /\s+/
+
+// Avoid - blank lines splitting the block
+const footnoteClassRegex = /footnote/i
+
+const bracketedNumberRegex = /^\[\d+\]$/
+```
