@@ -174,6 +174,8 @@ done
 
 Do NOT rely on `Bun.gc(true)` + `heapUsed` deltas around the workload: that measures only *retained* memory, and for functions whose cost is transient garbage (intermediate arrays, lowered strings) it reads 0 for every variant — the collector has already swept the churn you're trying to observe. Trial-verified failure mode.
 
+Interpret peak RSS with care: a *faster* variant can reproducibly show a *higher* peak in a tight benchmark loop, because it allocates more per second and the collector paces by time — the number reflects GC scheduling, not per-call allocation. When a variant allocates provably the same or less per call but peaks higher, say so and let wall time carry the verdict. Trial-verified confounder.
+
 ## Report format
 
 Per function, one table per scenario:
