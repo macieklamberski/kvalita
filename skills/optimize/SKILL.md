@@ -68,6 +68,12 @@ Use the harness templates in [references/harness.md](references/harness.md). The
 
 Benchmark scripts are throwaway — write them to the scratchpad, not the repo.
 
+### Step 5b: Macro gate — validate micro-wins end-to-end
+
+Micro-wins in pipeline libraries are often macro-invisible: a function can get 40% faster while whole-pipeline throughput moves 0% because a dependency (XML parser, DOM, network) dominates. Trial-verified: two feedsmith variants won 1.4–2× in micro-benchmarks and produced 1.00 ± 0.02 end-to-end.
+
+For any variant winning its micro-benchmark by >10% in a library with a larger pipeline around it: create two git worktrees (pristine + patched, symlink `node_modules`), run the library's main public entry over real inputs via hyperfine A/B, and run the target's test suite against the patched worktree. A micro-win with a ~1.00× macro result gets verdict "not worth it" regardless of the micro table. Standalone utilities whose public API *is* the measured function skip this step.
+
 ### Step 6: Report with an honest verdict
 
 Per function, a per-scenario table (baseline vs each variant, both runtimes, memory) followed by a verdict:
