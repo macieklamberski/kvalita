@@ -545,16 +545,25 @@ const bracketedNumberRegex = /^\[\d+\]$/
 
 ## 18. HTML Attribute Wrapping
 
-Keep an element's attributes inline with the tag while the whole element fits comfortably on one line. Split them onto their own lines once there are several (roughly 3+) **or the line runs long**, around the formatter's width. Length is the stronger trigger of the two: a two-attribute element whose url makes the line 140 characters gets split, and the attribute count does not excuse it. Never explode a genuinely short element. This applies to HTML in template literals (e.g. `html` test fixtures), not just JSX.
+An element with **one attribute** keeps it inline with the tag. **Two or more, and the attributes go on their own lines**, whatever the line length. Length is an independent trigger, so a one-attribute element whose url makes the line 140 characters splits too. This applies to HTML in template literals (e.g. `html` test fixtures), not just JSX.
+
+The threshold is two because that is where a fixture stops being scannable: with attributes stacked one per line, a reader compares two fixtures by eye and sees exactly which attribute differs, and a diff marks that one line rather than rewriting the whole element. Inline attributes hide the difference inside a long string.
 
 **Splitting only helps when there is something to distribute.** The trigger is length, but the fix is spreading attributes or elements across lines, so it does nothing for a line that is long because of one unbreakable value. A single element with one attribute holding a 200-character url stays on one line: splitting it yields the same long line plus an orphaned closing tag, which is worse than what it replaced. Ask what goes on the second line before splitting, and if the answer is only `</tag>`, leave it.
 
 **A long fixture is a `html` template, not a quoted string.** A test fixture that has outgrown one line moves to the `html` tag with its attributes stacked, rather than staying a single long `'…'` literal that wraps in the editor. The point is that the shape of the markup under test is readable at a glance, which is the whole reason the fixture exists.
 
 ```typescript
-// Correct - short element stays on one line
+// Correct - one attribute stays on the tag
 html`<div class="callout"></div>`
-html`<div class="player" data-video-id="abc123"></div>`
+
+// Correct - two attributes, so they stack
+html`
+  <div
+    class="player"
+    data-video-id="abc123"
+  ></div>
+`
 
 // Correct - several attributes, split for readability
 html`
@@ -566,11 +575,10 @@ html`
   ></div>
 `
 
-// Correct - only two attributes, but the line ran long, so it splits
+// Correct - one attribute, but the line ran long, so it splits
 html`
   <blockquote
     cite="https://example.com/some/quite/long/path/to/the/quoted/document/123"
-    class="quote-card"
   >
     <p>The quoted text.</p>
   </blockquote>
