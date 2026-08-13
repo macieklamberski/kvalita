@@ -50,6 +50,14 @@ describe('functionName', () => {
 - Pure transformation, parser, validator → flat
 - Flat file growing beyond ~15 tests → consider switching to nested
 
+**Nested per catalogued input shape** — for code that recognizes real-world input it did not author, where research has enumerated the shapes it must handle. Give each shape its own `describe`, named for what it is, with that shape's input inside it, rather than compressing them into an `it.each` table. The name is the payload: the runner output has to say which real-world shape is being asserted, which a `%s` row label does not carry, and the table hides the input at the point it matters.
+
+What earns the extra lines is coverage visibility. When research finds a shape nobody handles, the missing `describe` is the hole, so the test file doubles as the support matrix. A shape that is a **false friend**, input that looks like the target but is not, gets a describe too, asserting no match: those are the cases where a greedy matcher silently eats real content.
+
+Where a project numbers these shapes, follow its own convention for naming them, and keep it out of this skill.
+
+`it.each` remains right for uniform literal lists where no row has its own meaning, such as iterating a keyword constant so a new entry is covered automatically.
+
 ## Coverage Categories
 
 **Happy paths** — normal successful operations:
@@ -92,8 +100,10 @@ Implement the most critical tests first (happy paths). Use `.todo` for the rest.
 - **Hard-code expected values** — never compute them with string concat, loops, or conditionals in test code.
 - **Type expected values explicitly** — use `const expected: Array<MyType> = [...]` instead of `as const`. Explicit type annotations keep arrays mutable (avoiding readonly conflicts with matchers) while still narrowing literal/discriminated union types.
 - **Use realistic data** — not `"foo"`/`"bar"`. Include only data relevant to the specific test.
+- **Never put a real URL in a test:** no real blog, publisher or site addresses, even when the fixture was copied from one while investigating a bug. Use `example.com`, `example.org` or another RFC 2606 reserved domain. A real host in a fixture points test code at someone else's site for no benefit.
 - **One behavior per test** — no piggyback assertions testing unrelated things.
 - **Convert production bugs to regression tests** — every bug gets a test before fixing.
+- **Never test that the code was typed correctly**: a test pins behaviour, not the authoring of a literal, regex, lookup table or build step. If the only way it fails is that someone later edits the source wrongly, delete it. Before writing one, name the real input that produces the wrong output. If you cannot name it, there is nothing to test. Warning signs: the test was prompted by a construct *looking* fragile rather than by a case that exists; its name describes a mistake instead of a behaviour; you cannot make it fail by breaking the thing it supposedly guards.
 
 For detailed guidance on mocking, isolation, data patterns, and common anti-patterns, see [references/best-practices.md](references/best-practices.md).
 

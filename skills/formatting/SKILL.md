@@ -7,6 +7,8 @@ description: Code formatting and style rules not handled by auto-formatters (Bio
 
 Style guide for code formatting decisions not handled by auto-formatters (Biome/Prettier).
 
+For PR and MR descriptions specifically, the `pr-message` skill builds on these rules and covers what belongs in one.
+
 ## 1. Function Declaration Style
 
 Use arrow functions with explicit types:
@@ -50,6 +52,31 @@ export const processData = (input) => {
   }
 
   return cleanObject(result)
+}
+```
+
+**The same applies inside loops:** use early `break`/`continue` instead of `else if`/`else` chains, so the loop body stays flat:
+```typescript
+// Correct
+for (const entry of entries) {
+  if (entry.isTerminator) {
+    break
+  }
+
+  if (!entry.value) {
+    continue
+  }
+
+  results.push(transform(entry.value))
+}
+
+// Avoid
+for (const entry of entries) {
+  if (entry.isTerminator) {
+    break
+  } else if (entry.value) {
+    results.push(transform(entry.value))
+  }
 }
 ```
 
@@ -123,6 +150,22 @@ export const fn = (value) => {
 
 Important: This rule can be ignored if similar code near this fragment uses different formatting (eg. no curly braces). This is more for newly created code.
 
+For simple one-expression callbacks (`.map`, `.flatMap`, `.filter`, etc.) a bare implicit-return arrow is fine **only when the whole arrow fits on one line**. The moment it would wrap — the arrow and its expression body splitting across two lines — switch to a block body with an explicit `return`:
+```typescript
+// Correct - fits on one line, implicit return
+const data = pages.flatMap((page) => page.data)
+
+// Correct - would wrap, so use a block + return
+const items = transforms.flatMap((transform) => {
+  return transform === target ? [transform, ...extras] : [transform]
+})
+
+// Avoid - implicit-return arrow whose body wraps onto its own line
+const items = transforms.flatMap((transform) =>
+  transform === target ? [transform, ...extras] : [transform],
+)
+```
+
 ---
 
 ## 7. Variable Naming
@@ -140,6 +183,16 @@ const len = array.length
 const val = getValue()
 ```
 
+**camelCase every `const`, including lookup tables and configuration:**
+```typescript
+// Correct
+const secondsPerPeriod = { hourly: 3600, daily: 86400 }
+
+// Avoid
+const SECONDS_PER_PERIOD = { hourly: 3600, daily: 86400 }
+```
+There is no SCREAMING_SNAKE_CASE tier, however constant the value feels. Uppercase only when an external API forces the name.
+
 **Function name prefixes:**
 - `parse*` for parsing operations
 - `generate*` for generation operations
@@ -147,14 +200,116 @@ const val = getValue()
 - `is*` / `has*` for boolean checks
 - `validate*` for validation operations
 
+**Boolean variables take the same prefixes as boolean functions:** `is`, `has`, `does`. A bare adjective or past participle is not a boolean name:
+```typescript
+// Correct
+const isReconciled = compare(left, right)
+const hasMatch = candidates.length > 0
+
+// Avoid
+const reconciled = compare(left, right)
+const match = candidates.length > 0
+```
+
 ---
 
 ## 8. Comments
+
+**Comment only when strictly necessary:**
+The default is no comment. Before writing one, name what it tells a reader that the code does not. If you cannot, delete it. Restating the line below, narrating the flow, or explaining an obvious branch all fail that test. What passes: a constraint that lives outside the file, a quirk of the data being parsed, why an obvious alternative was rejected, or a bound whose exact value matters. Prefer a clearer name or a smaller function over a comment explaining an unclear one.
+
+**Never explain the diff in code.** A comment that exists to walk the reviewer through the change ("a third dialect adds …", "this now also handles …") is addressed to the wrong reader: it describes the delta, and once merged the delta has no referent. That explanation belongs in the PR description; the code carries only what the next reader of the final state needs.
+```typescript
+// Avoid: restates the code and the branch above it
+if (!product) {
+}
+
+// Ads without photos carry no Product block at all, so the title, description and price are
+// read from the page itself and only the images come from the structured data.
+const title = readTitle(document)
+
+// Correct: the code already says this, so nothing is written
+const title = readTitle(document)
+
+// Correct: records a constraint the code cannot show
+// The feed serves these gzipped despite the header, so the body is sniffed rather than trusted.
+const body = decode(response)
+```
+
+**Leave commented-out code alone:**
+Do not delete commented-out code as part of an unrelated edit. It is kept deliberately, often as a quick toggle for a dev-only guard. Remove it only when asked to.
 
 **Write comments as sentences:**
 ```typescript
 // This is a proper sentence with capitalization and punctuation.
 const value = process()
+```
+
+**Comments sound human, not mechanical:**
+Write them the way you would explain the code to a colleague: plain and natural, a rhetorical question is fine. Avoid stiff, robotic narration that mechanically enumerates each branch:
+```typescript
+// Correct
+// Few pages? Show them all.
+
+// Avoid - mechanical branch enumeration
+// Compact (<= 3 pages) shows every page; otherwise anchor on first, current and last and
+// bridge the gaps.
+```
+
+**No wrapped continuation-indent block comments:**
+A comment is either one line (a one-line block or a trailing inline comment) or a run of `//` lines (or the JSDoc asterisk style). Never the `/* line one` + indented continuation form:
+```typescript
+// Correct
+// Multi-line rationale as a run of slash lines, each a sentence,
+// wrapping at the formatter width.
+
+// Avoid
+/* Multi-line rationale crammed into one block comment
+   with a continuation indent. */
+```
+
+**Use plain language — no invented jargon:**
+Describe what the code does in simple, direct words. Avoid abstract or academic vocabulary ("verdict", "mirror", "pairwise", "consistently with", "domain") when a concrete description says the same thing. If a sentence needs the reader to decode a metaphor, rewrite it. Don't repeat the same phrase for two different facts (e.g. "the same way" twice in one comment) — repetition either signals redundancy or hides a distinction; give each sentence its own concrete statement. This applies to comments, test names, and PR descriptions alike:
+```typescript
+// Avoid
+// Optional: when absent, pairwise comparisons mirror the incoming item's verdict instead.
+
+// Correct
+// Optional: when absent, the stored item's enclosure is treated the same way as
+// the incoming item's one.
+```
+
+**Structure long comments as prose - what first, mechanism second, history never:**
+A comment longer than a few lines follows the same shape as good prose. It opens with what the code does and why it exists, in plain causal language. The mechanism comes after, one idea per paragraph, separated by an empty `//` line. What the code replaced or how it used to work is history: it belongs in the commit message, not the comment. An aside that is not needed to understand this function gets cut, even if true.
+```typescript
+// Avoid - opens with history, one dense block, narrates parser internals
+// Canonicalizes prefixes while parsing, replacing the post-parse tree walk. The parser
+// hands out tag names before it reads the tag's own attributes, but in document order
+// every ancestor's attributes stream by first, so a declaration map filled by the
+// attribute hook is ready when descendant names come through, and stop nodes therefore
+// match canonical names for any prefix a feed uses (outside stop-node content, which
+// stays raw).
+
+// Correct - what and why first, then the mechanism, one idea per paragraph
+// Renames namespace prefixes to their canonical form while the document is being parsed,
+// so stop nodes can match `a10:title` as `atom:title`. Renaming after parsing would be
+// too late: stop nodes fire during it.
+//
+// Document order is what makes this work. By the time the parser hands over an element's
+// name, it has already read every ancestor's attributes, including their `xmlns:`
+// declarations, so the element can be renamed right away.
+```
+
+**Never use em-dashes:**
+Reach for a colon, a period or a comma instead, in that order. A colon when what follows explains what came before, a period when the two halves are separate statements, a comma for a simple aside. Only if none of those fit, use a plain hyphen with spaces around it. This applies to comments, commit messages, PR descriptions and any other prose:
+```typescript
+// Avoid
+// The parent directory varies per board — the directory name is the stable part.
+// A sprite renders nothing — an unmapped one still becomes the text the author typed.
+
+// Correct
+// The parent directory varies per board: the directory name is the stable part.
+// A sprite renders nothing. An unmapped one still becomes the text the author typed.
 ```
 
 **Place comments above the subject:**
@@ -385,3 +540,192 @@ const footnoteClassRegex = /footnote/i
 
 const bracketedNumberRegex = /^\[\d+\]$/
 ```
+
+---
+
+## 18. HTML Attribute Wrapping
+
+Keep an element's attributes inline with the tag while the whole element fits comfortably on one line. Split them onto their own lines once there are several (roughly 3+) **or the line runs long**, around the formatter's width. Length is the stronger trigger of the two: a two-attribute element whose url makes the line 140 characters gets split, and the attribute count does not excuse it. Never explode a genuinely short element. This applies to HTML in template literals (e.g. `html` test fixtures), not just JSX.
+
+**Splitting only helps when there is something to distribute.** The trigger is length, but the fix is spreading attributes or elements across lines, so it does nothing for a line that is long because of one unbreakable value. A single element with one attribute holding a 200-character url stays on one line: splitting it yields the same long line plus an orphaned closing tag, which is worse than what it replaced. Ask what goes on the second line before splitting, and if the answer is only `</tag>`, leave it.
+
+**A long fixture is a `html` template, not a quoted string.** A test fixture that has outgrown one line moves to the `html` tag with its attributes stacked, rather than staying a single long `'…'` literal that wraps in the editor. The point is that the shape of the markup under test is readable at a glance, which is the whole reason the fixture exists.
+
+```typescript
+// Correct - short element stays on one line
+html`<div class="callout"></div>`
+html`<div class="player" data-video-id="abc123"></div>`
+
+// Correct - several attributes, split for readability
+html`
+  <div
+    class="player"
+    data-src="https://example.com/embed/abc123"
+    data-id="abc123"
+    data-query="feature=oembed"
+  ></div>
+`
+
+// Correct - only two attributes, but the line ran long, so it splits
+html`
+  <blockquote
+    cite="https://example.com/some/quite/long/path/to/the/quoted/document/123"
+    class="quote-card"
+  >
+    <p>The quoted text.</p>
+  </blockquote>
+`
+
+// Avoid - a short element exploded across lines
+html`
+  <div
+    class="callout"
+  ></div>
+`
+
+// Avoid - a long fixture kept as a quoted string
+const value =
+  '<blockquote cite="https://example.com/some/quite/long/path/to/the/quoted/document/123" class="quote-card"><p>The quoted text.</p></blockquote>'
+```
+
+---
+
+## 19. Extract Large Inline Data Arrays
+
+A multi-row data array (or object) passed directly into a call — most commonly a `it.each` / `test.each` table — goes in its own named `const` above, not inlined into the call. The call site should read as one line of intent; the data lives separately with a type annotation and, where helpful, a comment describing the row shape.
+```typescript
+// Correct
+// Each case is [CDN label, wrapped input URL, expected inner-source key].
+const imageProxyCases: Array<[string, string, string]> = [
+  ['Cloudflare image', 'https://.../cdn-cgi/image/w=1080/https://cdn.example.com/photo.jpg', 'cdn.example.com/photo.jpg'],
+  ['Next.js image', 'https://x.com/_next/image?url=https%3A%2F%2Fx.com%2Fphoto.jpg', 'x.com/photo.jpg'],
+]
+
+it.each(imageProxyCases)('should unwrap the %s image proxy', (_name, url, expected) => {
+  expect(getImageFingerprint(url)).toBe(expected)
+})
+
+// Avoid - a long table literal wedged into the it.each() call
+it.each([
+  ['Cloudflare image', 'https://.../cdn-cgi/image/w=1080/https://cdn.example.com/photo.jpg', 'cdn.example.com/photo.jpg'],
+  ['Next.js image', 'https://x.com/_next/image?url=https%3A%2F%2Fx.com%2Fphoto.jpg', 'x.com/photo.jpg'],
+])('should unwrap the %s image proxy', (_name, url, expected) => {
+  expect(getImageFingerprint(url)).toBe(expected)
+})
+```
+
+---
+
+## 20. Name the Intermediate Instead of Wrapping the Call
+
+When an argument is long enough that the formatter breaks the call across lines, pull it into a named `const` above instead. Both fit the width, but only the name says what the value is — a wrapped call buries that in the middle of an expression.
+```typescript
+// Correct
+const codepoints = stem.split(separatorRegex).map((part) => Number.parseInt(part, 16))
+const glyph = String.fromCodePoint(...codepoints)
+
+// Avoid - the wrap tells the reader nothing about what is being spread
+const glyph = String.fromCodePoint(
+  ...stem.split(separatorRegex).map((part) => Number.parseInt(part, 16)),
+)
+```
+
+This applies when the intermediate has a real name. If the only name available restates the call (`result`, `output`, `args`), the extraction adds a line and says nothing, so leave the wrap.
+
+Naming an intermediate is the only kind of compression worth reaching for. Do not shorten code by folding logic into a functional chain: a `flatMap` with a ternary inside, or a `filter` whose predicate has a side effect, replaces lines with cleverness and costs more to read than it saves. Keep the loop, the guard and the explicit variable. Where a file genuinely is too long, tighten spacing and cut exports, not the logic.
+
+---
+
+## 21. try/catch Over `.catch()`
+
+Handle async errors in a `try`/`catch` block, never by chaining `.catch()` onto the call:
+```typescript
+// Correct
+try {
+  const response = await fetchFeed(url)
+  return parseFeed(response)
+} catch (error) {
+  logger.warn(error)
+}
+
+// Avoid
+const response = await fetchFeed(url).catch((error) => logger.warn(error))
+```
+The empty-`catch` form in section 14 is still the right shape when the failure itself is expected and nothing needs handling.
+
+---
+
+## 22. Quote Nesting
+
+Single quotes outside, double quotes inside. When a string contains a quoted token, keep the outer pair single and quote the inner token with double quotes rather than flipping the whole literal:
+```typescript
+// Correct
+it.todo('should return "existing" when the alias short-circuits', () => {})
+describe('when chooseFeedUrl returns "existing"', () => {})
+
+// Avoid
+it.todo("should return 'existing' when the alias short-circuits", () => {})
+```
+This follows the Biome config, which sets `singleQuote: true`; flipping the outer pair makes the file inconsistent with everything around it.
+
+---
+
+## 23. No Non-Null Assertion
+
+Never use the `!` non-null assertion. Narrow with a guard clause instead, which is also what Biome's `noNonNullAssertion` asks for:
+```typescript
+// Correct
+const entry = index.get(key)
+
+if (!entry) {
+  return
+}
+
+return entry.value
+
+// Avoid
+return index.get(key)!.value
+```
+The same goes for array indexing and any other lookup that types as possibly undefined: the guard states what happens when the value is missing, while `!` only silences the question.
+
+---
+
+## 24. Partial-Object Assertions in Tests
+
+When a test checks one or more properties of a returned object, assert with `toMatchObject` on the whole result, not by reaching into a property and comparing it with `toBe`. Write the expected object multiline, one property per line, even when it has a single property:
+
+```typescript
+// Correct
+expect(await extract(value)).toMatchObject({
+  icon: 'https://example.com/author.png',
+})
+
+// Avoid - property access + toBe
+expect((await extract(value))?.icon).toBe('https://example.com/author.png')
+
+// Avoid - single-line object literal
+expect(await extract(value)).toMatchObject({ icon: 'https://example.com/author.png' })
+```
+
+Full-object `toEqual(expected)` assertions stay as they are; this rule is for the subset case.
+
+---
+
+## 25. CSS Token Naming
+
+Name CSS variables and theme tokens for what the value is used for, in everyday words. No design-system jargon (`surface`, `scrim`, `elevated`, `foreground`) and no palette-scale names (`neutral-600`) at usage sites:
+```css
+/* Correct */
+--bg
+--sidebar-bg
+--backdrop-bg
+--text-primary
+--text-muted
+
+/* Avoid */
+--surface
+--scrim
+--foreground-secondary
+--neutral-600
+```
+A palette scale may exist as a lower layer, but anything a component style references is named by its role.
