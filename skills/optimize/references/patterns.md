@@ -1,6 +1,6 @@
 # Optimization Pattern Catalog
 
-Candidate generators for variants — not verdicts. Every pattern here has to survive Step 4 (correctness) and Step 5 (measurement) on the actual inputs and runtimes. Provenance: mined from feedsmith's `perf:` commit history (~50 accepted optimizations on real feed-parsing hot paths), plus engine internals verified against primary sources (deep research, 2026 — see the sources section at the bottom).
+Candidate generators for variants — not verdicts. Every pattern here has to survive Step 4 (correctness) and Step 5 (measurement) on the actual inputs and runtimes. Provenance: mined from the accepted `perf:` history of a parsing library (~50 optimizations on real hot paths), plus engine internals verified against primary sources (deep research, 2026 — see the sources section at the bottom).
 
 ## Engine behavior (verified against primary sources)
 
@@ -18,35 +18,35 @@ Shared principles do not imply identical cliffs: dictionary-mode thresholds, IC 
 
 ## Hoist invariants out of hot paths
 
-- **Regex literals to module scope.** A regex literal inside a function body is re-created (or at least re-fetched) per call; a module-level `const` is compiled once. (feedsmith `5a0933a6`)
-- **Pre-construct objects at module load.** Expression objects, lookup tables, normalizers — build once, reuse per call. (feedsmith `dd9f4225`, `35191f75`)
+- **Regex literals to module scope.** A regex literal inside a function body is re-created (or at least re-fetched) per call; a module-level `const` is compiled once.
+- **Pre-construct objects at module load.** Expression objects, lookup tables, normalizers — build once, reuse per call.
 - **Invariant work out of per-item callbacks.** `pattern.toLowerCase().trim()` inside a `.some` callback runs per item per call; precompute the lowered list once before the loop.
 
 ## Avoid allocations
 
-- **Return the original when there's nothing to change.** Scan first with a cheap loop; only build a new object/array when the input actually needs modification. (feedsmith `7181d892` — `trimObject` returns the input untouched when nothing trims)
+- **Return the original when there's nothing to change.** Scan first with a cheap loop; only build a new object/array when the input actually needs modification. (e.g. an object-trimming helper returns its input untouched when nothing trims)
 - **Fuse chained array methods into one loop.** `.split().filter()`, `.filter().map()` each allocate an intermediate array; a single indexed loop allocates one.
 - **Lazy iteration with early exit instead of split-then-scan.** `value.split(/\s+/)` materializes every word before `.some` looks at the first one; a manual scan can return on the first match without allocating the array.
-- **Eliminate Maps/objects used only as transient scratch.** Plain locals or arrays are often enough. (feedsmith `378ef09c`)
+- **Eliminate Maps/objects used only as transient scratch.** Plain locals or arrays are often enough.
 - **Don't allocate the empty result eagerly.** Create the result container only on first write.
 
 ## Cheap checks first
 
-- **Order type checks by input frequency.** Check the type that actually arrives 90% of the time first — mine call sites to learn the distribution. (feedsmith: number-before-string in `parseNumber` callers)
-- **`charCodeAt(0) === code` over `startsWith`/`indexOf === 0`** for single-character prefix checks — no string allocation, no call overhead. (feedsmith `0eda2d29`)
-- **Cheap pre-detection to skip expensive work.** Test whether the expensive transform is needed at all (`indexOf('<![CDATA[')` before running CDATA stripping; length check before regex). (feedsmith: CDATA/entity detection)
+- **Order type checks by input frequency.** Check the type that actually arrives 90% of the time first — mine call sites to learn the distribution. (number-before-string in `parseNumber` callers)
+- **`charCodeAt(0) === code` over `startsWith`/`indexOf === 0`** for single-character prefix checks — no string allocation, no call overhead.
+- **Cheap pre-detection to skip expensive work.** Test whether the expensive transform is needed at all (`indexOf('<![CDATA[')` before running CDATA stripping; length check before regex). (CDATA/entity detection)
 - **Length and first/last-char checks before regex.** `value.length < 2` disqualifies before any regex runs; `charCodeAt` scans from both ends beat unanchored `$`-suffix regexes, which scan from position 0.
 
 ## Memoize
 
-- **Memoize repeated key/shape work.** Seen-key sets turned `detectNamespaces` 10× faster; make the memo conditional so cold paths don't pay for it. (feedsmith `61c4b5f1`)
+- **Memoize repeated key/shape work.** Seen-key sets turned `detectNamespaces` 10× faster; make the memo conditional so cold paths don't pay for it.
 
 ## Micro (engine-dependent — always measure both runtimes)
 
 - Unary plus (`+value`) over `Number(value)`.
 - Loose `== null` covers both null and undefined in one check.
 - `indexOf` vs `startsWith`/`includes`: has flipped winners across engine versions.
-- **Regex vs manual scan flips both ways.** feedsmith optimized `parseBoolean` away from regex once, then back to regex later ("more robust and faster") — the winner depends on engine, input length, and unicode requirements. Never assume; benchmark both directions.
+- **Regex vs manual scan flips both ways.** One library optimized `parseBoolean` away from regex once, then back to regex later ("more robust and faster") — the winner depends on engine, input length, and unicode requirements. Never assume; benchmark both directions.
 
 ## Semantic traps (correctness gate catches these — know them anyway)
 
