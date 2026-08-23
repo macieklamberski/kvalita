@@ -1,0 +1,81 @@
+# System
+Thumbs.db
+.DS_Store
+
+# Editors
+.idea
+.vscode
+
+# Agents
+.aider*
+.claude
+.codex
+.continue
+.cursor
+.gemini
+.junie
+.opencode
+.windsurf
+
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+.pnp.cjs
+.yarn
+.npm
+.pnpm-store
+.bun
+
+# Debug
+*.tsbuildinfo
+
+# Caches
+.cache
+.parcel-cache
+.turbo
+.vite
+
+# Frameworks
+.astro
+.next
+.nuxt
+.output
+.svelte-kit
+
+# Testing
+playwright-report
+test-results
+
+# Deployment
+.netlify
+.vercel
+
+# Output
+dist
+coverage
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile*
+.dockerignore
+docker-compose*.y*ml
+docker-stack*.y*ml
+compose*.y*ml
+
+# Tooling
+.editorconfig
+biome.json
+lefthook.json
+
+# Docs
+README.md
+LICENSE
+
+# Working files
+_drafts
+_files
+_plans

@@ -72,3 +72,14 @@ Create a `lefthook.json` file in your project root and extend the hooks you need
 - `lefthook-biome.json` - Lints and formats staged files with Biome (pre-commit)
 - `lefthook-typescript.json` - Type checks TypeScript files (pre-commit)
 - `lefthook-commitlint.json` - Validates commit messages (commit-msg)
+
+### Ignore File Templates
+
+Copy the templates into your project root, then add whatever the project itself produces:
+
+```bash
+cp node_modules/kvalita/configs/gitignore .gitignore
+cp node_modules/kvalita/configs/dockerignore .dockerignore
+```
+
+In a monorepo, prefix the Docker entries with `**/`. Docker matches patterns from the build context root, not at any depth like git.
