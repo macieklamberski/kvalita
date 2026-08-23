@@ -82,4 +82,4 @@ cp node_modules/kvalita/configs/gitignore .gitignore
 cp node_modules/kvalita/configs/dockerignore .dockerignore
 ```
 
-In a monorepo, prefix the Docker entries with `**/`. Docker matches patterns from the build context root, not at any depth like git.
+The Docker entries carry a `**/` prefix because Docker matches from the build context root, not at any depth like git. `**` also matches zero directories, so the one spelling works in a flat project and a monorepo alike.

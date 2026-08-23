@@ -1,81 +1,81 @@
 # System
-Thumbs.db
-.DS_Store
+**/Thumbs.db
+**/.DS_Store
 
 # Editors
-.idea
-.vscode
+**/.idea
+**/.vscode
 
 # Agents
-.aider*
-.claude
-.codex
-.continue
-.cursor
-.gemini
-.junie
-.opencode
-.windsurf
+**/.aider*
+**/.claude
+**/.codex
+**/.continue
+**/.cursor
+**/.gemini
+**/.junie
+**/.opencode
+**/.windsurf
 
 # Dependencies
-node_modules
-.pnp
-.pnp.js
-.pnp.cjs
-.yarn
-.npm
-.pnpm-store
-.bun
+**/node_modules
+**/.pnp
+**/.pnp.js
+**/.pnp.cjs
+**/.yarn
+**/.npm
+**/.pnpm-store
+**/.bun
 
 # Debug
-*.tsbuildinfo
+**/*.tsbuildinfo
 
 # Caches
-.cache
-.parcel-cache
-.turbo
-.vite
+**/.cache
+**/.parcel-cache
+**/.turbo
+**/.vite
 
 # Frameworks
-.astro
-.next
-.nuxt
-.output
-.svelte-kit
+**/.astro
+**/.next
+**/.nuxt
+**/.output
+**/.svelte-kit
 
 # Testing
-playwright-report
-test-results
+**/playwright-report
+**/test-results
 
 # Deployment
-.netlify
-.vercel
+**/.netlify
+**/.vercel
 
 # Output
-dist
-coverage
+**/dist
+**/coverage
 
 # Git
-.git
-.gitignore
+**/.git
+**/.gitignore
 
 # Docker
-Dockerfile*
-.dockerignore
-docker-compose*.y*ml
-docker-stack*.y*ml
-compose*.y*ml
+**/Dockerfile*
+**/.dockerignore
+**/docker-compose*.y*ml
+**/docker-stack*.y*ml
+**/compose*.y*ml
 
 # Tooling
-.editorconfig
-biome.json
-lefthook.json
+**/.editorconfig
+**/biome.json
+**/lefthook.json
 
 # Docs
-README.md
-LICENSE
+**/README.md
+**/LICENSE
 
 # Working files
-_drafts
-_files
-_plans
+**/_drafts
+**/_files
+**/_plans
