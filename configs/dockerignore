@@ -5,6 +5,7 @@
 # Editors
 **/.idea
 **/.vscode
+**/.zed
 
 # Agents
 **/.aider*
@@ -57,6 +58,7 @@
 
 # Git
 **/.git
+**/.github
 **/.gitignore
 
 # Docker
