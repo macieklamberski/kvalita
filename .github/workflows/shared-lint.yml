@@ -1,0 +1,46 @@
+name: Shared lint
+
+on:
+  workflow_call:
+    inputs:
+      bun-version:
+        description: Bun version to install. Defaults to the latest release.
+        required: false
+        type: string
+        default: latest
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ inputs.bun-version }}
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile --ignore-scripts
+
+      - name: Run Biome check
+        run: bunx @biomejs/biome check --no-errors-on-unmatched --files-ignore-unknown=true .
+
+      - name: Run TypeScript check
+        if: hashFiles('tsconfig.json') != ''
+        run: bunx tsc --noEmit
+
+      # Dependabot writes a lower-case subject after the prefix and offers no option to
+      # change it (dependabot/dependabot-core#11705), which the sentence-case rule rejects.
+      # Only this step skips, so Biome and TypeScript still cover the lockfile it changed.
+      - name: Validate PR commits
+        if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]' && hashFiles('commitlint.json') != ''
+        run: |
+          bunx commitlint \
+            --from ${{ github.event.pull_request.base.sha }} \
+            --to ${{ github.event.pull_request.head.sha }} \
+            --config ./commitlint.json \
+            --verbose
