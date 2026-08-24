@@ -54,6 +54,22 @@ This configuration includes:
 - `conventionalcommits` preset with `feat!:` syntax for breaking changes
 - [npm provenance](https://docs.npmjs.com/generating-provenance-statements) (requires `id-token: write` permission)
 
+### TypeScript Configuration
+
+Create a `tsconfig.json` in your project root and extend the base that matches the project:
+
+```json
+{
+  "extends": "kvalita/tsconfig",
+  "include": ["src"]
+}
+```
+
+- `kvalita/tsconfig` for Bun libraries and services: `nodenext` modules, `types: ["bun"]`, `resolveJsonModule`.
+- `kvalita/tsconfig-mikrob` for [Mikrob](https://github.com/macieklamberski/mikrob) sites: `esnext` modules, `bundler` resolution, and Hono JSX.
+
+Both set `strict`, `target: esnext` and `skipLibCheck`. Keep whatever makes the project different, such as `declaration` and `outDir` when publishing, in the project's own file.
+
 ### [Lefthook](https://github.com/evilmartians/lefthook) Configuration
 
 Create a `lefthook.json` file in your project root and extend the hooks you need:
