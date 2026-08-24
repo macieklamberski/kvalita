@@ -4,7 +4,7 @@
     "commands": {
       "typescript": {
         "glob": "*.{ts,tsx}",
-        "run": "bunx tsc --noEmit"
+        "run": "bunx tsc --build --noEmit"
       }
     }
   }
