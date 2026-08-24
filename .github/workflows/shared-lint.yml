@@ -8,6 +8,11 @@ on:
         required: false
         type: string
         default: latest
+      prepare:
+        description: Commands run after install, for repositories whose checks need generated files.
+        required: false
+        type: string
+        default: ''
 
 jobs:
   lint:
@@ -25,6 +30,11 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile --ignore-scripts
+
+      - name: Prepare
+        if: inputs.prepare != ''
+        run: |
+          ${{ inputs.prepare }}
 
       - name: Run Biome check
         run: bunx @biomejs/biome check --no-errors-on-unmatched --files-ignore-unknown=true .
