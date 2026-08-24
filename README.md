@@ -73,6 +73,46 @@ Create a `lefthook.json` file in your project root and extend the hooks you need
 - `lefthook-typescript.json` - Type checks TypeScript files (pre-commit)
 - `lefthook-commitlint.json` - Validates commit messages (commit-msg)
 
+### Shared Workflows
+
+Call them instead of copying the job into every repo. `secrets: inherit` passes `CODECOV_TOKEN` and `NPM_TOKEN` through.
+
+```yaml
+# .github/workflows/test.yml
+name: Test
+on:
+  push:
+    branches: [main, alpha, beta, rc]
+  pull_request:
+jobs:
+  test:
+    uses: macieklamberski/kvalita/.github/workflows/shared-test.yml@main
+    secrets: inherit
+```
+
+```yaml
+# .github/workflows/release.yml
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch to release
+        required: true
+        default: main
+        type: choice
+        options: [main, rc, beta, alpha]
+jobs:
+  release:
+    uses: macieklamberski/kvalita/.github/workflows/shared-release.yml@main
+    with:
+      branch: ${{ inputs.branch }}
+      build: true
+    secrets: inherit
+```
+
+`shared-release` takes `branch`, `build`, `config` and `bun-version`; `shared-test` takes `bun-version`. Every one has a default, so a repo on the common setup passes nothing.
+
 ### Ignore File Templates
 
 Copy the templates into your project root, then add whatever the project itself produces:
