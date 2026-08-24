@@ -37,7 +37,7 @@ jobs:
           ${{ inputs.prepare }}
 
       - name: Run Biome check
-        run: bunx @biomejs/biome check --no-errors-on-unmatched --files-ignore-unknown=true .
+        run: bunx @biomejs/biome check --error-on-warnings --no-errors-on-unmatched --files-ignore-unknown=true .
 
       # --build so a root tsconfig.json that only lists project references is followed to
       # the projects themselves; plain --noEmit owns no files there and checks nothing.

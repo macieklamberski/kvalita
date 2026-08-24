@@ -5,7 +5,7 @@
     "commands": {
       "lint:biome": {
         "glob": "*.{ts,tsx,js,jsx,json,jsonc,css,graphql,gql}",
-        "run": "bunx @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}",
+        "run": "bunx @biomejs/biome check --write --error-on-warnings --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}",
         "stage_fixed": true
       }
     }
