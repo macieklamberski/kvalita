@@ -39,16 +39,11 @@ jobs:
       - name: Run Biome check
         run: bunx @biomejs/biome check --no-errors-on-unmatched --files-ignore-unknown=true .
 
-      # A root tsconfig.json that only lists project references owns no files itself, so
-      # --noEmit type-checks nothing and reports success. --build follows the references.
+      # --build so a root tsconfig.json that only lists project references is followed to
+      # the projects themselves; plain --noEmit owns no files there and checks nothing.
       - name: Run TypeScript check
         if: hashFiles('tsconfig.json') != ''
-        run: |
-          if grep -q '"references"' tsconfig.json; then
-            bunx tsc --build
-          else
-            bunx tsc --noEmit
-          fi
+        run: bunx tsc --build --noEmit
 
       # Dependabot writes a lower-case subject after the prefix and offers no option to
       # change it (dependabot/dependabot-core#11705), which the sentence-case rule rejects.
