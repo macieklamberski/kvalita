@@ -1,0 +1,35 @@
+name: Shared test
+
+on:
+  workflow_call:
+    inputs:
+      bun-version:
+        description: Bun version to install. Defaults to the latest release.
+        required: false
+        type: string
+        default: latest
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ inputs.bun-version }}
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile --ignore-scripts
+
+      - name: Run tests with coverage
+        run: bun test --coverage --coverage-reporter=lcov
+
+      - name: Upload coverage to Codecov
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
