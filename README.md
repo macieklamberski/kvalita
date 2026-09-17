@@ -50,7 +50,7 @@ Use the `--extends` flag in your CI workflow:
 ```
 
 This configuration includes:
-- Branches: `main`, `rc` (prerelease), `beta` (prerelease), `alpha` (prerelease)
+- Branches: `main`, `rc` (prerelease), `beta` (prerelease), `alpha` (prerelease), and maintenance branches named `N.x` or `N.N.x`, which publish to the `release-N.x` dist-tag
 - `conventionalcommits` preset with `feat!:` syntax for breaking changes
 - [npm provenance](https://docs.npmjs.com/generating-provenance-statements) (requires `id-token: write` permission)
 
