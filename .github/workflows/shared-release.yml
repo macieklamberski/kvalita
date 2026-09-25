@@ -57,11 +57,8 @@ jobs:
         if: inputs.build
         run: bun run build
 
-      # semantic-release reads the branch from GITHUB_REF, which names the ref the workflow was started
-      # from. Point it at the checked-out branch, so a run started from main can release another branch.
       - name: Release and publish package
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          BRANCH: ${{ inputs.branch }}
-        run: GITHUB_REF="refs/heads/$BRANCH" bunx semantic-release --extends ${{ inputs.config }}
+        run: bunx semantic-release --extends ${{ inputs.config }}
