@@ -1,0 +1,117 @@
+name: Shared package
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: Git ref to check. Defaults to the ref that triggered the workflow.
+        required: false
+        type: string
+        default: ''
+      bun-version:
+        description: Bun version to install. Defaults to the latest release.
+        required: false
+        type: string
+        default: latest
+
+jobs:
+  versions:
+    runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.versions.outputs.versions }}
+      latest: ${{ steps.versions.outputs.latest }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Checkout kvalita
+        uses: actions/checkout@v6
+        with:
+          repository: macieklamberski/kvalita
+          ref: ${{ job.workflow_sha }}
+          path: .kvalita
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: List Node.js versions
+        id: versions
+        run: |
+          versions=$(node .kvalita/scripts/package-check.mjs versions .)
+          echo "versions=$versions" >> "$GITHUB_OUTPUT"
+          echo "latest=$(echo "$versions" | jq '.[-1]')" >> "$GITHUB_OUTPUT"
+
+  package:
+    name: package (Node ${{ matrix.node }})
+    needs: versions
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ${{ fromJSON(needs.versions.outputs.versions) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Checkout kvalita
+        uses: actions/checkout@v6
+        with:
+          repository: macieklamberski/kvalita
+          ref: ${{ job.workflow_sha }}
+          path: .kvalita
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ inputs.bun-version }}
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile --ignore-scripts
+
+      - name: Build package
+        run: bun run build
+
+      # --install-links packs the package the way npm publishes it, so only its published files land
+      # in the consumer.
+      - name: Install package into a consumer
+        working-directory: ${{ runner.temp }}
+        run: |
+          mkdir consumer && cd consumer
+          npm init -y > /dev/null
+          npm install --install-links --ignore-scripts "$GITHUB_WORKSPACE"
+          node "$GITHUB_WORKSPACE/.kvalita/scripts/package-check.mjs" entries "$GITHUB_WORKSPACE" .
+
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node }}
+
+      # On the latest Node, the fallbacks older versions lack are turned off: syntax detection, which
+      # loads ESM files Node would otherwise treat as CommonJS, and require() of ESM files.
+      - name: Load every entry point
+        working-directory: ${{ runner.temp }}/consumer
+        env:
+          FLAGS: ${{ matrix.node == needs.versions.outputs.latest && '--no-experimental-detect-module --no-experimental-require-module' || '' }}
+        run: |
+          node --version
+          status=0
+          for file in entries/*; do
+            if node $FLAGS "$file" > /dev/null; then
+              echo "ok $file"
+            else
+              echo "::error::$file failed to load"
+              status=1
+            fi
+          done
+          exit $status
