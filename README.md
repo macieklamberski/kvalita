@@ -30,7 +30,7 @@ Create a `biome.json` file in your project root:
 }
 ```
 
-The config runs two GritQL plugins on Bun tests. One flags `await` before `expect(...).rejects`, since Bun tracks that assertion on its own. The other flags a callback written inline in `expect(() => fn()).toThrow()`, which reads better as `const throwing = () => fn()`. The plugins load from `node_modules/kvalita`, so the config expects kvalita installed at the project root.
+The config runs three GritQL plugins on Bun tests. One flags `await` before `expect(...).rejects`, since Bun tracks that assertion on its own. Another flags a callback written inline in `expect(() => fn()).toThrow()`, which reads better as `const throwing = () => fn()`. The third flags `const expected = value`, where asserting against `value` says the input comes back unchanged. The plugins load from `node_modules/kvalita`, so the config expects kvalita installed at the project root.
 
 ### [Commitlint](https://github.com/conventional-changelog/commitlint) Configuration
 

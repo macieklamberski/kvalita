@@ -3,6 +3,7 @@
   "root": false,
   "plugins": [
     "./node_modules/kvalita/configs/biome/no-await-expect-rejects.grit",
+    "./node_modules/kvalita/configs/biome/no-expected-alias.grit",
     "./node_modules/kvalita/configs/biome/use-throwing-const.grit"
   ],
   "vcs": {
@@ -49,6 +50,7 @@
         "noMultiAssign": "error",
         "noMultilineString": "error",
         "noNestedTernary": "error",
+        "noNonNullAssertion": "error",
         "noParameterAssign": "error",
         "noSubstr": "error",
         "noUnusedTemplateLiteral": "error",
@@ -82,6 +84,7 @@
         "useShorthandAssign": "error",
         "useSingleVarDeclarator": "error",
         "useSpreadOverApply": "error",
+        "useTemplate": "error",
         "useThrowNewError": "error",
         "useThrowOnlyError": "error",
         "useTrimStartEnd": "error"
@@ -121,6 +124,10 @@
       },
       "security": {
         "noScriptUrl": "error"
+      },
+      "nursery": {
+        "noIdenticalTestTitle": "error",
+        "useTestHooksOnTop": "error"
       }
     }
   }
