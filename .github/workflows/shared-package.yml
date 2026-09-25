@@ -83,13 +83,14 @@ jobs:
         run: bun run build
 
       # --install-links packs the package the way npm publishes it, so only its published files land
-      # in the consumer.
+      # in the consumer. Optional peers go in too, as npm skips them and their entry points need them.
       - name: Install package into a consumer
         working-directory: ${{ runner.temp }}
         run: |
           mkdir consumer && cd consumer
           npm init -y > /dev/null
-          npm install --install-links --ignore-scripts "$GITHUB_WORKSPACE"
+          mapfile -t peers < <(node "$GITHUB_WORKSPACE/.kvalita/scripts/package-check.mjs" peers "$GITHUB_WORKSPACE")
+          npm install --install-links --ignore-scripts "$GITHUB_WORKSPACE" "${peers[@]}"
           node "$GITHUB_WORKSPACE/.kvalita/scripts/package-check.mjs" entries "$GITHUB_WORKSPACE" .
 
       - name: Setup Node.js ${{ matrix.node }}
