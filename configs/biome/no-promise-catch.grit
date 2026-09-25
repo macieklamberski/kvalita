@@ -1,0 +1,6 @@
+language js
+
+`$promise.catch($handler)` where {
+  not $promise <: within `void $_` ,
+  register_diagnostic(span=$handler, message="Handle the rejection in try/catch around an await. A fire-and-forget call keeps `.catch()` behind `void`.")
+}

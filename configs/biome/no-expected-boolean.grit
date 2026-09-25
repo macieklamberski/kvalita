@@ -1,0 +1,9 @@
+language js
+
+`const expected = $boolean` where {
+  $boolean <: or {
+    `true`,
+    `false`
+  },
+  register_diagnostic(span=$boolean, message="Inline the boolean in the matcher: `expect(...).toBe(true)`.")
+}

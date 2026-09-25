@@ -1,0 +1,5 @@
+language js
+
+`$value as unknown as $type` where {
+  register_diagnostic(span=$value, message="Drop the `as unknown` step: try a single cast, a runtime check or a property of the base type first.")
+}
