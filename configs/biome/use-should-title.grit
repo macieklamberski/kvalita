@@ -1,0 +1,17 @@
+language js
+
+`$test($title, $callback)` where {
+  $test <: or {
+    `it`,
+    `test`,
+    `it.todo`,
+    `it.skip`,
+    `it.only`,
+    `test.todo`,
+    `test.skip`,
+    `test.only`
+  },
+  $title <: r"^['\"`].*",
+  not $title <: r"^['\"`]should .*",
+  register_diagnostic(span=$title, message="Start the test title with \"should\".")
+}

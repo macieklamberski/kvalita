@@ -1,0 +1,7 @@
+language js
+
+`$object as $type` where {
+  $object <: object(),
+  not $type <: r"^const$",
+  register_diagnostic(span=$object, message="Annotate instead of casting: `const value: Type = { ... }` checks every field.")
+}

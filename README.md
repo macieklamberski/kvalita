@@ -37,11 +37,16 @@ The config also runs GritQL plugins. Most of them target Bun tests:
 - `const expected = value`, where asserting against `value` says the input comes back unchanged.
 - `const expected = true` or `false`, where the boolean reads better inline in `toBe()`.
 - `toBe(undefined)` and `toEqual(undefined)`, where `toBeUndefined()` says it directly.
+- A test title that doesn't start with "should".
+- A table written inline in `it.each(...)`, which reads better as a typed const above the call.
 
-Two apply to all code:
+The rest apply to all code:
 
 - `as unknown as`, which skips the type check entirely.
+- An object literal cast with `as Type`, where an annotation checks every field. `as const` is fine.
 - `.catch()` chained on a promise, where try/catch around an `await` is the house style. A fire-and-forget call behind `void` keeps its `.catch()`.
+- Two or more `===` comparisons against literals in one condition, which read better as a named array and `.includes()`.
+- A regex constant whose name doesn't end with `Regex`.
 
 The plugins load from `node_modules/kvalita`, so the config expects kvalita installed at the project root.
 
