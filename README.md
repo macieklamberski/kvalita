@@ -113,7 +113,7 @@ jobs:
     secrets: inherit
 ```
 
-`shared-release` takes `branch`, `build`, `config` and `bun-version`; `shared-test` takes `bun-version`. Every one has a default, so a repo on the common setup passes nothing.
+`shared-release` takes `branch`, `build`, `config` and `bun-version`; `shared-test` takes `bun-version` and `ref`. Every one has a default, so a repo on the common setup passes nothing. Pass `ref` when a release job waits on `shared-test`: the release runs from `main`, and without it the tests check `main` instead of the branch being released.
 
 ### Ignore File Templates
 
