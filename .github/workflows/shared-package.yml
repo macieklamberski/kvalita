@@ -13,6 +13,11 @@ on:
         required: false
         type: string
         default: latest
+      browser:
+        description: Also bundle every entry point for the browser, for packages that run there.
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   versions:
@@ -112,6 +117,73 @@ jobs:
               echo "ok $file"
             else
               echo "::error::$file failed to load"
+              status=1
+            fi
+          done
+          exit $status
+
+  # Type-checks every entry point under each TypeScript module resolution, from ESM and CommonJS
+  # consumers, and bundles every entry point with Vite.
+  types-and-bundlers:
+    name: types and bundlers
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Checkout kvalita
+        uses: actions/checkout@v6
+        with:
+          repository: macieklamberski/kvalita
+          ref: ${{ job.workflow_sha }}
+          path: .kvalita
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ inputs.bun-version }}
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile --ignore-scripts
+
+      - name: Build package
+        run: bun run build
+
+      # TypeScript stays on 5: version 6 deprecates the node10 resolution and 7 removes it.
+      - name: Install package into a consumer
+        working-directory: ${{ runner.temp }}
+        run: |
+          mkdir consumer && cd consumer
+          npm init -y > /dev/null
+          mapfile -t peers < <(node "$GITHUB_WORKSPACE/.kvalita/scripts/package-check.mjs" peers "$GITHUB_WORKSPACE")
+          npm install --install-links --ignore-scripts "$GITHUB_WORKSPACE" "${peers[@]}" typescript@5 vite @types/node
+
+      - name: Type-check and bundle every entry point
+        working-directory: ${{ runner.temp }}/consumer
+        env:
+          BROWSER: ${{ inputs.browser && '--browser' || '' }}
+        run: |
+          script="$GITHUB_WORKSPACE/.kvalita/scripts/package-check.mjs"
+          status=0
+          for setup in $(node "$script" setups "$GITHUB_WORKSPACE" . $BROWSER); do
+            case $setup in
+              typescript/*) command="node $script typecheck $GITHUB_WORKSPACE $setup" ;;
+              vite/*) command="npx vite build $setup --logLevel warn" ;;
+            esac
+            echo "::group::$setup"
+            if $command; then
+              echo "::endgroup::"
+              echo "ok $setup"
+            else
+              echo "::endgroup::"
+              echo "::error::$setup failed"
               status=1
             fi
           done
