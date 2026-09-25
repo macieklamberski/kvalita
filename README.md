@@ -115,6 +115,29 @@ jobs:
 
 `shared-release` takes `branch`, `build`, `config` and `bun-version`; `shared-test` takes `bun-version` and `ref`. Every one has a default, so a repo on the common setup passes nothing. Start every release from `main` and pick the branch with `branch`: `shared-release` checks it out and tells semantic-release to release it. Pass the same branch as `ref` when a release job waits on `shared-test`, or the tests check `main` instead of the branch being released.
 
+`shared-package` checks the package the way a consumer gets it. It builds the package, installs it into an empty project with `npm install --install-links`, so only the published files land there, and loads every entry point in `exports`: through `import`, and through `require()` where a `require` condition exists. It does that on every even Node.js major from the floor in `engines.node`, or 18 when it isn't set, up to the latest release. On the latest one, it also turns off syntax detection and `require()` of ESM files, which older versions don't have. It takes `ref` and `bun-version`:
+
+```yaml
+# .github/workflows/package.yml
+name: Package
+on:
+  push:
+    branches: [main, alpha, beta, rc]
+  pull_request:
+  workflow_call:
+    inputs:
+      ref:
+        type: string
+        default: ''
+jobs:
+  package:
+    uses: macieklamberski/kvalita/.github/workflows/shared-package.yml@main
+    with:
+      ref: ${{ inputs.ref }}
+```
+
+The `workflow_call` trigger lets the release workflow run it as a gate with `ref: ${{ inputs.branch }}`, next to `shared-test`.
+
 ### Ignore File Templates
 
 Copy the templates into your project root, then add whatever the project itself produces:
