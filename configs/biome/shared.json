@@ -6,8 +6,13 @@
     "./node_modules/kvalita/configs/biome/no-double-cast.grit",
     "./node_modules/kvalita/configs/biome/no-expected-alias.grit",
     "./node_modules/kvalita/configs/biome/no-expected-boolean.grit",
+    "./node_modules/kvalita/configs/biome/no-inline-each-table.grit",
+    "./node_modules/kvalita/configs/biome/no-literal-equality-chain.grit",
+    "./node_modules/kvalita/configs/biome/no-object-cast.grit",
     "./node_modules/kvalita/configs/biome/no-promise-catch.grit",
     "./node_modules/kvalita/configs/biome/use-throwing-const.grit",
+    "./node_modules/kvalita/configs/biome/use-regex-suffix.grit",
+    "./node_modules/kvalita/configs/biome/use-should-title.grit",
     "./node_modules/kvalita/configs/biome/use-to-be-undefined.grit"
   ],
   "vcs": {
@@ -56,6 +61,7 @@
         "noNestedTernary": "error",
         "noNonNullAssertion": "error",
         "noParameterAssign": "error",
+        "noProcessEnv": "error",
         "noSubstr": "error",
         "noUnusedTemplateLiteral": "error",
         "noUselessElse": "error",
@@ -142,6 +148,8 @@
             "style": "expression"
           }
         },
+        "useConsistentTestIt": "error",
+        "useNullishCoalescing": "error",
         "useTestHooksOnTop": "error",
         "useValidTestTitle": "error"
       }

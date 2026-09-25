@@ -1,0 +1,13 @@
+language js
+
+`$left === $first || $left === $second` where {
+  $first <: or {
+    string(),
+    number()
+  },
+  $second <: or {
+    string(),
+    number()
+  },
+  register_diagnostic(span=$left, message="Put the literals in a named array and check membership with `.includes()`.")
+}

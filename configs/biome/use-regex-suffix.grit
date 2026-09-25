@@ -1,0 +1,11 @@
+language js
+
+`const $name = $value` where {
+  $value <: or {
+    r"^/.+/[dgimsuvy]*$",
+    `new RegExp($pattern)`,
+    `new RegExp($pattern, $flags)`
+  },
+  not $name <: r".*Regex$",
+  register_diagnostic(span=$name, message="End a regex constant's name with `Regex`.")
+}

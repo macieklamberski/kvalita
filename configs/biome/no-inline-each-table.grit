@@ -1,0 +1,11 @@
+language js
+
+`$test.each($rows)` where {
+  $test <: or {
+    `it`,
+    `test`,
+    `describe`
+  },
+  $rows <: array(),
+  register_diagnostic(span=$rows, message="Move the table into a typed const above the call.")
+}
