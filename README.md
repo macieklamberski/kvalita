@@ -113,7 +113,7 @@ jobs:
     secrets: inherit
 ```
 
-`shared-release` takes `branch`, `build`, `config` and `bun-version`; `shared-test` takes `bun-version` and `ref`. Every one has a default, so a repo on the common setup passes nothing. Pass `ref` when a release job waits on `shared-test`: the release runs from `main`, and without it the tests check `main` instead of the branch being released.
+`shared-release` takes `branch`, `build`, `config` and `bun-version`; `shared-test` takes `bun-version` and `ref`. Every one has a default, so a repo on the common setup passes nothing. Start every release from `main` and pick the branch with `branch`: `shared-release` checks it out and tells semantic-release to release it. Pass the same branch as `ref` when a release job waits on `shared-test`, or the tests check `main` instead of the branch being released.
 
 ### Ignore File Templates
 
