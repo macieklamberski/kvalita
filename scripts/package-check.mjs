@@ -4,6 +4,9 @@
 // node package-check.mjs versions <package-dir>
 //   Prints the Node majors to test as a JSON array: every even major from the floor in
 //   engines.node, or 18 when it is not set, up to the latest release.
+// node package-check.mjs peers <package-dir>
+//   Prints each optional peer dependency as name@range, one per line. npm skips optional peers,
+//   but an entry point built on one needs it installed to load.
 // node package-check.mjs entries <package-dir> <consumer-dir>
 //   Writes one file per exported entry point and condition into <consumer-dir>/entries.
 
@@ -116,15 +119,27 @@ const writeEntries = (packageDir, consumerDir) => {
   })
 }
 
+const getOptionalPeers = (packageDir) => {
+  const { peerDependencies = {}, peerDependenciesMeta = {} } = readPackage(packageDir)
+
+  return Object.entries(peerDependencies)
+    .filter(([name]) => peerDependenciesMeta[name]?.optional)
+    .map(([name, range]) => `${name}@${range}`)
+}
+
 const [command, packageDir, consumerDir] = process.argv.slice(2)
 
 if (command === 'versions') {
   console.log(JSON.stringify(await getVersions(packageDir)))
+} else if (command === 'peers') {
+  for (const peer of getOptionalPeers(packageDir)) {
+    console.log(peer)
+  }
 } else if (command === 'entries') {
   writeEntries(packageDir, consumerDir)
 } else {
   console.error(
-    'Usage: package-check.mjs versions <package-dir> | entries <package-dir> <consumer-dir>',
+    'Usage: package-check.mjs versions|peers <package-dir> | entries <package-dir> <consumer-dir>',
   )
   process.exit(1)
 }
