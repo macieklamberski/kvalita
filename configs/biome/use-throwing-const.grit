@@ -1,0 +1,13 @@
+language js
+
+`expect($callback).$matcher($args)` where {
+  $callback <: or {
+    `() => $body`,
+    `async () => $body`
+  },
+  $matcher <: or {
+    `toThrow`,
+    `toThrowError`
+  },
+  register_diagnostic(span=$callback, message="Name the throwing call: `const throwing = () => fn()`, then `expect(throwing).toThrow(...)`.")
+}
