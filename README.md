@@ -30,7 +30,20 @@ Create a `biome.json` file in your project root:
 }
 ```
 
-The config runs three GritQL plugins on Bun tests. One flags `await` before `expect(...).rejects`, since Bun tracks that assertion on its own. Another flags a callback written inline in `expect(() => fn()).toThrow()`, which reads better as `const throwing = () => fn()`. The third flags `const expected = value`, where asserting against `value` says the input comes back unchanged. The plugins load from `node_modules/kvalita`, so the config expects kvalita installed at the project root.
+The config also runs GritQL plugins. Most of them target Bun tests:
+
+- `await` before `expect(...).rejects`, since Bun tracks that assertion on its own.
+- A callback written inline in `expect(() => fn()).toThrow()`, which reads better as `const throwing = () => fn()`.
+- `const expected = value`, where asserting against `value` says the input comes back unchanged.
+- `const expected = true` or `false`, where the boolean reads better inline in `toBe()`.
+- `toBe(undefined)` and `toEqual(undefined)`, where `toBeUndefined()` says it directly.
+
+Two apply to all code:
+
+- `as unknown as`, which skips the type check entirely.
+- `.catch()` chained on a promise, where try/catch around an `await` is the house style. A fire-and-forget call behind `void` keeps its `.catch()`.
+
+The plugins load from `node_modules/kvalita`, so the config expects kvalita installed at the project root.
 
 ### [Commitlint](https://github.com/conventional-changelog/commitlint) Configuration
 

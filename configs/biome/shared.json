@@ -3,8 +3,12 @@
   "root": false,
   "plugins": [
     "./node_modules/kvalita/configs/biome/no-await-expect-rejects.grit",
+    "./node_modules/kvalita/configs/biome/no-double-cast.grit",
     "./node_modules/kvalita/configs/biome/no-expected-alias.grit",
-    "./node_modules/kvalita/configs/biome/use-throwing-const.grit"
+    "./node_modules/kvalita/configs/biome/no-expected-boolean.grit",
+    "./node_modules/kvalita/configs/biome/no-promise-catch.grit",
+    "./node_modules/kvalita/configs/biome/use-throwing-const.grit",
+    "./node_modules/kvalita/configs/biome/use-to-be-undefined.grit"
   ],
   "vcs": {
     "enabled": true,
@@ -108,10 +112,13 @@
       "suspicious": {
         "noDuplicatedSpreadProps": "error",
         "noEmptySource": "error",
+        "noFocusedTests": "error",
         "noForIn": "error",
+        "noMisplacedAssertion": "error",
         "noParametersOnlyUsedInRecursion": "error",
         "noProto": "error",
         "noReturnAssign": "error",
+        "noSkippedTests": "error",
         "noVar": "error",
         "useArraySortCompare": "error",
         "useAwait": "error",
@@ -126,8 +133,17 @@
         "noScriptUrl": "error"
       },
       "nursery": {
+        "noConditionalExpect": "error",
+        "noFloatingPromises": "error",
         "noIdenticalTestTitle": "error",
-        "useTestHooksOnTop": "error"
+        "useConsistentFunctionStyle": {
+          "level": "error",
+          "options": {
+            "style": "expression"
+          }
+        },
+        "useTestHooksOnTop": "error",
+        "useValidTestTitle": "error"
       }
     }
   }

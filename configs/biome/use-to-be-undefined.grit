@@ -1,0 +1,10 @@
+language js
+
+`expect($value).$matcher(undefined)` where {
+  $matcher <: or {
+    `toBe`,
+    `toEqual`,
+    `toStrictEqual`
+  },
+  register_diagnostic(span=$matcher, message="Assert a missing value with `toBeUndefined()`.")
+}
