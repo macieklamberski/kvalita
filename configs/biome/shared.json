@@ -149,7 +149,12 @@
           }
         },
         "useConsistentTestIt": "error",
-        "useNullishCoalescing": "error",
+        "useNullishCoalescing": {
+          "level": "error",
+          "options": {
+            "ignoreIfStatements": true
+          }
+        },
         "useTestHooksOnTop": "error",
         "useValidTestTitle": "error"
       }
