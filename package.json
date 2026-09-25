@@ -15,7 +15,7 @@
     "configs"
   ],
   "exports": {
-    "./biome": "./configs/biome.json",
+    "./biome": "./configs/biome/shared.json",
     "./commitlint": "./configs/commitlint.json",
     "./semantic-release": "./configs/semantic-release.json",
     "./semantic-release-dry-run": "./configs/semantic-release-dry-run.json"
@@ -37,6 +37,7 @@
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.2",
     "conventional-changelog-conventionalcommits": "^9.3.1",
+    "kvalita": "file:.",
     "lefthook": "^2.1.14",
     "semantic-release": "^25.0.9",
     "typescript": "^7.0.2"

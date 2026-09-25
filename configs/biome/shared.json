@@ -1,6 +1,10 @@
 {
   "$schema": "https://biomejs.dev/schemas/latest/schema.json",
   "root": false,
+  "plugins": [
+    "./node_modules/kvalita/configs/biome/no-await-expect-rejects.grit",
+    "./node_modules/kvalita/configs/biome/use-throwing-const.grit"
+  ],
   "vcs": {
     "enabled": true,
     "clientKind": "git",
