@@ -115,7 +115,11 @@ jobs:
 
 `shared-release` takes `branch`, `build`, `config` and `bun-version`; `shared-test` takes `bun-version` and `ref`. Every one has a default, so a repo on the common setup passes nothing. Start every release from `main` and pick the branch with `branch`: `shared-release` checks it out and tells semantic-release to release it. Pass the same branch as `ref` when a release job waits on `shared-test`, or the tests check `main` instead of the branch being released.
 
-`shared-package` checks the package the way a consumer gets it. It builds the package, installs it into an empty project with `npm install --install-links`, so only the published files land there, and loads every entry point in `exports`: through `import`, and through `require()` where a `require` condition exists. It does that on every even Node.js major from the floor in `engines.node`, or 18 when it isn't set, up to the latest release. On the latest one, it also turns off syntax detection and `require()` of ESM files, which older versions don't have. It takes `ref` and `bun-version`:
+`shared-package` checks the package the way a consumer gets it. It builds the package, installs it into an empty project with `npm install --install-links`, so only the published files land there, and loads every entry point in `exports`: through `import`, and through `require()` where a `require` condition exists. It does that on every even Node.js major from the floor in `engines.node`, or 18 when it isn't set, up to the latest release. On the latest one, it also turns off syntax detection and `require()` of ESM files, which older versions don't have. Optional peers get installed too, since an entry point built on one needs it.
+
+A second job checks the same entry points the way TypeScript and bundler users reach them. It type-checks them from an ESM and a CommonJS project under each module resolution (`node10`, `node16`, `nodenext` and `bundler`) with `strict` and `skipLibCheck: false`, and fails only on errors in the package's own types. It also bundles them with Vite as a server build. With `browser: true`, it bundles them for the browser as well. Every setup only imports what the package claims: CommonJS files only use entry points with a `require` condition, and `node10` only checks the root entry, when the package has a top-level `types`.
+
+It takes `ref`, `bun-version` and `browser`:
 
 ```yaml
 # .github/workflows/package.yml

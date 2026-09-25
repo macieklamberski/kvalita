@@ -9,12 +9,20 @@
 //   but an entry point built on one needs it installed to load.
 // node package-check.mjs entries <package-dir> <consumer-dir>
 //   Writes one file per exported entry point and condition into <consumer-dir>/entries.
+// node package-check.mjs setups <package-dir> <consumer-dir> [--browser]
+//   Writes one TypeScript project per module type and resolution, and one Vite SSR project per
+//   module format, plus browser ones with --browser, each importing every entry point that setup
+//   can reach, and prints their paths.
+// node package-check.mjs typecheck <package-dir> <setup-dir>
+//   Runs tsc on one TypeScript setup, failing only on errors in it or in the package's own types.
 
+import { spawnSync } from 'node:child_process'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 const defaultFloor = 18
 const majorRegex = /\d+/
+const ownerRegex = /node_modules\/((?:@[^/]+\/)?[^/]+)\//g
 
 const readPackage = (packageDir) => {
   return JSON.parse(readFileSync(join(packageDir, 'package.json'), 'utf8'))
@@ -119,6 +127,159 @@ const writeEntries = (packageDir, consumerDir) => {
   })
 }
 
+// Strict consumer settings, with skipLibCheck off so errors in the package's own types surface.
+const compilerOptions = {
+  target: 'ES2023',
+  strict: true,
+  esModuleInterop: true,
+  skipLibCheck: false,
+  noEmit: true,
+}
+
+// The module setting each resolution pairs with, per module type of the consumer package.
+const modules = {
+  node10: { esm: 'esnext', cjs: 'commonjs' },
+  node16: { esm: 'node16', cjs: 'node16' },
+  nodenext: { esm: 'nodenext', cjs: 'nodenext' },
+  bundler: { esm: 'esnext', cjs: 'esnext' },
+}
+
+const toExports = (specifiers) => {
+  return specifiers.map((specifier, index) => `export * as entry${index} from '${specifier}'\n`)
+}
+
+const writeProject = (dir, files) => {
+  mkdirSync(dir, { recursive: true })
+
+  for (const [name, content] of Object.entries(files)) {
+    writeFileSync(join(dir, name), typeof content === 'string' ? content : JSON.stringify(content))
+  }
+}
+
+// Each file only imports the entries its module format can reach: import-able ones from ESM, and
+// ones with a require condition from CommonJS. node10 ignores exports, so it gets the root entry
+// only, and only when the package points at its types the old way.
+const getTypeScriptFiles = (pkg, type, resolution) => {
+  const entries = getEntries(pkg)
+  const esm = entries.filter(({ kind }) => kind === 'import').map(({ specifier }) => specifier)
+  const cjs = entries.filter(({ kind }) => kind === 'require').map(({ specifier }) => specifier)
+
+  if (resolution === 'node10') {
+    return pkg.types || pkg.typings ? { 'index.ts': toExports([pkg.name]).join('') } : {}
+  }
+
+  if (resolution === 'bundler') {
+    return { 'index.ts': toExports(esm).join('') }
+  }
+
+  const files = {
+    'index.ts': toExports(type === 'esm' ? esm : cjs).join(''),
+    'index.mts': toExports(esm).join(''),
+    'index.cts': toExports(cjs).join(''),
+  }
+
+  return Object.fromEntries(Object.entries(files).filter(([, content]) => content))
+}
+
+// An SSR build bundles the package in, the way Vite users with ssr.noExternal load it on a server.
+// A browser build bundles everything for the browser, for packages that claim to run there.
+const viteConfig = (input, target, name) => {
+  const build =
+    target === 'ssr'
+      ? `{ ssr: true, rollupOptions: { input: fileURLToPath(new URL('./${input}', import.meta.url)) } }`
+      : `{ rollupOptions: { input: fileURLToPath(new URL('./${input}', import.meta.url)) } }`
+  const ssr = target === 'ssr' ? `, ssr: { noExternal: ['${name}'] }` : ''
+
+  return [
+    "import { fileURLToPath } from 'node:url'",
+    '',
+    `export default { build: ${build}${ssr} }`,
+    '',
+  ].join('\n')
+}
+
+const writeSetups = (packageDir, consumerDir, browser) => {
+  const pkg = readPackage(packageDir)
+  const entries = getEntries(pkg)
+
+  for (const type of ['esm', 'cjs']) {
+    for (const [resolution, module] of Object.entries(modules)) {
+      const files = getTypeScriptFiles(pkg, type, resolution)
+
+      if (Object.values(files).every((content) => !content)) {
+        continue
+      }
+
+      const dir = join(consumerDir, 'typescript', `${type}-${resolution}`)
+
+      writeProject(dir, {
+        ...files,
+        'package.json': { private: true, type: type === 'esm' ? 'module' : 'commonjs' },
+        'tsconfig.json': {
+          compilerOptions: {
+            ...compilerOptions,
+            module: module[type],
+            moduleResolution: resolution,
+          },
+          include: Object.keys(files),
+        },
+      })
+      console.log(`typescript/${type}-${resolution}`)
+    }
+  }
+
+  const imports = entries.filter(({ kind }) => kind === 'import')
+  const requires = entries.filter(({ kind }) => kind === 'require')
+  const formats = {
+    esm: {
+      specifiers: imports,
+      input: 'index.mjs',
+      line: (specifier, index) => `export * as entry${index} from '${specifier}'\n`,
+    },
+    cjs: {
+      specifiers: requires,
+      input: 'index.cjs',
+      line: (specifier, index) => `exports.entry${index} = require('${specifier}')\n`,
+    },
+  }
+
+  for (const target of browser ? ['ssr', 'browser'] : ['ssr']) {
+    for (const [format, { specifiers, input, line }] of Object.entries(formats)) {
+      if (!specifiers.length) {
+        continue
+      }
+
+      writeProject(join(consumerDir, 'vite', `${target}-${format}`), {
+        'package.json': { private: true, type: 'module' },
+        [input]: specifiers.map(({ specifier }, index) => line(specifier, index)).join(''),
+        'vite.config.mjs': viteConfig(input, target, pkg.name),
+      })
+      console.log(`vite/${target}-${format}`)
+    }
+  }
+}
+
+// Type-checks one setup and fails only on errors a consumer would hit: in the generated files or in
+// the package's own types. Errors inside the types of other packages it pulls in are printed but
+// ignored, as they are not the package's to fix.
+const typecheck = (packageDir, setupDir) => {
+  const { name } = readPackage(packageDir)
+  const { status, stdout } = spawnSync('npx', ['tsc', '-p', setupDir], { encoding: 'utf8' })
+  const errors = stdout.split('\n').filter((line) => line.includes('error TS'))
+  // The package a file belongs to is the one after the last node_modules in its path.
+  const isRelevant = (line) => {
+    const owner = [...line.matchAll(ownerRegex)].at(-1)?.[1]
+
+    return !owner || owner === name
+  }
+
+  for (const line of errors) {
+    console.log(isRelevant(line) ? line : `ignored: ${line}`)
+  }
+
+  return status === 0 || (errors.length > 0 && !errors.some(isRelevant))
+}
+
 const getOptionalPeers = (packageDir) => {
   const { peerDependencies = {}, peerDependenciesMeta = {} } = readPackage(packageDir)
 
@@ -127,7 +288,7 @@ const getOptionalPeers = (packageDir) => {
     .map(([name, range]) => `${name}@${range}`)
 }
 
-const [command, packageDir, consumerDir] = process.argv.slice(2)
+const [command, packageDir, consumerDir, flag] = process.argv.slice(2)
 
 if (command === 'versions') {
   console.log(JSON.stringify(await getVersions(packageDir)))
@@ -137,9 +298,13 @@ if (command === 'versions') {
   }
 } else if (command === 'entries') {
   writeEntries(packageDir, consumerDir)
+} else if (command === 'setups') {
+  writeSetups(packageDir, consumerDir, flag === '--browser')
+} else if (command === 'typecheck') {
+  process.exit(typecheck(packageDir, consumerDir) ? 0 : 1)
 } else {
   console.error(
-    'Usage: package-check.mjs versions|peers <package-dir> | entries <package-dir> <consumer-dir>',
+    'Usage: package-check.mjs versions|peers <package-dir> | entries|setups|typecheck <package-dir> <dir>',
   )
   process.exit(1)
 }
