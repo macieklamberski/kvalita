@@ -8,6 +8,11 @@ on:
         required: false
         type: string
         default: latest
+      ref:
+        description: Git ref to test. Defaults to the ref that triggered the workflow.
+        required: false
+        type: string
+        default: ''
 
 jobs:
   test:
@@ -15,6 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
