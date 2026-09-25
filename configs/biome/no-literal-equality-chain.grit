@@ -1,6 +1,7 @@
 language js
 
 `$left === $first || $left === $second` where {
+  $left <: JsIdentifierExpression(),
   $first <: or {
     string(),
     number()
