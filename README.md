@@ -32,7 +32,6 @@ Create a `biome.json` file in your project root:
 
 The config also runs GritQL plugins. Most of them target Bun tests:
 
-- `await` before `expect(...).rejects`, since Bun tracks that assertion on its own.
 - A callback written inline in `expect(() => fn()).toThrow()`, which reads better as `const throwing = () => fn()`.
 - `const expected = value`, where asserting against `value` says the input comes back unchanged.
 - `const expected = true` or `false`, where the boolean reads better inline in `toBe()`.
