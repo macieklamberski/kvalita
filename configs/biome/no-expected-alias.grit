@@ -1,0 +1,6 @@
+language js
+
+`const expected = $alias` where {
+  $alias <: `value`,
+  register_diagnostic(span=$alias, message="Assert against `value` itself: `const expected = value` names the same value twice.")
+}
