@@ -1,5 +1,0 @@
-language js
-
-`await expect($value).rejects.$matcher($args)` where {
-  register_diagnostic(span=$value, message="Drop the await: Bun tracks an expect(...).rejects assertion on its own. Name the call as `const throwing = () => fn()` and assert `expect(throwing()).rejects...`.")
-}

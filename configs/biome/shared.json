@@ -2,7 +2,6 @@
   "$schema": "https://biomejs.dev/schemas/latest/schema.json",
   "root": false,
   "plugins": [
-    "./node_modules/kvalita/configs/biome/no-await-expect-rejects.grit",
     "./node_modules/kvalita/configs/biome/no-double-cast.grit",
     "./node_modules/kvalita/configs/biome/no-expected-alias.grit",
     "./node_modules/kvalita/configs/biome/no-expected-boolean.grit",
