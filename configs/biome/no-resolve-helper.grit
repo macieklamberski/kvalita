@@ -1,0 +1,5 @@
+language js
+
+`const resolve = $_` as $helper where {
+  register_diagnostic(span=$helper, message="Name the test helper for what it returns, not `resolve`.")
+}

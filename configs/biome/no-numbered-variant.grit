@@ -1,0 +1,6 @@
+language js
+
+`describe($title, $callback)` as $group where {
+  $title <: r"^['\"`]V\d+\b.*",
+  register_diagnostic(span=$title, message="Name the variant the group covers, not a number such as `V1`.")
+}

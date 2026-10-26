@@ -1,0 +1,6 @@
+language js
+
+`mock.module($path, $factory)` as $mock where {
+  $path <: r"^['\"](?:\.|@/|~/).*",
+  register_diagnostic(span=$mock, message="Test the module's real behavior instead of mocking a module of this project.")
+}

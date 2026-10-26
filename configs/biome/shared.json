@@ -37,11 +37,17 @@
         "./node_modules/kvalita/configs/biome/no-inline-html-tag.grit",
         "./node_modules/kvalita/configs/biome/no-inline-test-object.grit",
         "./node_modules/kvalita/configs/biome/no-label-tuple.grit",
+        "./node_modules/kvalita/configs/biome/no-not-to-have-property.grit",
+        "./node_modules/kvalita/configs/biome/no-numbered-variant.grit",
+        "./node_modules/kvalita/configs/biome/no-own-module-mock.grit",
         "./node_modules/kvalita/configs/biome/no-placeholder-data.grit",
+        "./node_modules/kvalita/configs/biome/no-resolve-helper.grit",
+        "./node_modules/kvalita/configs/biome/no-snapshot.grit",
         "./node_modules/kvalita/configs/biome/no-undefined-in-expected.grit",
         "./node_modules/kvalita/configs/biome/use-block-fixture.grit",
         "./node_modules/kvalita/configs/biome/use-to-be-for-primitives.grit",
         "./node_modules/kvalita/configs/biome/use-to-equal-for-objects.grit",
+        "./node_modules/kvalita/configs/biome/use-to-equal-over-to-match-object.grit",
         "./node_modules/kvalita/configs/biome/use-value-name.grit"
       ]
     }

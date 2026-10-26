@@ -1,0 +1,10 @@
+language js
+
+or {
+  `$_.toMatchSnapshot()`,
+  `$_.toMatchSnapshot($_)`,
+  `$_.toMatchInlineSnapshot()`,
+  `$_.toMatchInlineSnapshot($_)`
+} as $snapshot where {
+  register_diagnostic(span=$snapshot, message="Assert the value itself with `toEqual` or `toBe`, not a snapshot.")
+}

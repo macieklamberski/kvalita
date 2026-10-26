@@ -49,6 +49,12 @@ These run only in `*.test.ts` files:
 - A field spelled `undefined` in an expected object, which `toEqual` treats as absent anyway.
 - `input`, `data`, `str`, `obj`, `arr`, `output` and `res` as names, where the input under test is `value`.
 - A multi-line `value` fixture whose markup starts on the opening-backtick line.
+- `mock.module()` on a module of the project itself, where the test exercises the real module.
+- `toMatchSnapshot()` and `toMatchInlineSnapshot()`, where the value is asserted itself.
+- `toMatchObject()`, where `toEqual` fails on an extra or missing field too.
+- `.not.toHaveProperty()`, where `toEqual` on the whole object covers the absent field.
+- A `describe` group titled `V1` or `V2`, where the title names the variant.
+- A test helper named `resolve`, where the name says what it returns.
 
 The rest apply to all code:
 
