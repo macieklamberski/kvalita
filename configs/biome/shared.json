@@ -2,10 +2,13 @@
   "$schema": "https://biomejs.dev/schemas/latest/schema.json",
   "root": false,
   "plugins": [
+    "./node_modules/kvalita/configs/biome/no-coalesced-ternary.grit",
     "./node_modules/kvalita/configs/biome/no-double-cast.grit",
     "./node_modules/kvalita/configs/biome/no-empty-string-test.grit",
     "./node_modules/kvalita/configs/biome/no-expected-alias.grit",
     "./node_modules/kvalita/configs/biome/no-expected-boolean.grit",
+    "./node_modules/kvalita/configs/biome/no-filter-type-predicate.grit",
+    "./node_modules/kvalita/configs/biome/no-flatmap-ternary.grit",
     "./node_modules/kvalita/configs/biome/no-guarded-assign.grit",
     "./node_modules/kvalita/configs/biome/no-inline-each-table.grit",
     "./node_modules/kvalita/configs/biome/no-literal-equality-chain.grit",
@@ -15,6 +18,7 @@
     "./node_modules/kvalita/configs/biome/no-promise-catch.grit",
     "./node_modules/kvalita/configs/biome/no-screaming-const.grit",
     "./node_modules/kvalita/configs/biome/no-short-name.grit",
+    "./node_modules/kvalita/configs/biome/no-wrapped-implicit-return.grit",
     "./node_modules/kvalita/configs/biome/use-if-guard.grit",
     "./node_modules/kvalita/configs/biome/use-if-over-ternary-guard.grit",
     "./node_modules/kvalita/configs/biome/use-nullish-type.grit",
@@ -22,6 +26,25 @@
     "./node_modules/kvalita/configs/biome/use-should-title.grit",
     "./node_modules/kvalita/configs/biome/use-throwing-const.grit",
     "./node_modules/kvalita/configs/biome/use-to-be-undefined.grit"
+  ],
+  "overrides": [
+    {
+      "includes": ["**/*.test.ts"],
+      "plugins": [
+        "./node_modules/kvalita/configs/biome/no-computed-expected.grit",
+        "./node_modules/kvalita/configs/biome/no-dense-expect-chain.grit",
+        "./node_modules/kvalita/configs/biome/no-empty-todo.grit",
+        "./node_modules/kvalita/configs/biome/no-inline-html-tag.grit",
+        "./node_modules/kvalita/configs/biome/no-inline-test-object.grit",
+        "./node_modules/kvalita/configs/biome/no-label-tuple.grit",
+        "./node_modules/kvalita/configs/biome/no-placeholder-data.grit",
+        "./node_modules/kvalita/configs/biome/no-undefined-in-expected.grit",
+        "./node_modules/kvalita/configs/biome/use-block-fixture.grit",
+        "./node_modules/kvalita/configs/biome/use-to-be-for-primitives.grit",
+        "./node_modules/kvalita/configs/biome/use-to-equal-for-objects.grit",
+        "./node_modules/kvalita/configs/biome/use-value-name.grit"
+      ]
+    }
   ],
   "vcs": {
     "enabled": true,

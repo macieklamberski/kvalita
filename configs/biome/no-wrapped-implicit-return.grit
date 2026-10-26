@@ -1,0 +1,7 @@
+language js
+
+JsArrowFunctionExpression(body = $body) as $arrow where {
+  not $body <: JsFunctionBody(),
+  $arrow <: r"(?s).*=>\s*(?://[^\n]*)?\n.*",
+  register_diagnostic(span=$arrow, message="Give the arrow a block body with `return`: its expression wraps onto the next line.", severity="warn")
+}

@@ -1,0 +1,6 @@
+language js
+
+`expect($_).toBe($value)` as $assertion where {
+  or { $value <: JsObjectExpression(), $value <: JsArrayExpression() },
+  register_diagnostic(span=$assertion, message="Compare an object or array with `toEqual`: `toBe` checks identity.")
+}

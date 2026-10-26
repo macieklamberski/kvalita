@@ -39,6 +39,17 @@ The config also runs GritQL plugins. Most of them target Bun tests:
 - A test title that doesn't start with "should".
 - A table written inline in `it.each(...)`, which reads better as a typed const above the call.
 
+These run only in `*.test.ts` files:
+
+- An empty `.todo` body, where a comment describes the scenario.
+- `toBe` on an object or array literal, where `toEqual` compares the contents.
+- `toEqual` on a string, number or boolean, where `toBe` reads as the primitive it is.
+- Two optional chains inside `expect()`, where the value gets a name first.
+- `'foo'` and `'bar'` as data, where a realistic value shows what the code handles.
+- A field spelled `undefined` in an expected object, which `toEqual` treats as absent anyway.
+- `input`, `data`, `str`, `obj`, `arr`, `output` and `res` as names, where the input under test is `value`.
+- A multi-line `value` fixture whose markup starts on the opening-backtick line.
+
 The rest apply to all code:
 
 - `as unknown as`, which skips the type check entirely.
@@ -52,12 +63,23 @@ The rest apply to all code:
 - `T | null | undefined` spelled out, where the type is `Nullish<T>`.
 - `err`, `len`, `val`, `res`, `req`, `ctx` and `pkg` as names, where the full word reads as the thing.
 - A SCREAMING_SNAKE_CASE const, where every const is camelCase.
+- A ternary inside a `??` chain, where the fallbacks are early returns.
+- A `flatMap` callback that is a ternary, where filtering comes first.
+- A `filter` callback carrying a type predicate, where a named guard such as `filter(isPresent)` does.
 
-Three more report a warning, which `biome check` prints without failing:
+More report a warning, which `biome check` prints without failing:
 
 - `value !== ''` and `value === ''`, where the value stands on its own as the predicate.
 - `return condition ? value : undefined`, where the ternary is an early return.
 - `new Set([...])` over a literal list, where a plain array and `.includes()` do.
+- An implicit-return arrow whose expression wraps onto the next line, where the body is a block with `return`.
+
+And in `*.test.ts` files:
+
+- An `it.each` callback whose first parameter is `_`-prefixed, where the label belongs in the title.
+- An `expected` built from a call, an operator or an interpolated template, where the value is hard-coded.
+- An object with two or more properties on one line, where each property gets its own line.
+- A one-line `html` template, where a plain string does.
 
 The plugins load from `node_modules/kvalita`, so the config expects kvalita installed at the project root.
 

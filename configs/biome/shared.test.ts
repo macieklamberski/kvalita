@@ -25,8 +25,14 @@ const plugins = readdirSync(pluginsDir)
   .filter((name) => gritRegex.test(name))
   .map((name) => name.replace(gritRegex, ''))
 const sharedSource = readFileSync(join(pluginsDir, 'shared.json'), 'utf8')
-const shared = JSON.parse(sharedSource) as { plugins: Array<string> }
-const registered = shared.plugins.map((path) => path.split('/').at(-1)?.replace(gritRegex, ''))
+const shared = JSON.parse(sharedSource) as {
+  plugins: Array<string>
+  overrides: Array<{ plugins?: Array<string> }>
+}
+const overridePaths = shared.overrides.flatMap((override) => override.plugins ?? [])
+const registered = [...shared.plugins, ...overridePaths].map((path) => {
+  return path.split('/').at(-1)?.replace(gritRegex, '')
+})
 
 // One plugin at a time, through a config of its own, so a fixture line is attributed to the
 // plugin under test and not to a neighbour that happens to match it too.

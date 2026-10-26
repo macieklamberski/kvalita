@@ -1,0 +1,6 @@
+language js
+
+`expect($subject)` as $call where {
+  $subject <: r"(?s).*\?\..*\?\..*",
+  register_diagnostic(span=$call, message="Name the value before asserting on it: two optional chains inside `expect()` hide which step was missing.")
+}

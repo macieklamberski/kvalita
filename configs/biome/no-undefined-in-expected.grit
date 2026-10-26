@@ -1,0 +1,8 @@
+language js
+
+`const $name = $value` where {
+  $name <: r"^expected\w*$",
+  $value <: JsObjectExpression(),
+  $value <: contains `$key: undefined`,
+  register_diagnostic(span=$value, message="Leave the field out of the expected value: `toEqual` already treats an `undefined` key as absent.")
+}

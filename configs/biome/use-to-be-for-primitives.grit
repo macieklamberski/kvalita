@@ -1,0 +1,7 @@
+language js
+
+`expect($_).$matcher($value)` as $assertion where {
+  $matcher <: or { `toEqual`, `toStrictEqual` },
+  or { $value <: string(), $value <: number(), $value <: `true`, $value <: `false` },
+  register_diagnostic(span=$assertion, message="Compare a string, number or boolean with `toBe`.")
+}

@@ -1,0 +1,8 @@
+language js
+
+`$each($table)($title, $callback)` where {
+  $each <: or { `it.each`, `test.each`, `describe.each` },
+  $callback <: JsArrowFunctionExpression(parameters = $parameters),
+  $parameters <: r"^\(\s*_\w*\s*,.*",
+  register_diagnostic(span=$parameters, message="Drop the column the callback ignores: a row label used only by the title goes in the title.", severity="warn")
+}
