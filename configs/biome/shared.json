@@ -92,6 +92,11 @@
       "quoteStyle": "single"
     }
   },
+  "markdown": {
+    "formatter": {
+      "enabled": false
+    }
+  },
   "assist": {
     "actions": {
       "source": {
