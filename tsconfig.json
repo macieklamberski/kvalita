@@ -5,7 +5,8 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "skipLibCheck": true,
+    "noEmit": true,
     "types": ["bun"]
   },
-  "include": ["configs/biome/plugins.test.ts"]
+  "include": ["configs/biome/shared.test.ts"]
 }

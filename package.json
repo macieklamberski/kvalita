@@ -14,7 +14,7 @@
   "files": [
     "configs",
     "!configs/biome/fixtures",
-    "!configs/biome/plugins.test.ts"
+    "!configs/biome/shared.test.ts"
   ],
   "exports": {
     "./biome": "./configs/biome/shared.json",

@@ -9,6 +9,10 @@ const biome = join(root, 'node_modules/.bin/biome')
 const gritRegex = /\.grit$/
 const flagRegex = /\/\/ flag$/
 
+const byName = (left: string | undefined, right: string | undefined): number => {
+  return (left ?? '').localeCompare(right ?? '')
+}
+
 type Diagnostic = {
   location: {
     start: {
@@ -20,6 +24,9 @@ type Diagnostic = {
 const plugins = readdirSync(pluginsDir)
   .filter((name) => gritRegex.test(name))
   .map((name) => name.replace(gritRegex, ''))
+const sharedSource = readFileSync(join(pluginsDir, 'shared.json'), 'utf8')
+const shared = JSON.parse(sharedSource) as { plugins: Array<string> }
+const registered = shared.plugins.map((path) => path.split('/').at(-1)?.replace(gritRegex, ''))
 
 // One plugin at a time, through a config of its own, so a fixture line is attributed to the
 // plugin under test and not to a neighbour that happens to match it too.
@@ -70,6 +77,12 @@ const readFlaggedLines = (plugin: string): Array<number> => {
 
   return flagged
 }
+
+describe('shared.json', () => {
+  it('should register every plugin in the folder and nothing else', () => {
+    expect(registered.toSorted(byName)).toEqual(plugins.toSorted(byName))
+  })
+})
 
 describe.each(plugins)('%s', (plugin) => {
   it('should flag the marked fixture lines and no others', () => {
