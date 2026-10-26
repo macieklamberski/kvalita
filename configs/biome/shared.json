@@ -188,6 +188,7 @@
         "noScriptUrl": "error"
       },
       "nursery": {
+        "noDanglingUnderscore": "error",
         "noFloatingPromises": "error",
         "useConsistentFunctionStyle": {
           "level": "error",
