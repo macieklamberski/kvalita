@@ -65,7 +65,7 @@ const lintFixture = (plugin: string): Array<number> => {
     '--only=plugin',
     '--reporter=json',
     '--max-diagnostics=none',
-    `configs/biome/plugins/fixtures/${plugin}.ts`,
+    `configs/biome/fixtures/${plugin}.ts`,
   ]
   const result = Bun.spawnSync(command, { cwd: root, stdout: 'pipe', stderr: 'pipe' })
   const json = `${result.stdout}`.split('\n').find((line) => line.startsWith('{'))
@@ -83,7 +83,7 @@ const lintFixture = (plugin: string): Array<number> => {
 }
 
 const readFlaggedLines = (plugin: string): Array<number> => {
-  const source = readFileSync(join(pluginsDir, `fixtures/${plugin}.ts`), 'utf8')
+  const source = readFileSync(join(configsDir, `fixtures/${plugin}.ts`), 'utf8')
   const flagged: Array<number> = []
 
   for (const [index, line] of source.split('\n').entries()) {

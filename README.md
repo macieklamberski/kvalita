@@ -30,7 +30,7 @@ Create a `biome.json` file in your project root:
 }
 ```
 
-On top of Biome's recommended rules, the config turns on more built-in rules and runs GritQL plugins, some only in `*.test.ts` files. All of it lives in [`configs/biome`](configs/biome): `shared.json` lists the rules, each `.grit` file in `plugins/` is one plugin with its message, and `plugins/fixtures/` shows what each plugin flags. Rules waiting for the projects to be swept clean of them sit in `pending.json`, which no config extends.
+On top of Biome's recommended rules, the config turns on more built-in rules and runs GritQL plugins, some only in `*.test.ts` files. All of it lives in [`configs/biome`](configs/biome): `shared.json` lists the rules, each `.grit` file in `plugins/` is one plugin with its message, and `fixtures/` shows what each plugin flags. Rules waiting for the projects to be swept clean of them sit in `pending.json`, which no config extends.
 
 The plugins load from `node_modules/kvalita`, so the config expects kvalita installed at the project root.
 
