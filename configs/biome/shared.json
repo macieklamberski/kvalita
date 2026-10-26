@@ -87,6 +87,11 @@
       "quoteStyle": "single"
     }
   },
+  "yaml": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
   "assist": {
     "actions": {
       "source": {

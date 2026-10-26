@@ -7,7 +7,7 @@ on:
         description: Git ref to check. Defaults to the ref that triggered the workflow.
         required: false
         type: string
-        default: ""
+        default: ''
       bun-version:
         description: Bun version to install. Defaults to the latest release.
         required: false

@@ -213,7 +213,7 @@ on:
     inputs:
       ref:
         type: string
-        default: ""
+        default: ''
 jobs:
   package:
     uses: macieklamberski/kvalita/.github/workflows/shared-package.yml@main

@@ -12,7 +12,7 @@ on:
         description: Commands run after install, for repositories whose checks need generated files.
         required: false
         type: string
-        default: ""
+        default: ''
 
 jobs:
   lint:
