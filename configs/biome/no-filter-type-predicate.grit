@@ -1,7 +1,7 @@
 language js
 
 `$list.filter($callback)` as $call where {
-  $callback <: JsArrowFunctionExpression(return_type_annotation = $annotation),
+  $callback <: JsArrowFunctionExpression(return_type_annotation=$annotation),
   $annotation <: r"(?s).*\bis\b.*",
   register_diagnostic(span=$call, message="Pass a named guard such as `filter(isPresent)`: a callback carrying a type predicate packs two checks into one line.")
 }

@@ -1,7 +1,10 @@
 language js
 
 `$list.flatMap($callback)` as $call where {
-  $callback <: JsArrowFunctionExpression(body = $body),
-  or { $body <: JsConditionalExpression(), $body <: JsParenthesizedExpression(expression = JsConditionalExpression()) },
+  $callback <: JsArrowFunctionExpression(body=$body),
+  or {
+    $body <: JsConditionalExpression(),
+    $body <: JsParenthesizedExpression(expression=JsConditionalExpression())
+  },
   register_diagnostic(span=$call, message="Take the ternary out of the `flatMap` callback: filter first, then map.")
 }
