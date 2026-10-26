@@ -1,0 +1,5 @@
+language js
+
+JsVariableDeclarator(variable_annotation=TsTypeAnnotation(ty=TsFunctionType())) as $declarator where {
+  register_diagnostic(span=$declarator, message="Annotate the function with a named function type instead of an inline one.")
+}

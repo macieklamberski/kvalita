@@ -1,0 +1,6 @@
+language js
+
+`$subject.resolves` as $chain where {
+  $subject <: `expect($_)`,
+  register_diagnostic(span=$chain, message="Await the call inside `expect()`, `expect(await call())`, instead of chaining `.resolves`.")
+}

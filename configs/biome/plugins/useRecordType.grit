@@ -1,0 +1,6 @@
+language js
+
+TsObjectType(members=$members) as $type where {
+  $members <: [TsIndexSignatureTypeMember()],
+  register_diagnostic(span=$type, message="Write a type that is only an index signature as `Record<K, V>`.")
+}

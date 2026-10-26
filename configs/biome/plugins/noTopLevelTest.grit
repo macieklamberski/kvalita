@@ -1,0 +1,25 @@
+language js
+
+or {
+  `$test($...)` where {
+    $test <: or {
+      `it`,
+      `it.todo`,
+      `it.only`,
+      `it.skip`,
+      `test`,
+      `test.todo`,
+      `test.only`,
+      `test.skip`
+    }
+  },
+  `$each($table)($...)` where {
+    $each <: or {
+      `it.each`,
+      `test.each`
+    }
+  }
+} as $call where {
+  not $call <: within JsArrowFunctionExpression(),
+  register_diagnostic(span=$call, message="Put the test inside a `describe` named after the function under test.")
+}

@@ -1,0 +1,6 @@
+language js
+
+`const $name = $_` where {
+  $name <: r"^(?:input|data|str|obj|arr|output|res)$",
+  register_diagnostic(span=$name, message="Name the input under test `value`.")
+}

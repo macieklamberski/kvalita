@@ -1,0 +1,9 @@
+language js
+
+`$left ?? $right` as $chain where {
+  or {
+    $left <: JsConditionalExpression(),
+    $left <: JsParenthesizedExpression(expression=JsConditionalExpression())
+  },
+  register_diagnostic(span=$chain, message="Write the fallbacks as early returns: a ternary inside a `??` chain hides which branch answers.")
+}

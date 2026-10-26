@@ -1,0 +1,6 @@
+language js
+
+JsCatchDeclaration(binding=$name) as $catch where {
+  not $name <: r"^error$",
+  register_diagnostic(span=$catch, message="Name the caught value `error`.")
+}

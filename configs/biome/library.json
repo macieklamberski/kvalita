@@ -1,0 +1,21 @@
+{
+  "$schema": "https://biomejs.dev/schemas/latest/schema.json",
+  "root": false,
+  "plugins": [],
+  "overrides": [
+    {
+      "includes": ["src/**"],
+      "plugins": ["./node_modules/kvalita/configs/biome/plugins/useExportedReturnType.grit"],
+      "linter": {
+        "rules": {
+          "nursery": {
+            "noProcessExit": "error"
+          },
+          "suspicious": {
+            "noConsole": "error"
+          }
+        }
+      }
+    }
+  ]
+}

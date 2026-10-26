@@ -1,0 +1,16 @@
+language js
+
+`pgTable($table, $columns, $extras)` where {
+  $table <: r"'([a-z0-9_]+)'"($tableName),
+  $prefix = join(list=[$tableName, "_"], separator=""),
+  $extras <: contains or {
+    `index($index)`,
+    `uniqueIndex($index)`,
+    `unique($index)`
+  } where {
+    $index <: r"'([a-z0-9_]+)'"($indexName),
+    $parts = split($indexName, $prefix),
+    not $parts <: [``, ...],
+    register_diagnostic(span=$index, message="Start the index name with its table's name and an underscore, since Postgres index names share one namespace per schema.")
+  }
+}

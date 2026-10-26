@@ -1,0 +1,11 @@
+language js
+
+JsVariableDeclarator(id=$name, variable_annotation=$annotation, initializer=$initializer) where {
+  $annotation <: .,
+  $initializer <: JsInitializerClause(expression=$value),
+  $value <: or {
+    `[]`,
+    `{}`
+  },
+  register_diagnostic(span=$name, message="Annotate an empty array or object with the type it will hold.")
+}

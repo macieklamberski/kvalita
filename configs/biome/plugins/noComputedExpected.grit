@@ -1,0 +1,11 @@
+language js
+
+`const $name = $value` where {
+  $name <: r"^expected\w*$",
+  or {
+    $value <: JsTemplateExpression() where { $value <: r"(?s)^`.*\$\{.*" },
+    $value <: JsCallExpression(),
+    $value <: JsBinaryExpression()
+  },
+  register_diagnostic(span=$value, message="Hard-code the expected value: one built by code can share the bug it checks.")
+}

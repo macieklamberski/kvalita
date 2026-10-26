@@ -1,0 +1,6 @@
+language js
+
+JsStringLiteralExpression() as $literal where {
+  $literal <: r"^['\"](?:foo|bar|baz|qux|lorem)['\"]$",
+  register_diagnostic(span=$literal, message="Use realistic data, not `foo` or `bar`.")
+}

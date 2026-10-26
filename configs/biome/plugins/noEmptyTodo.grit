@@ -1,0 +1,16 @@
+language js
+
+or {
+  `$todo($title, $callback)` as $call where {
+    $callback <: JsArrowFunctionExpression(body=$body),
+    $body <: r"^\{\s*\}$"
+  },
+  `$todo($title)` as $call where { not $call <: contains JsArrowFunctionExpression() }
+} where {
+  $todo <: or {
+    `it.todo`,
+    `test.todo`,
+    `describe.todo`
+  },
+  register_diagnostic(span=$call, message="Describe the scenario in a comment inside the `.todo` body.")
+}

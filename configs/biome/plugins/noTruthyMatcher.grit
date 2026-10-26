@@ -1,0 +1,11 @@
+language js
+
+`$subject.$matcher()` where {
+  $matcher <: or {
+    `toBeTruthy`,
+    `toBeFalsy`,
+    `toBeTrue`,
+    `toBeFalse`
+  },
+  register_diagnostic(span=$matcher, message="Assert the exact value with `toBe(true)` or `toBe(false)`.")
+}

@@ -1,0 +1,8 @@
+language js
+
+`const $name = $template` where {
+  $name <: r"^value\w*$",
+  $template <: JsTemplateExpression(),
+  $template <: r"(?s)^`[^\n]*<[^\n]*\n.*",
+  register_diagnostic(span=$template, message="Start the fixture's markup on the line after the opening backtick.")
+}

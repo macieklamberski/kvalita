@@ -1,0 +1,8 @@
+language js
+
+JsFunctionBody(statements=$statements) where {
+  $statements <: [..., $first, ..., $second, ...],
+  $first <: r"(?s)^const expected\b.*",
+  $second <: r"(?s)^const value\b.*",
+  register_diagnostic(span=$first, message="Declare `value`, the input, before `expected`.")
+}

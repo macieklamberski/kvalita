@@ -4,7 +4,7 @@
     "parallel": true,
     "commands": {
       "lint:biome": {
-        "glob": "*.{ts,tsx,js,jsx,json,jsonc,css,graphql,gql}",
+        "glob": "*.{ts,tsx,js,jsx,json,jsonc,css,graphql,gql,yml,yaml,html}",
         "run": "bunx @biomejs/biome check --write --error-on-warnings --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}",
         "stage_fixed": true
       }

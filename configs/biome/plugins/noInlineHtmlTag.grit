@@ -1,0 +1,7 @@
+language js
+
+JsTemplateExpression(tag=$tag) as $template where {
+  $tag <: `html`,
+  not $template <: r"(?s).*\n.*",
+  register_diagnostic(span=$template, message="Write a one-line fixture as a plain string, not an `html` template.")
+}

@@ -30,36 +30,22 @@ Create a `biome.json` file in your project root:
 }
 ```
 
-The config also runs GritQL plugins. Most of them target Bun tests:
-
-- A callback written inline in `expect(() => fn()).toThrow()`, which reads better as `const throwing = () => fn()`.
-- `const expected = value`, where asserting against `value` says the input comes back unchanged.
-- `const expected = true` or `false`, where the boolean reads better inline in `toBe()`.
-- `toBe(undefined)` and `toEqual(undefined)`, where `toBeUndefined()` says it directly.
-- A test title that doesn't start with "should".
-- A table written inline in `it.each(...)`, which reads better as a typed const above the call.
-
-The rest apply to all code:
-
-- `as unknown as`, which skips the type check entirely.
-- An object literal cast with `as Type`, where an annotation checks every field. `as const` is fine.
-- `.catch()` chained on a promise, where try/catch around an `await` is the house style. A fire-and-forget call behind `void` keeps its `.catch()`.
-- Two or more `===` comparisons of one variable against literals, which read better as a named array and `.includes()`. A property such as `parsed.kind` is left alone, since a chain on it can narrow a union that `.includes()` cannot.
-- A regex constant whose name doesn't end with `Regex`.
-- `return value && { ... }`, where the guard is an early return and the object a plain literal.
-- `??=` and `||=`, where a guarded assignment is an `if` block.
-- Three nested calls, or a method chained onto a nested call, where each step gets a named const. A callback body and an object literal start the count over, and `expect(...)` chains are left alone.
-- `T | null | undefined` spelled out, where the type is `Nullish<T>`.
-- `err`, `len`, `val`, `res`, `req`, `ctx` and `pkg` as names, where the full word reads as the thing.
-- A SCREAMING_SNAKE_CASE const, where every const is camelCase.
-
-Three more report a warning, which `biome check` prints without failing:
-
-- `value !== ''` and `value === ''`, where the value stands on its own as the predicate.
-- `return condition ? value : undefined`, where the ternary is an early return.
-- `new Set([...])` over a literal list, where a plain array and `.includes()` do.
+On top of Biome's recommended rules, the config turns on more built-in rules and runs GritQL plugins, some only in `*.test.ts` files. All of it lives in [`configs/biome`](configs/biome): `shared.json` lists the rules, each `.grit` file in `plugins/` is one plugin with its message, and `fixtures/` shows what each plugin flags. Rules waiting for the projects to be swept clean of them sit in `upcoming.json`, which no config extends.
 
 The plugins load from `node_modules/kvalita`, so the config expects kvalita installed at the project root.
+
+A project adds the configs that fit it after `kvalita/biome`:
+
+- `kvalita/biome-trousse` for a project that depends on [trousse](https://github.com/macieklamberski/trousse).
+- `kvalita/biome-library` for a published library, which declares its exports' return types and never logs or exits.
+- `kvalita/biome-react` for a React app's components.
+- `kvalita/biome-drizzle` for a project that queries through Drizzle.
+
+```json
+{
+  "extends": ["kvalita/biome", "kvalita/biome-trousse", "kvalita/biome-library"]
+}
+```
 
 ### [Commitlint](https://github.com/conventional-changelog/commitlint) Configuration
 

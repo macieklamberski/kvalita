@@ -1,0 +1,7 @@
+language js
+
+JsReturnStatement(argument=$value) where {
+  $value <: TsAsExpression(),
+  not $value <: `$_ as const`,
+  register_diagnostic(span=$value, message="Guard the value and throw with a message instead of asserting the helper's return type, so a bad input fails where it was made.")
+}

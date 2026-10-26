@@ -1,0 +1,10 @@
+language js
+
+`$each($table)($title, $callback)` where {
+  $each <: or {
+    `it.each`,
+    `describe.each`
+  },
+  not $title <: r"(?s).*(?:%[sdpiofj#]|\$[A-Za-z#]).*",
+  register_diagnostic(span=$title, message="Put a placeholder such as `%s` in the `.each` title so each row gets its own title.")
+}

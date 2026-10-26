@@ -1,0 +1,9 @@
+language js
+
+JsExport(export_clause=JsVariableDeclarationClause(declaration=JsVariableDeclaration(declarators=$declarators))) where {
+  $declarators <: some JsVariableDeclarator(id=$name, variable_annotation=$annotation, initializer=$initializer),
+  $annotation <: .,
+  $initializer <: JsInitializerClause(expression=JsArrowFunctionExpression(return_type_annotation=$returns)),
+  $returns <: .,
+  register_diagnostic(span=$name, message="Declare the exported function's return type, or type the const with a named function type.")
+}

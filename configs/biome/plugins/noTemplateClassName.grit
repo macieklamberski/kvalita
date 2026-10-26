@@ -1,0 +1,10 @@
+language js
+
+JsxAttribute(name=$name, initializer=$value) where {
+  $name <: or {
+    `className`,
+    `class`
+  },
+  $value <: contains JsTemplateExpression(),
+  register_diagnostic(span=$value, message="Compose the class list with `cn()` instead of a template literal.")
+}

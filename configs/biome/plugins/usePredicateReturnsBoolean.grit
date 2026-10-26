@@ -1,0 +1,9 @@
+language js
+
+JsVariableDeclarator(id=$name, initializer=$initializer) where {
+  $name <: r"(?:is|has|does|should|can)[A-Z0-9].*",
+  $initializer <: JsInitializerClause(expression=JsArrowFunctionExpression(return_type_annotation=$returns)),
+  not $returns <: .,
+  not $returns <: r"(?s):\s*(?:boolean|Promise<boolean>|asserts .*|\w+ is .*)",
+  register_diagnostic(span=$name, message="Return `boolean`, a `Promise<boolean>` or a type predicate from a function named is, has, does, should or can.")
+}

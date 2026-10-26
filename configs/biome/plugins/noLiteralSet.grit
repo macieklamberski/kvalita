@@ -1,0 +1,6 @@
+language js
+
+JsNewExpression(callee=`Set`, arguments=$arguments) as $set where {
+  $arguments <: contains JsArrayExpression(),
+  register_diagnostic(span=$set, message="A literal membership list is a plain array checked with `.includes()`; a Set is for a large or runtime-built collection.")
+}

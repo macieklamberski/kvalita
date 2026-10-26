@@ -1,0 +1,18 @@
+language js
+
+or {
+  `$value.toLowerCase() === $literal`,
+  `$value.toLowerCase() !== $literal`,
+  `$literal === $value.toLowerCase()`,
+  `$literal !== $value.toLowerCase()`,
+  `$value.toUpperCase() === $literal`,
+  `$value.toUpperCase() !== $literal`,
+  `$literal === $value.toUpperCase()`,
+  `$literal !== $value.toUpperCase()`,
+  `$list.includes($value.toLowerCase())`,
+  `$list.includes($value.toUpperCase())`
+} as $compare where {
+  or { $literal <: string(), $list <: JsArrayExpression(), $list <: JsIdentifierExpression() },
+  not $value <: r"(?s).*\b(?:tagName|nodeName|localName)$",
+  register_diagnostic(span=$compare, message="Match the value with isAnyOf from trousse, which folds case and trims: isAnyOf(value, 'embed').")
+}

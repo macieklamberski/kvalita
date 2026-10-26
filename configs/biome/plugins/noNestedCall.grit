@@ -18,14 +18,14 @@ pattern inner_call() {
 
 call($arguments) as $outer where {
   not $outer <: `expect($_)`,
-  not $outer <: within `expect($_)` ,
+  not $outer <: within `expect($_)`,
   or {
     $arguments <: contains inner_call() until or {
       JsArrowFunctionExpression(),
       JsObjectExpression()
     },
     and {
-      $outer <: within JsCallExpression(callee=JsStaticMemberExpression(object=$outer)) ,
+      $outer <: within JsCallExpression(callee=JsStaticMemberExpression(object=$outer)),
       $arguments <: contains call($_) until or {
         JsArrowFunctionExpression(),
         JsObjectExpression()

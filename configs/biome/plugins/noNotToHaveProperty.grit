@@ -1,0 +1,5 @@
+language js
+
+`$_.not.toHaveProperty($_)` as $absent where {
+  register_diagnostic(span=$absent, message="Assert the whole object with `toEqual`, which also fails on a field that should be absent.")
+}

@@ -1,0 +1,9 @@
+language js
+
+`const $name: $type = $value` where {
+  $name <: r"[A-Z][A-Za-z0-9]*",
+  $type <: r"(?:FC|FunctionComponent)<([A-Za-z0-9]+Props)>"($props),
+  $expected = join(list=[$name, "Props"], separator=""),
+  not $props <: $expected,
+  register_diagnostic(span=$type, message="Name the component's props type after the component, such as `CardProps` for `Card`.")
+}
