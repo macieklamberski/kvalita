@@ -30,76 +30,7 @@ Create a `biome.json` file in your project root:
 }
 ```
 
-The config also runs GritQL plugins. Most of them target Bun tests:
-
-- A callback written inline in `expect(() => fn()).toThrow()`, which reads better as `const throwing = () => fn()`.
-- `const expected = value`, where asserting against `value` says the input comes back unchanged.
-- `const expected = true` or `false`, where the boolean reads better inline in `toBe()`.
-- `toBe(undefined)` and `toEqual(undefined)`, where `toBeUndefined()` says it directly.
-- A test title that doesn't start with "should".
-- A table written inline in `it.each(...)`, which reads better as a typed const above the call.
-
-These run only in `*.test.ts` files:
-
-- An empty `.todo` body, where a comment describes the scenario.
-- `toBe` on an object or array literal, where `toEqual` compares the contents.
-- `toEqual` on a string, number or boolean, where `toBe` reads as the primitive it is.
-- Two optional chains inside `expect()`, where the value gets a name first.
-- `'foo'` and `'bar'` as data, where a realistic value shows what the code handles.
-- A field spelled `undefined` in an expected object, which `toEqual` treats as absent anyway.
-- `input`, `data`, `str`, `obj`, `arr`, `output` and `res` as names, where the input under test is `value`.
-- A multi-line `value` fixture whose markup starts on the opening-backtick line.
-- `mock.module()` on a module of the project itself, where the test exercises the real module.
-- `toMatchSnapshot()` and `toMatchInlineSnapshot()`, where the value is asserted itself.
-- `toMatchObject()`, where `toEqual` fails on an extra or missing field too.
-- `.not.toHaveProperty()`, where `toEqual` on the whole object covers the absent field.
-- A `describe` group titled `V1` or `V2`, where the title names the variant.
-- A test helper named `resolve`, where the name says what it returns.
-- `await` on an `expect(...).rejects` assertion, which Bun settles before the next line runs.
-- `return value as Type` in a test helper, where the value is guarded and thrown on with a message, so a bad input fails where it was made. `as const` is fine.
-
-The rest apply to all code:
-
-- `as unknown as`, which skips the type check entirely.
-- An object literal cast with `as Type`, where an annotation checks every field. `as const` is fine.
-- `.catch()` chained on a promise, where try/catch around an `await` is the house style. A fire-and-forget call behind `void` keeps its `.catch()`.
-- Two or more `===` comparisons of one variable against literals, which read better as a named array and `.includes()`. A property such as `parsed.kind` is left alone, since a chain on it can narrow a union that `.includes()` cannot.
-- A regex constant whose name doesn't end with `Regex`.
-- `return value && { ... }`, where the guard is an early return and the object a plain literal.
-- `??=` and `||=`, where a guarded assignment is an `if` block.
-- Three nested calls, or a method chained onto a nested call, where each step gets a named const. A callback body and an object literal start the count over, and `expect(...)` chains are left alone.
-- `T | null | undefined` spelled out, where the type is `Nullish<T>`.
-- `err`, `len`, `val`, `res`, `req`, `ctx` and `pkg` as names, where the full word reads as the thing.
-- A SCREAMING_SNAKE_CASE const, where every const is camelCase.
-- A ternary inside a `??` chain, where the fallbacks are early returns.
-- A `flatMap` callback that is a ternary, where filtering comes first.
-- A `filter` callback carrying a type predicate, where a named guard such as `filter(isPresent)` does.
-
-More report a warning, which `biome check` prints without failing:
-
-- `value !== ''` and `value === ''`, where the value stands on its own as the predicate.
-- `return condition ? value : undefined`, where the ternary is an early return.
-- `new Set([...])` over a literal list, where a plain array and `.includes()` do.
-- An implicit-return arrow whose expression wraps onto the next line, where the body is a block with `return`.
-
-And in `*.test.ts` files:
-
-- An `it.each` callback whose first parameter is `_`-prefixed, where the label belongs in the title.
-- An `expected` built from a call, an operator or an interpolated template, where the value is hard-coded.
-- An object with two or more properties on one line, where each property gets its own line.
-- A one-line `html` template, where a plain string does.
-
-Beyond Biome's recommended set, the config turns on these built-in rules:
-
-- Style: `noCommonJs`, `noDefaultExport`, `noEnum`, `noImplicitBoolean`, `noInferrableTypes`, `noMultiAssign`, `noMultilineString`, `noNestedTernary`, `noNonNullAssertion`, `noParameterAssign`, `noProcessEnv`, `noSubstr`, `noUnusedTemplateLiteral`, `noUselessElse` and `noYodaExpression`, the patterns the house style writes another way.
-- Style, the preferred form: `useAtIndex` for `.at(-1)`, `useBlockStatements`, `useCollapsedIf` and `useCollapsedElseIf`, `useConsistentArrayType` for `Array<T>`, `useConsistentTypeDefinitions` for `type`, `useConsistentBuiltinInstantiation`, `useConsistentEnumValueType`, `useConsistentMethodSignatures`, `useDefaultParameterLast`, `useErrorCause`, `useForOf`, `useFragmentSyntax`, `useGlobalThis`, `useNumberNamespace`, `useObjectSpread`, `useSelfClosingElements`, `useShorthandAssign`, `useSingleVarDeclarator`, `useSpreadOverApply`, `useTemplate`, `useThrowNewError`, `useThrowOnlyError` and `useTrimStartEnd`.
-- Complexity: `noExcessiveNestedCallbacks`, `noForEach`, `noRedundantDefaultExport`, `noUselessCatchBinding`, `noUselessReturn`, `noUselessStringConcat`, `noUselessUndefined`, `useArrayFind` and `useArrowFunction`.
-- Correctness: `noReactPropAssignments`, `noUnusedInstantiation`, `useImportExtensions` for the `.js` suffix on relative imports, and `useJsonImportAttributes`.
-- Suspicious: `noDuplicatedSpreadProps`, `noEmptySource`, `noForIn`, `noImportCycles` for two modules importing each other, `noNestedPromises`, `noParametersOnlyUsedInRecursion`, `noProto`, `noReturnAssign`, `noVar`, `useArraySortCompare`, `useAwait` and `useErrorMessage`.
-- Promises and types: `noFloatingPromises`, `noMisusedPromises` for an async callback whose promise is dropped, `useAwaitThenable` for `await` on a value that is not a promise, and `noBaseToString` for an object in a template string.
-- Naming and built-ins: `noDanglingUnderscore`, where a dead variable is deleted rather than renamed `_x`, `useIncludes`, `useRegexpExec`, `useNullishCoalescing` and `useConsistentFunctionStyle` for arrow functions.
-- Performance and security: `noDelete`, `noSyncScripts`, `useTopLevelRegex` and `noScriptUrl`, plus `noAmbiguousAnchorText`.
-- In tests: `noConditionalExpect`, `noDoneCallback`, `noExcessiveNestedTestSuites`, `noFocusedTests`, `noIdenticalTestTitle`, `noMisplacedAssertion`, `noSkippedTests`, `useConsistentTestIt`, `useTestHooksOnTop` and `useValidTestTitle`, and in `*.test.ts` files `noExportsInTest` and `useExpectToContain`.
+On top of Biome's recommended rules, the config turns on more built-in rules and runs GritQL plugins, some only in `*.test.ts` files. All of it lives in [`configs/biome`](configs/biome): `shared.json` lists the rules, each `.grit` file is one plugin with its message, and `fixtures/` shows what each plugin flags. A few plugins report a warning, which `biome check` prints without failing.
 
 The plugins load from `node_modules/kvalita`, so the config expects kvalita installed at the project root.
 
@@ -110,8 +41,6 @@ A project that depends on [trousse](https://github.com/macieklamberski/trousse) 
   "extends": ["kvalita/biome", "kvalita/biome-trousse"]
 }
 ```
-
-It flags a case-folded compare, `value.toLowerCase() === 'embed'` or `list.includes(value.toLowerCase())`, where `isAnyOf` from trousse folds case and trims. Element names such as `tagName` are left alone.
 
 ### [Commitlint](https://github.com/conventional-changelog/commitlint) Configuration
 
