@@ -43,6 +43,7 @@
         "./node_modules/kvalita/configs/biome/no-own-module-mock.grit",
         "./node_modules/kvalita/configs/biome/no-placeholder-data.grit",
         "./node_modules/kvalita/configs/biome/no-resolve-helper.grit",
+        "./node_modules/kvalita/configs/biome/no-return-assertion.grit",
         "./node_modules/kvalita/configs/biome/no-snapshot.grit",
         "./node_modules/kvalita/configs/biome/no-undefined-in-expected.grit",
         "./node_modules/kvalita/configs/biome/use-block-fixture.grit",
@@ -50,7 +51,17 @@
         "./node_modules/kvalita/configs/biome/use-to-equal-for-objects.grit",
         "./node_modules/kvalita/configs/biome/use-to-equal-over-to-match-object.grit",
         "./node_modules/kvalita/configs/biome/use-value-name.grit"
-      ]
+      ],
+      "linter": {
+        "rules": {
+          "nursery": {
+            "useExpectToContain": "error"
+          },
+          "suspicious": {
+            "noExportsInTest": "error"
+          }
+        }
+      }
     }
   ],
   "vcs": {
@@ -168,6 +179,7 @@
         "noFocusedTests": "error",
         "noForIn": "error",
         "noIdenticalTestTitle": "error",
+        "noImportCycles": "error",
         "noMisplacedAssertion": "error",
         "noNestedPromises": "error",
         "noParametersOnlyUsedInRecursion": "error",
@@ -188,8 +200,11 @@
         "noScriptUrl": "error"
       },
       "nursery": {
+        "noBaseToString": "error",
         "noDanglingUnderscore": "error",
         "noFloatingPromises": "error",
+        "noMisusedPromises": "error",
+        "useAwaitThenable": "error",
         "useConsistentFunctionStyle": {
           "level": "error",
           "options": {

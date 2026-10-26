@@ -56,6 +56,7 @@ These run only in `*.test.ts` files:
 - A `describe` group titled `V1` or `V2`, where the title names the variant.
 - A test helper named `resolve`, where the name says what it returns.
 - `await` on an `expect(...).rejects` assertion, which Bun settles before the next line runs.
+- `return value as Type` in a test helper, where the value is guarded and thrown on with a message, so a bad input fails where it was made. `as const` is fine.
 
 The rest apply to all code:
 
@@ -87,6 +88,18 @@ And in `*.test.ts` files:
 - An `expected` built from a call, an operator or an interpolated template, where the value is hard-coded.
 - An object with two or more properties on one line, where each property gets its own line.
 - A one-line `html` template, where a plain string does.
+
+Beyond Biome's recommended set, the config turns on these built-in rules:
+
+- Style: `noCommonJs`, `noDefaultExport`, `noEnum`, `noImplicitBoolean`, `noInferrableTypes`, `noMultiAssign`, `noMultilineString`, `noNestedTernary`, `noNonNullAssertion`, `noParameterAssign`, `noProcessEnv`, `noSubstr`, `noUnusedTemplateLiteral`, `noUselessElse` and `noYodaExpression`, the patterns the house style writes another way.
+- Style, the preferred form: `useAtIndex` for `.at(-1)`, `useBlockStatements`, `useCollapsedIf` and `useCollapsedElseIf`, `useConsistentArrayType` for `Array<T>`, `useConsistentTypeDefinitions` for `type`, `useConsistentBuiltinInstantiation`, `useConsistentEnumValueType`, `useConsistentMethodSignatures`, `useDefaultParameterLast`, `useErrorCause`, `useForOf`, `useFragmentSyntax`, `useGlobalThis`, `useNumberNamespace`, `useObjectSpread`, `useSelfClosingElements`, `useShorthandAssign`, `useSingleVarDeclarator`, `useSpreadOverApply`, `useTemplate`, `useThrowNewError`, `useThrowOnlyError` and `useTrimStartEnd`.
+- Complexity: `noExcessiveNestedCallbacks`, `noForEach`, `noRedundantDefaultExport`, `noUselessCatchBinding`, `noUselessReturn`, `noUselessStringConcat`, `noUselessUndefined`, `useArrayFind` and `useArrowFunction`.
+- Correctness: `noReactPropAssignments`, `noUnusedInstantiation`, `useImportExtensions` for the `.js` suffix on relative imports, and `useJsonImportAttributes`.
+- Suspicious: `noDuplicatedSpreadProps`, `noEmptySource`, `noForIn`, `noImportCycles` for two modules importing each other, `noNestedPromises`, `noParametersOnlyUsedInRecursion`, `noProto`, `noReturnAssign`, `noVar`, `useArraySortCompare`, `useAwait` and `useErrorMessage`.
+- Promises and types: `noFloatingPromises`, `noMisusedPromises` for an async callback whose promise is dropped, `useAwaitThenable` for `await` on a value that is not a promise, and `noBaseToString` for an object in a template string.
+- Naming and built-ins: `noDanglingUnderscore`, where a dead variable is deleted rather than renamed `_x`, `useIncludes`, `useRegexpExec`, `useNullishCoalescing` and `useConsistentFunctionStyle` for arrow functions.
+- Performance and security: `noDelete`, `noSyncScripts`, `useTopLevelRegex` and `noScriptUrl`, plus `noAmbiguousAnchorText`.
+- In tests: `noConditionalExpect`, `noDoneCallback`, `noExcessiveNestedTestSuites`, `noFocusedTests`, `noIdenticalTestTitle`, `noMisplacedAssertion`, `noSkippedTests`, `useConsistentTestIt`, `useTestHooksOnTop` and `useValidTestTitle`, and in `*.test.ts` files `noExportsInTest` and `useExpectToContain`.
 
 The plugins load from `node_modules/kvalita`, so the config expects kvalita installed at the project root.
 
