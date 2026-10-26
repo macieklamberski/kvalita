@@ -115,6 +115,7 @@
         "useConsistentBuiltinInstantiation": "error",
         "useConsistentEnumValueType": "error",
         "useConsistentMethodSignatures": "error",
+        "useConsistentTestIt": "error",
         "useConsistentTypeDefinitions": {
           "level": "error",
           "options": {
@@ -133,6 +134,7 @@
         "useSingleVarDeclarator": "error",
         "useSpreadOverApply": "error",
         "useTemplate": "error",
+        "useTestHooksOnTop": "error",
         "useThrowNewError": "error",
         "useThrowOnlyError": "error",
         "useTrimStartEnd": "error"
@@ -154,10 +156,12 @@
         "useJsonImportAttributes": "error"
       },
       "suspicious": {
+        "noConditionalExpect": "error",
         "noDuplicatedSpreadProps": "error",
         "noEmptySource": "error",
         "noFocusedTests": "error",
         "noForIn": "error",
+        "noIdenticalTestTitle": "error",
         "noMisplacedAssertion": "error",
         "noParametersOnlyUsedInRecursion": "error",
         "noProto": "error",
@@ -177,23 +181,19 @@
         "noScriptUrl": "error"
       },
       "nursery": {
-        "noConditionalExpect": "error",
         "noFloatingPromises": "error",
-        "noIdenticalTestTitle": "error",
         "useConsistentFunctionStyle": {
           "level": "error",
           "options": {
             "style": "expression"
           }
         },
-        "useConsistentTestIt": "error",
         "useNullishCoalescing": {
           "level": "error",
           "options": {
             "ignoreIfStatements": true
           }
         },
-        "useTestHooksOnTop": "error",
         "useValidTestTitle": "error"
       }
     }
