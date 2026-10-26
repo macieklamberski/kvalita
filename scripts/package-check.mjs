@@ -25,7 +25,9 @@ const majorRegex = /\d+/
 const ownerRegex = /node_modules\/((?:@[^/]+\/)?[^/]+)\//g
 
 const readPackage = (packageDir) => {
-  return JSON.parse(readFileSync(join(packageDir, 'package.json'), 'utf8'))
+  const path = join(packageDir, 'package.json')
+
+  return JSON.parse(readFileSync(path, 'utf8'))
 }
 
 // The lowest major any alternative of the range allows, so `^18 || >=20` starts at 18.
@@ -75,8 +77,8 @@ const getConditions = (target) => {
   return []
 }
 
-const getSubpaths = (pkg) => {
-  const exports = pkg.exports ?? pkg.main ?? './index.js'
+const getSubpaths = (manifest) => {
+  const exports = manifest.exports ?? manifest.main ?? './index.js'
 
   if (typeof exports === 'object' && Object.keys(exports).some((key) => key.startsWith('.'))) {
     return exports
@@ -85,16 +87,16 @@ const getSubpaths = (pkg) => {
   return { '.': exports }
 }
 
-const getEntries = (pkg) => {
+const getEntries = (manifest) => {
   const entries = []
 
-  for (const [subpath, target] of Object.entries(getSubpaths(pkg))) {
+  for (const [subpath, target] of Object.entries(getSubpaths(manifest))) {
     // Patterns have no single file to load, and JSON needs an import attribute old Node lacks.
     if (subpath.includes('*') || subpath.endsWith('.json')) {
       continue
     }
 
-    const specifier = subpath === '.' ? pkg.name : `${pkg.name}${subpath.slice(1)}`
+    const specifier = subpath === '.' ? manifest.name : `${manifest.name}${subpath.slice(1)}`
     const conditions = getConditions(target)
 
     if (conditions.some((condition) => ['import', 'default'].includes(condition))) {
@@ -159,13 +161,15 @@ const writeProject = (dir, files) => {
 // Each file only imports the entries its module format can reach: import-able ones from ESM, and
 // ones with a require condition from CommonJS. node10 ignores exports, so it gets the root entry
 // only, and only when the package points at its types the old way.
-const getTypeScriptFiles = (pkg, type, resolution) => {
-  const entries = getEntries(pkg)
+const getTypeScriptFiles = (manifest, type, resolution) => {
+  const entries = getEntries(manifest)
   const esm = entries.filter(({ kind }) => kind === 'import').map(({ specifier }) => specifier)
   const cjs = entries.filter(({ kind }) => kind === 'require').map(({ specifier }) => specifier)
 
   if (resolution === 'node10') {
-    return pkg.types || pkg.typings ? { 'index.ts': toExports([pkg.name]).join('') } : {}
+    return manifest.types || manifest.typings
+      ? { 'index.ts': toExports([manifest.name]).join('') }
+      : {}
   }
 
   if (resolution === 'bundler') {
@@ -199,12 +203,12 @@ const viteConfig = (input, target, name) => {
 }
 
 const writeSetups = (packageDir, consumerDir, browser) => {
-  const pkg = readPackage(packageDir)
-  const entries = getEntries(pkg)
+  const manifest = readPackage(packageDir)
+  const entries = getEntries(manifest)
 
   for (const type of ['esm', 'cjs']) {
     for (const [resolution, module] of Object.entries(modules)) {
-      const files = getTypeScriptFiles(pkg, type, resolution)
+      const files = getTypeScriptFiles(manifest, type, resolution)
 
       if (Object.values(files).every((content) => !content)) {
         continue
@@ -252,7 +256,7 @@ const writeSetups = (packageDir, consumerDir, browser) => {
       writeProject(join(consumerDir, 'vite', `${target}-${format}`), {
         'package.json': { private: true, type: 'module' },
         [input]: specifiers.map(({ specifier }, index) => line(specifier, index)).join(''),
-        'vite.config.mjs': viteConfig(input, target, pkg.name),
+        'vite.config.mjs': viteConfig(input, target, manifest.name),
       })
       console.log(`vite/${target}-${format}`)
     }
@@ -291,7 +295,9 @@ const getOptionalPeers = (packageDir) => {
 const [command, packageDir, consumerDir, flag] = process.argv.slice(2)
 
 if (command === 'versions') {
-  console.log(JSON.stringify(await getVersions(packageDir)))
+  const versions = await getVersions(packageDir)
+
+  console.log(JSON.stringify(versions))
 } else if (command === 'peers') {
   for (const peer of getOptionalPeers(packageDir)) {
     console.log(peer)

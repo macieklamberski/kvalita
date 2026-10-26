@@ -1,0 +1,8 @@
+language js
+
+or {
+  `$value !== ''`,
+  `$value === ''`
+} as $test where {
+  register_diagnostic(span=$test, message="Let the value stand on its own as the predicate instead of comparing it with ''.", severity="warn")
+}
