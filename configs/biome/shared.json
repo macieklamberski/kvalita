@@ -84,6 +84,13 @@
       "quoteStyle": "single"
     }
   },
+  "html": {
+    "formatter": {
+      "enabled": true,
+      "selfCloseVoidElements": "always",
+      "indentScriptAndStyle": true
+    }
+  },
   "markdown": {
     "formatter": {
       "enabled": false
