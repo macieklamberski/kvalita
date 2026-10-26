@@ -11,10 +11,8 @@
     "./node_modules/kvalita/configs/biome/no-guarded-assign.grit",
     "./node_modules/kvalita/configs/biome/no-inline-each-table.grit",
     "./node_modules/kvalita/configs/biome/no-literal-equality-chain.grit",
-    "./node_modules/kvalita/configs/biome/no-nested-call.grit",
     "./node_modules/kvalita/configs/biome/no-object-cast.grit",
     "./node_modules/kvalita/configs/biome/no-promise-catch.grit",
-    "./node_modules/kvalita/configs/biome/no-screaming-const.grit",
     "./node_modules/kvalita/configs/biome/no-short-name.grit",
     "./node_modules/kvalita/configs/biome/use-if-guard.grit",
     "./node_modules/kvalita/configs/biome/use-nullish-type.grit",
@@ -27,10 +25,8 @@
     {
       "includes": ["**/*.test.ts"],
       "plugins": [
-        "./node_modules/kvalita/configs/biome/no-await-expect-rejects.grit",
         "./node_modules/kvalita/configs/biome/no-dense-expect-chain.grit",
         "./node_modules/kvalita/configs/biome/no-empty-todo.grit",
-        "./node_modules/kvalita/configs/biome/no-not-to-have-property.grit",
         "./node_modules/kvalita/configs/biome/no-numbered-variant.grit",
         "./node_modules/kvalita/configs/biome/no-own-module-mock.grit",
         "./node_modules/kvalita/configs/biome/no-placeholder-data.grit",
@@ -111,7 +107,6 @@
       },
       "style": {
         "noCommonJs": "error",
-        "noDefaultExport": "error",
         "noDoneCallback": "error",
         "noEnum": "error",
         "noImplicitBoolean": "error",

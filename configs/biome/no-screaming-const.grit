@@ -2,5 +2,7 @@ language js
 
 `const $name = $_` where {
   $name <: r"^[A-Z][A-Z0-9_]+$",
+  // Next.js route handlers are exported under the HTTP method names the framework fixes.
+  not $name <: r"^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)$",
   register_diagnostic(span=$name, message="camelCase every const, lookup tables and configuration included: there is no SCREAMING_SNAKE_CASE tier.")
 }
