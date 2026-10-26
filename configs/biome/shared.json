@@ -93,6 +93,7 @@
         "noCommonJs": "error",
         "noDefaultExport": "error",
         "noDoneCallback": "error",
+        "noEnum": "error",
         "noImplicitBoolean": "error",
         "noInferrableTypes": "error",
         "noMultiAssign": "error",
@@ -105,8 +106,10 @@
         "noUnusedTemplateLiteral": "error",
         "noUselessElse": "error",
         "noYodaExpression": "error",
+        "useAtIndex": "error",
         "useBlockStatements": "error",
         "useCollapsedElseIf": "error",
+        "useCollapsedIf": "error",
         "useConsistentArrayType": {
           "level": "error",
           "options": {
@@ -141,6 +144,7 @@
         "useTrimStartEnd": "error"
       },
       "complexity": {
+        "noExcessiveNestedCallbacks": "error",
         "noExcessiveNestedTestSuites": "error",
         "noForEach": "error",
         "noRedundantDefaultExport": "error",
@@ -154,6 +158,7 @@
       "correctness": {
         "noReactPropAssignments": "error",
         "noUnusedInstantiation": "error",
+        "useImportExtensions": "error",
         "useJsonImportAttributes": "error"
       },
       "suspicious": {
@@ -164,6 +169,7 @@
         "noForIn": "error",
         "noIdenticalTestTitle": "error",
         "noMisplacedAssertion": "error",
+        "noNestedPromises": "error",
         "noParametersOnlyUsedInRecursion": "error",
         "noProto": "error",
         "noReturnAssign": "error",
@@ -189,12 +195,14 @@
             "style": "expression"
           }
         },
+        "useIncludes": "error",
         "useNullishCoalescing": {
           "level": "error",
           "options": {
             "ignoreIfStatements": true
           }
         },
+        "useRegexpExec": "error",
         "useValidTestTitle": "error"
       }
     }
