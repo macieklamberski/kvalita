@@ -18,7 +18,7 @@
         "./node_modules/kvalita/configs/biome/no-inline-html-tag.grit",
         "./node_modules/kvalita/configs/biome/no-inline-test-object.grit",
         "./node_modules/kvalita/configs/biome/no-label-tuple.grit",
-        "./node_modules/kvalita/configs/biome/no-not-to-have-property.grit"
+        "./node_modules/kvalita/configs/biome/use-to-equal-over-to-match-object.grit"
       ]
     }
   ]

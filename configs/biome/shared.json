@@ -27,6 +27,7 @@
       "plugins": [
         "./node_modules/kvalita/configs/biome/no-dense-expect-chain.grit",
         "./node_modules/kvalita/configs/biome/no-empty-todo.grit",
+        "./node_modules/kvalita/configs/biome/no-not-to-have-property.grit",
         "./node_modules/kvalita/configs/biome/no-numbered-variant.grit",
         "./node_modules/kvalita/configs/biome/no-own-module-mock.grit",
         "./node_modules/kvalita/configs/biome/no-placeholder-data.grit",
@@ -37,7 +38,6 @@
         "./node_modules/kvalita/configs/biome/use-block-fixture.grit",
         "./node_modules/kvalita/configs/biome/use-to-be-for-primitives.grit",
         "./node_modules/kvalita/configs/biome/use-to-equal-for-objects.grit",
-        "./node_modules/kvalita/configs/biome/use-to-equal-over-to-match-object.grit",
         "./node_modules/kvalita/configs/biome/use-value-name.grit"
       ],
       "linter": {
