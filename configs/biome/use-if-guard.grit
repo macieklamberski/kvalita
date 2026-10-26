@@ -1,0 +1,7 @@
+language js
+
+JsReturnStatement(argument=$guard) where {
+  $guard <: `$left && $right`,
+  $right <: JsObjectExpression(),
+  register_diagnostic(span=$guard, message="Write the guard as an early return, then return the object as a plain literal.")
+}

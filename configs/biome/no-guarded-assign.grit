@@ -1,0 +1,6 @@
+language js
+
+JsAssignmentExpression() as $assign where {
+  $assign <: r".*(?:\?\?|\|\|)=.*",
+  register_diagnostic(span=$assign, message="Write the guarded assignment as an `if` block with the assignment inside, never `??=` or `||=`.")
+}

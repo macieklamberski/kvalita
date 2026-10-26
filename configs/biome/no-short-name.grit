@@ -1,0 +1,6 @@
+language js
+
+JsIdentifierBinding() as $name where {
+  $name <: r"^(?:err|len|val|res|req|ctx|pkg)$",
+  register_diagnostic(span=$name, message="Use the full word: `error`, `length`, `value`, `response`, `request`, `context`, or a single letter for a reserved word.")
+}

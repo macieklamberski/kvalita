@@ -46,6 +46,18 @@ The rest apply to all code:
 - `.catch()` chained on a promise, where try/catch around an `await` is the house style. A fire-and-forget call behind `void` keeps its `.catch()`.
 - Two or more `===` comparisons of one variable against literals, which read better as a named array and `.includes()`. A property such as `parsed.kind` is left alone, since a chain on it can narrow a union that `.includes()` cannot.
 - A regex constant whose name doesn't end with `Regex`.
+- `return value && { ... }`, where the guard is an early return and the object a plain literal.
+- `??=` and `||=`, where a guarded assignment is an `if` block.
+- Three nested calls, or a method chained onto a nested call, where each step gets a named const. A callback body and an object literal start the count over, and `expect(...)` chains are left alone.
+- `T | null | undefined` spelled out, where the type is `Nullish<T>`.
+- `err`, `len`, `val`, `res`, `req`, `ctx` and `pkg` as names, where the full word reads as the thing.
+- A SCREAMING_SNAKE_CASE const, where every const is camelCase.
+
+Three more report a warning, which `biome check` prints without failing:
+
+- `value !== ''` and `value === ''`, where the value stands on its own as the predicate.
+- `return condition ? value : undefined`, where the ternary is an early return.
+- `new Set([...])` over a literal list, where a plain array and `.includes()` do.
 
 The plugins load from `node_modules/kvalita`, so the config expects kvalita installed at the project root.
 

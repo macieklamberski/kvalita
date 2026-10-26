@@ -1,0 +1,36 @@
+language js
+
+pattern call($arguments) {
+  or {
+    `$_($arguments)`,
+    `new $_($arguments)`
+  }
+}
+
+pattern inner_call() {
+  call($arguments) where {
+    $arguments <: contains call($_) until or {
+      JsArrowFunctionExpression(),
+      JsObjectExpression()
+    }
+  }
+}
+
+call($arguments) as $outer where {
+  not $outer <: `expect($_)`,
+  not $outer <: within `expect($_)` ,
+  or {
+    $arguments <: contains inner_call() until or {
+      JsArrowFunctionExpression(),
+      JsObjectExpression()
+    },
+    and {
+      $outer <: within JsCallExpression(callee=JsStaticMemberExpression(object=$outer)) ,
+      $arguments <: contains call($_) until or {
+        JsArrowFunctionExpression(),
+        JsObjectExpression()
+      }
+    }
+  },
+  register_diagnostic(span=$outer, message="Give each step its own named const: three nested calls, or a method chained onto a nested call, read inside out.")
+}

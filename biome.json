@@ -1,3 +1,6 @@
 {
-  "extends": ["./configs/biome/shared.json"]
+  "extends": ["./configs/biome/shared.json"],
+  "files": {
+    "includes": ["**", "!configs/biome/fixtures"]
+  }
 }

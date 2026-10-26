@@ -1,0 +1,6 @@
+language js
+
+`const $name = $_` where {
+  $name <: r"^[A-Z][A-Z0-9_]+$",
+  register_diagnostic(span=$name, message="camelCase every const, lookup tables and configuration included: there is no SCREAMING_SNAKE_CASE tier.")
+}
