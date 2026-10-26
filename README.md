@@ -83,6 +83,16 @@ And in `*.test.ts` files:
 
 The plugins load from `node_modules/kvalita`, so the config expects kvalita installed at the project root.
 
+A project that depends on [trousse](https://github.com/macieklamberski/trousse) adds its config too:
+
+```json
+{
+  "extends": ["kvalita/biome", "kvalita/biome-trousse"]
+}
+```
+
+It flags a case-folded compare, `value.toLowerCase() === 'embed'` or `list.includes(value.toLowerCase())`, where `isAnyOf` from trousse folds case and trims. Element names such as `tagName` are left alone.
+
 ### [Commitlint](https://github.com/conventional-changelog/commitlint) Configuration
 
 Create a `commitlint.json` file in your project root:

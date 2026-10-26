@@ -24,15 +24,25 @@ type Diagnostic = {
 const plugins = readdirSync(pluginsDir)
   .filter((name) => gritRegex.test(name))
   .map((name) => name.replace(gritRegex, ''))
-const sharedSource = readFileSync(join(pluginsDir, 'shared.json'), 'utf8')
-const shared = JSON.parse(sharedSource) as {
+// Every plugin ships in exactly one config: the shared one, its test override, or the opt-in one
+// for trousse projects.
+const configs = ['shared.json', 'trousse.json']
+
+type Config = {
   plugins: Array<string>
-  overrides: Array<{ plugins?: Array<string> }>
+  overrides?: Array<{ plugins?: Array<string> }>
 }
-const overridePaths = shared.overrides.flatMap((override) => override.plugins ?? [])
-const registered = [...shared.plugins, ...overridePaths].map((path) => {
-  return path.split('/').at(-1)?.replace(gritRegex, '')
-})
+
+const readRegistered = (config: string): Array<string | undefined> => {
+  const source = readFileSync(join(pluginsDir, config), 'utf8')
+  const parsed = JSON.parse(source) as Config
+  const overridePaths = (parsed.overrides ?? []).flatMap((override) => override.plugins ?? [])
+  const paths = [...parsed.plugins, ...overridePaths]
+
+  return paths.map((path) => path.split('/').at(-1)?.replace(gritRegex, ''))
+}
+
+const registered = configs.flatMap(readRegistered)
 
 // One plugin at a time, through a config of its own, so a fixture line is attributed to the
 // plugin under test and not to a neighbour that happens to match it too.
@@ -84,8 +94,8 @@ const readFlaggedLines = (plugin: string): Array<number> => {
   return flagged
 }
 
-describe('shared.json', () => {
-  it('should register every plugin in the folder and nothing else', () => {
+describe('configs', () => {
+  it('should register every plugin in the folder once and nothing else', () => {
     expect(registered.toSorted(byName)).toEqual(plugins.toSorted(byName))
   })
 })
