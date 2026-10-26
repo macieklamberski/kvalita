@@ -1,0 +1,7 @@
+language js
+
+`const $name = $value` where {
+  $name <: r"[A-Z][A-Za-z0-9]*",
+  $value <: `($parameters) => $body`,
+  register_diagnostic(span=$name, message="Annotate the component with its type, such as `FC<Props>`, instead of typing its parameters.")
+}

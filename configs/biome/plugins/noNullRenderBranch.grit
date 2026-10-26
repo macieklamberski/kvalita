@@ -1,0 +1,9 @@
+language js
+
+JsxExpressionChild(expression=$expression) where {
+  $expression <: or {
+    JsConditionalExpression(consequent=JsNullLiteralExpression()),
+    JsConditionalExpression(alternate=JsNullLiteralExpression())
+  },
+  register_diagnostic(span=$expression, message="Render conditionally with `condition && <X />` instead of a ternary with a `null` branch, and wrap a condition that is not a boolean in `Boolean()`.")
+}

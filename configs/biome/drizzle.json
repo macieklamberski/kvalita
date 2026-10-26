@@ -1,0 +1,23 @@
+{
+  "$schema": "https://biomejs.dev/schemas/latest/schema.json",
+  "root": false,
+  "plugins": ["./node_modules/kvalita/configs/biome/plugins/useIndexTablePrefix.grit"],
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noDrizzleDeleteWithoutWhere": {
+          "level": "error",
+          "options": {
+            "drizzleObjectName": ["db", "dbOrTx", "tx", "database", "transaction", "trx"]
+          }
+        },
+        "noDrizzleUpdateWithoutWhere": {
+          "level": "error",
+          "options": {
+            "drizzleObjectName": ["db", "dbOrTx", "tx", "database", "transaction", "trx"]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+language js
+
+`$test($title, $callback)` where {
+  $test <: or {
+    `it`,
+    `test`
+  },
+  not $callback <: contains `expect`,
+  register_diagnostic(span=$title, message="Assert the result with `expect`, so the test can fail.")
+}

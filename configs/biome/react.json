@@ -1,0 +1,16 @@
+{
+  "$schema": "https://biomejs.dev/schemas/latest/schema.json",
+  "root": false,
+  "plugins": [],
+  "overrides": [
+    {
+      "includes": ["**/*.tsx", "!**/*.stories.tsx", "!**/*.test.tsx"],
+      "plugins": [
+        "./node_modules/kvalita/configs/biome/plugins/noNullRenderBranch.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noTemplateClassName.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useComponentPropsName.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useComponentType.grit"
+      ]
+    }
+  ]
+}

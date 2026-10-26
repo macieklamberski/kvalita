@@ -1,0 +1,12 @@
+language js
+
+JsVariableDeclarator(id=$name, initializer=$initializer) as $declarator where {
+  $declarator <: within JsFunctionBody(),
+  $initializer <: JsInitializerClause(expression=JsArrayExpression(elements=$elements)),
+  $elements <: some JsStringLiteralExpression(),
+  $elements <: every or {
+    JsStringLiteralExpression(),
+    JsNumberLiteralExpression()
+  },
+  register_diagnostic(span=$name, message="Declare a named list of literals at module level, beside the code that reads it.")
+}

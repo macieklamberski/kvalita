@@ -2,6 +2,7 @@
   "$schema": "https://biomejs.dev/schemas/latest/schema.json",
   "root": false,
   "plugins": [
+    "./node_modules/kvalita/configs/biome/plugins/noArrayConcat.grit",
     "./node_modules/kvalita/configs/biome/plugins/noCoalescedTernary.grit",
     "./node_modules/kvalita/configs/biome/plugins/noDoubleCast.grit",
     "./node_modules/kvalita/configs/biome/plugins/noExpectedAlias.grit",
@@ -18,7 +19,9 @@
     "./node_modules/kvalita/configs/biome/plugins/noTypeofUndefined.grit",
     "./node_modules/kvalita/configs/biome/plugins/useErrorCatchName.grit",
     "./node_modules/kvalita/configs/biome/plugins/useIfGuard.grit",
+    "./node_modules/kvalita/configs/biome/plugins/useNamedFunctionType.grit",
     "./node_modules/kvalita/configs/biome/plugins/useNullishType.grit",
+    "./node_modules/kvalita/configs/biome/plugins/usePredicateReturnsBoolean.grit",
     "./node_modules/kvalita/configs/biome/plugins/useRecordType.grit",
     "./node_modules/kvalita/configs/biome/plugins/useRegexSuffix.grit",
     "./node_modules/kvalita/configs/biome/plugins/useShouldTitle.grit",
@@ -31,6 +34,7 @@
       "plugins": [
         "./node_modules/kvalita/configs/biome/plugins/noDenseExpectChain.grit",
         "./node_modules/kvalita/configs/biome/plugins/noEmptyTodo.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noExpectResolves.grit",
         "./node_modules/kvalita/configs/biome/plugins/noNotToHaveProperty.grit",
         "./node_modules/kvalita/configs/biome/plugins/noNumberedVariant.grit",
         "./node_modules/kvalita/configs/biome/plugins/noOwnModuleMock.grit",
@@ -38,11 +42,16 @@
         "./node_modules/kvalita/configs/biome/plugins/noResolveHelper.grit",
         "./node_modules/kvalita/configs/biome/plugins/noReturnAssertion.grit",
         "./node_modules/kvalita/configs/biome/plugins/noSnapshot.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noTopLevelTest.grit",
         "./node_modules/kvalita/configs/biome/plugins/noToStrictEqual.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noTruthyMatcher.grit",
         "./node_modules/kvalita/configs/biome/plugins/noUndefinedInExpected.grit",
         "./node_modules/kvalita/configs/biome/plugins/useBlockFixture.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useEachPlaceholder.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useExpectInTest.grit",
         "./node_modules/kvalita/configs/biome/plugins/useToBeForPrimitives.grit",
         "./node_modules/kvalita/configs/biome/plugins/useToEqualForObjects.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useValueBeforeExpected.grit",
         "./node_modules/kvalita/configs/biome/plugins/useValueName.grit"
       ],
       "linter": {
@@ -51,10 +60,18 @@
             "useExpectToContain": "error"
           },
           "suspicious": {
+            "noDuplicateTestHooks": "error",
             "noExportsInTest": "error"
           }
         }
       }
+    },
+    {
+      "includes": ["**", "!**/*.test.ts", "!**/*.test.tsx"],
+      "plugins": [
+        "./node_modules/kvalita/configs/biome/plugins/useTopLevelLiteralList.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useTypedEmptyCollection.grit"
+      ]
     }
   ],
   "vcs": {
@@ -139,6 +156,7 @@
         "useConsistentBuiltinInstantiation": "error",
         "useConsistentEnumValueType": "error",
         "useConsistentMethodSignatures": "error",
+        "useConsistentObjectDefinitions": "error",
         "useConsistentTestIt": "error",
         "useConsistentTypeDefinitions": {
           "level": "error",
@@ -151,6 +169,7 @@
         "useForOf": "error",
         "useFragmentSyntax": "error",
         "useGlobalThis": "error",
+        "useImportsFirst": "error",
         "useNumberNamespace": "error",
         "useObjectSpread": "error",
         "useSelfClosingElements": "error",
@@ -173,9 +192,12 @@
         "noUselessStringConcat": "error",
         "noUselessUndefined": "error",
         "useArrayFind": "error",
-        "useArrowFunction": "error"
+        "useArraySome": "error",
+        "useArrowFunction": "error",
+        "useRegexpTest": "error"
       },
       "correctness": {
+        "noGlobalDirnameFilename": "error",
         "noReactPropAssignments": "error",
         "noUnusedInstantiation": "error",
         "useJsonImportAttributes": "error",
@@ -194,6 +216,7 @@
         "noProto": "error",
         "noReturnAssign": "error",
         "noSkippedTests": "error",
+        "noUnusedExpressions": "error",
         "noVar": "error",
         "useArraySortCompare": "error",
         "useAwait": "error",
@@ -219,6 +242,7 @@
             "style": "expression"
           }
         },
+        "useExhaustiveSwitchCases": "error",
         "useIncludes": "error",
         "useNullishCoalescing": {
           "level": "error",
@@ -227,6 +251,7 @@
           }
         },
         "useRegexpExec": "error",
+        "useStringStartsEndsWith": "error",
         "useValidTestTitle": "error"
       }
     }

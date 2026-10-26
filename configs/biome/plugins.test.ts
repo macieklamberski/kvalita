@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -25,9 +25,16 @@ type Diagnostic = {
 const plugins = readdirSync(pluginsDir)
   .filter((name) => gritRegex.test(name))
   .map((name) => name.replace(gritRegex, ''))
-// Every plugin ships in exactly one config: the shared one, its test override, the opt-in one
-// for trousse projects, or upcoming, which holds rules until the projects are swept clean of them.
-const configs = ['shared.json', 'trousse.json', 'upcoming.json']
+// Every plugin ships in exactly one config: the shared one with its overrides, an opt-in one for
+// a kind of project, or upcoming, which holds rules until the projects are swept clean of them.
+const configs = [
+  'shared.json',
+  'trousse.json',
+  'library.json',
+  'react.json',
+  'drizzle.json',
+  'upcoming.json',
+]
 
 type Config = {
   plugins: Array<string>
@@ -47,6 +54,13 @@ const registered = configs.flatMap(readRegistered)
 
 // One plugin at a time, through a config of its own, so a fixture line is attributed to the
 // plugin under test and not to a neighbour that happens to match it too.
+// A plugin for JSX keeps its fixture in a .tsx file.
+const readFixturePath = (plugin: string): string => {
+  const tsxPath = `configs/biome/fixtures/${plugin}.tsx`
+
+  return existsSync(join(root, tsxPath)) ? tsxPath : `configs/biome/fixtures/${plugin}.ts`
+}
+
 const lintFixture = (plugin: string): Array<number> => {
   const prefix = join(tmpdir(), 'kvalita-plugin-')
   const configDir = mkdtempSync(prefix)
@@ -65,7 +79,7 @@ const lintFixture = (plugin: string): Array<number> => {
     '--only=plugin',
     '--reporter=json',
     '--max-diagnostics=none',
-    `configs/biome/fixtures/${plugin}.ts`,
+    readFixturePath(plugin),
   ]
   const result = Bun.spawnSync(command, { cwd: root, stdout: 'pipe', stderr: 'pipe' })
   const json = `${result.stdout}`.split('\n').find((line) => line.startsWith('{'))
@@ -83,7 +97,7 @@ const lintFixture = (plugin: string): Array<number> => {
 }
 
 const readFlaggedLines = (plugin: string): Array<number> => {
-  const source = readFileSync(join(configsDir, `fixtures/${plugin}.ts`), 'utf8')
+  const source = readFileSync(join(root, readFixturePath(plugin)), 'utf8')
   const flagged: Array<number> = []
 
   for (const [index, line] of source.split('\n').entries()) {

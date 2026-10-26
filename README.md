@@ -34,11 +34,16 @@ On top of Biome's recommended rules, the config turns on more built-in rules and
 
 The plugins load from `node_modules/kvalita`, so the config expects kvalita installed at the project root.
 
-A project that depends on [trousse](https://github.com/macieklamberski/trousse) adds its config too:
+A project adds the configs that fit it after `kvalita/biome`:
+
+- `kvalita/biome-trousse` for a project that depends on [trousse](https://github.com/macieklamberski/trousse).
+- `kvalita/biome-library` for a published library, which declares its exports' return types and never logs or exits.
+- `kvalita/biome-react` for a React app's components.
+- `kvalita/biome-drizzle` for a project that queries through Drizzle.
 
 ```json
 {
-  "extends": ["kvalita/biome", "kvalita/biome-trousse"]
+  "extends": ["kvalita/biome", "kvalita/biome-trousse", "kvalita/biome-library"]
 }
 ```
 
