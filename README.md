@@ -55,6 +55,7 @@ These run only in `*.test.ts` files:
 - `.not.toHaveProperty()`, where `toEqual` on the whole object covers the absent field.
 - A `describe` group titled `V1` or `V2`, where the title names the variant.
 - A test helper named `resolve`, where the name says what it returns.
+- `await` on an `expect(...).rejects` assertion, which Bun settles before the next line runs.
 
 The rest apply to all code:
 

@@ -1,0 +1,5 @@
+language js
+
+`await expect($value).rejects.$matcher($args)` as $assertion where {
+  register_diagnostic(span=$assertion, message="Drop the await: Bun settles an `expect(...).rejects` assertion before the next line runs, and fails it when the promise resolves. A test with no other await then drops `async` too.")
+}

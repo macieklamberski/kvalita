@@ -31,6 +31,7 @@
     {
       "includes": ["**/*.test.ts"],
       "plugins": [
+        "./node_modules/kvalita/configs/biome/no-await-expect-rejects.grit",
         "./node_modules/kvalita/configs/biome/no-computed-expected.grit",
         "./node_modules/kvalita/configs/biome/no-dense-expect-chain.grit",
         "./node_modules/kvalita/configs/biome/no-empty-todo.grit",
