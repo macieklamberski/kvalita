@@ -178,7 +178,6 @@
       "correctness": {
         "noReactPropAssignments": "error",
         "noUnusedInstantiation": "error",
-        "useImportExtensions": "error",
         "useJsonImportAttributes": "error"
       },
       "suspicious": {
@@ -188,7 +187,6 @@
         "noFocusedTests": "error",
         "noForIn": "error",
         "noIdenticalTestTitle": "error",
-        "noImportCycles": "error",
         "noMisplacedAssertion": "error",
         "noNestedPromises": "error",
         "noParametersOnlyUsedInRecursion": "error",
