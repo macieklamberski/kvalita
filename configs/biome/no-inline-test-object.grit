@@ -3,5 +3,5 @@ language js
 `const $name = $value` where {
   $value <: JsObjectExpression(),
   $value <: r"^\{[^\n]*,[^\n]*\}$",
-  register_diagnostic(span=$value, message="Put each property of the object on its own line.", severity="warn")
+  register_diagnostic(span=$value, message="Put each property of the object on its own line.")
 }

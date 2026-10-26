@@ -1,0 +1,21 @@
+{
+  "$schema": "https://biomejs.dev/schemas/latest/schema.json",
+  "root": false,
+  "plugins": [
+    "./node_modules/kvalita/configs/biome/no-empty-string-test.grit",
+    "./node_modules/kvalita/configs/biome/no-literal-set.grit",
+    "./node_modules/kvalita/configs/biome/no-wrapped-implicit-return.grit",
+    "./node_modules/kvalita/configs/biome/use-if-over-ternary-guard.grit"
+  ],
+  "overrides": [
+    {
+      "includes": ["**/*.test.ts"],
+      "plugins": [
+        "./node_modules/kvalita/configs/biome/no-computed-expected.grit",
+        "./node_modules/kvalita/configs/biome/no-inline-html-tag.grit",
+        "./node_modules/kvalita/configs/biome/no-inline-test-object.grit",
+        "./node_modules/kvalita/configs/biome/no-label-tuple.grit"
+      ]
+    }
+  ]
+}

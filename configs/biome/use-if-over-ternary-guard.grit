@@ -3,5 +3,5 @@ language js
 JsReturnStatement(argument=$guard) where {
   $guard <: JsConditionalExpression(alternate=$fallback),
   $fallback <: `undefined`,
-  register_diagnostic(span=$guard, message="A ternary standing in for a guard is an early `return`, then the value on its own line.", severity="warn")
+  register_diagnostic(span=$guard, message="A ternary standing in for a guard is an early `return`, then the value on its own line.")
 }
