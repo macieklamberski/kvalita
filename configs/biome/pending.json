@@ -2,23 +2,23 @@
   "$schema": "https://biomejs.dev/schemas/latest/schema.json",
   "root": false,
   "plugins": [
-    "./node_modules/kvalita/configs/biome/no-empty-string-test.grit",
-    "./node_modules/kvalita/configs/biome/no-literal-set.grit",
-    "./node_modules/kvalita/configs/biome/no-nested-call.grit",
-    "./node_modules/kvalita/configs/biome/no-screaming-const.grit",
-    "./node_modules/kvalita/configs/biome/no-wrapped-implicit-return.grit",
-    "./node_modules/kvalita/configs/biome/use-if-over-ternary-guard.grit"
+    "./node_modules/kvalita/configs/biome/plugins/noEmptyStringTest.grit",
+    "./node_modules/kvalita/configs/biome/plugins/noLiteralSet.grit",
+    "./node_modules/kvalita/configs/biome/plugins/noNestedCall.grit",
+    "./node_modules/kvalita/configs/biome/plugins/noScreamingConst.grit",
+    "./node_modules/kvalita/configs/biome/plugins/noWrappedImplicitReturn.grit",
+    "./node_modules/kvalita/configs/biome/plugins/useIfOverTernaryGuard.grit"
   ],
   "overrides": [
     {
       "includes": ["**/*.test.ts"],
       "plugins": [
-        "./node_modules/kvalita/configs/biome/no-await-expect-rejects.grit",
-        "./node_modules/kvalita/configs/biome/no-computed-expected.grit",
-        "./node_modules/kvalita/configs/biome/no-inline-html-tag.grit",
-        "./node_modules/kvalita/configs/biome/no-inline-test-object.grit",
-        "./node_modules/kvalita/configs/biome/no-label-tuple.grit",
-        "./node_modules/kvalita/configs/biome/use-to-equal-over-to-match-object.grit"
+        "./node_modules/kvalita/configs/biome/plugins/noAwaitExpectRejects.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noComputedExpected.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noInlineHtmlTag.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noInlineTestObject.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noLabelTuple.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useToEqualOverToMatchObject.grit"
       ]
     }
   ]

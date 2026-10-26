@@ -1,5 +1,5 @@
 {
   "$schema": "https://biomejs.dev/schemas/latest/schema.json",
   "root": false,
-  "plugins": ["./node_modules/kvalita/configs/biome/use-any-of.grit"]
+  "plugins": ["./node_modules/kvalita/configs/biome/plugins/useAnyOf.grit"]
 }

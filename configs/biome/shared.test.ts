@@ -3,8 +3,9 @@ import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-const pluginsDir = import.meta.dir
-const root = join(pluginsDir, '../..')
+const configsDir = import.meta.dir
+const pluginsDir = join(configsDir, 'plugins')
+const root = join(configsDir, '../..')
 const biome = join(root, 'node_modules/.bin/biome')
 const gritRegex = /\.grit$/
 const flagRegex = /\/\/ flag$/
@@ -34,7 +35,7 @@ type Config = {
 }
 
 const readRegistered = (config: string): Array<string | undefined> => {
-  const source = readFileSync(join(pluginsDir, config), 'utf8')
+  const source = readFileSync(join(configsDir, config), 'utf8')
   const parsed = JSON.parse(source) as Config
   const overridePaths = (parsed.overrides ?? []).flatMap((override) => override.plugins ?? [])
   const paths = [...parsed.plugins, ...overridePaths]
@@ -64,7 +65,7 @@ const lintFixture = (plugin: string): Array<number> => {
     '--only=plugin',
     '--reporter=json',
     '--max-diagnostics=none',
-    `configs/biome/fixtures/${plugin}.ts`,
+    `configs/biome/plugins/fixtures/${plugin}.ts`,
   ]
   const result = Bun.spawnSync(command, { cwd: root, stdout: 'pipe', stderr: 'pipe' })
   const json = `${result.stdout}`.split('\n').find((line) => line.startsWith('{'))
