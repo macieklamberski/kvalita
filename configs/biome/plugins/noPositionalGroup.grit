@@ -1,0 +1,18 @@
+language js
+
+or {
+  JsComputedMemberExpression(object=$object, member=$index) as $read where {
+    $index <: r"^[1-9]$",
+    or { $object <: `$_.exec($_)`, $object <: `$_.match($_)`, $object <: r"^(?:match|matched|m)$" },
+    register_diagnostic(span=$read, message="Name the capture group and read it from `.groups`, so the reader does not count parentheses.")
+  },
+  `const [, $first] = $source` as $read where {
+    or {
+      $source <: `$_.exec($_)`,
+      $source <: `$_.match($_)`,
+      $source <: `$_.exec($_) ?? []`,
+      $source <: `$_.match($_) ?? []`
+    },
+    register_diagnostic(span=$read, message="Name the capture group and read it from `.groups`, so the reader does not count parentheses.")
+  }
+}

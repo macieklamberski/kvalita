@@ -1,0 +1,6 @@
+language js
+
+JsCallExpression(callee=JsStaticMemberExpression(member=$method)) as $call where {
+  $method <: r"^then$",
+  register_diagnostic(span=$call, message="Await the promise instead of chaining `.then()`, with try/catch around the `await` where it can fail.")
+}

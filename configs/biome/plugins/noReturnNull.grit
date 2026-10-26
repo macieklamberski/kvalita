@@ -1,0 +1,6 @@
+language js
+
+`return null` as $return where {
+  not $filename <: r".*\.tsx$",
+  register_diagnostic(span=$return, message="Return nothing with a bare `return`, since a missing value is `undefined` throughout.")
+}

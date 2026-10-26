@@ -1,0 +1,6 @@
+language js
+
+JsCallExpression(callee=JsStaticMemberExpression(member=$method)) as $call where {
+  $method <: r"^toStrictEqual$",
+  register_diagnostic(span=$call, message="Assert with `toEqual`, as every other test does.")
+}

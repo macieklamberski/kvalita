@@ -26,8 +26,8 @@ const plugins = readdirSync(pluginsDir)
   .filter((name) => gritRegex.test(name))
   .map((name) => name.replace(gritRegex, ''))
 // Every plugin ships in exactly one config: the shared one, its test override, the opt-in one
-// for trousse projects, or pending, which holds rules until the projects are swept clean of them.
-const configs = ['shared.json', 'trousse.json', 'pending.json']
+// for trousse projects, or upcoming, which holds rules until the projects are swept clean of them.
+const configs = ['shared.json', 'trousse.json', 'upcoming.json']
 
 type Config = {
   plugins: Array<string>

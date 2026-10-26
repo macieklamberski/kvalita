@@ -1,0 +1,10 @@
+language js
+
+or {
+  `typeof $_ === 'undefined'`,
+  `typeof $_ !== 'undefined'`,
+  `typeof $_ == 'undefined'`,
+  `typeof $_ != 'undefined'`
+} as $compare where {
+  register_diagnostic(span=$compare, message="Compare with `undefined` directly, `value === undefined`, which reads as the check it is.")
+}

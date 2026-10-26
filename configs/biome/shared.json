@@ -13,9 +13,13 @@
     "./node_modules/kvalita/configs/biome/plugins/noLiteralEqualityChain.grit",
     "./node_modules/kvalita/configs/biome/plugins/noObjectCast.grit",
     "./node_modules/kvalita/configs/biome/plugins/noPromiseCatch.grit",
+    "./node_modules/kvalita/configs/biome/plugins/noReturnNull.grit",
     "./node_modules/kvalita/configs/biome/plugins/noShortName.grit",
+    "./node_modules/kvalita/configs/biome/plugins/noTypeofUndefined.grit",
+    "./node_modules/kvalita/configs/biome/plugins/useErrorCatchName.grit",
     "./node_modules/kvalita/configs/biome/plugins/useIfGuard.grit",
     "./node_modules/kvalita/configs/biome/plugins/useNullishType.grit",
+    "./node_modules/kvalita/configs/biome/plugins/useRecordType.grit",
     "./node_modules/kvalita/configs/biome/plugins/useRegexSuffix.grit",
     "./node_modules/kvalita/configs/biome/plugins/useShouldTitle.grit",
     "./node_modules/kvalita/configs/biome/plugins/useThrowingConst.grit",
@@ -34,6 +38,7 @@
         "./node_modules/kvalita/configs/biome/plugins/noResolveHelper.grit",
         "./node_modules/kvalita/configs/biome/plugins/noReturnAssertion.grit",
         "./node_modules/kvalita/configs/biome/plugins/noSnapshot.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noToStrictEqual.grit",
         "./node_modules/kvalita/configs/biome/plugins/noUndefinedInExpected.grit",
         "./node_modules/kvalita/configs/biome/plugins/useBlockFixture.grit",
         "./node_modules/kvalita/configs/biome/plugins/useToBeForPrimitives.grit",
@@ -173,7 +178,8 @@
       "correctness": {
         "noReactPropAssignments": "error",
         "noUnusedInstantiation": "error",
-        "useJsonImportAttributes": "error"
+        "useJsonImportAttributes": "error",
+        "useParseIntRadix": "error"
       },
       "suspicious": {
         "noConditionalExpect": "error",
