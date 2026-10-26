@@ -1,5 +1,5 @@
 language js
 
-`$_.toMatchObject($_)` as $match where {
-  register_diagnostic(span=$match, message="Assert the whole object with `toEqual`, so an extra or missing field fails the test.")
+`$_.toMatchObject($_)` as $assertion where {
+  register_diagnostic(span=$assertion, message="Assert the whole object with `toEqual`, so an extra or missing field fails the test.")
 }
