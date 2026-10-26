@@ -24,9 +24,17 @@ type Diagnostic = {
 const plugins = readdirSync(pluginsDir)
   .filter((name) => gritRegex.test(name))
   .map((name) => name.replace(gritRegex, ''))
-const sharedSource = readFileSync(join(pluginsDir, 'shared.json'), 'utf8')
-const shared = JSON.parse(sharedSource) as { plugins: Array<string> }
-const registered = shared.plugins.map((path) => path.split('/').at(-1)?.replace(gritRegex, ''))
+// Every plugin ships in exactly one config: the shared one, or the opt-in one for trousse projects.
+const configs = ['shared.json', 'trousse.json']
+
+const readRegistered = (config: string): Array<string | undefined> => {
+  const source = readFileSync(join(pluginsDir, config), 'utf8')
+  const { plugins } = JSON.parse(source) as { plugins: Array<string> }
+
+  return plugins.map((path) => path.split('/').at(-1)?.replace(gritRegex, ''))
+}
+
+const registered = configs.flatMap(readRegistered)
 
 // One plugin at a time, through a config of its own, so a fixture line is attributed to the
 // plugin under test and not to a neighbour that happens to match it too.
@@ -78,8 +86,8 @@ const readFlaggedLines = (plugin: string): Array<number> => {
   return flagged
 }
 
-describe('shared.json', () => {
-  it('should register every plugin in the folder and nothing else', () => {
+describe('configs', () => {
+  it('should register every plugin in the folder once and nothing else', () => {
     expect(registered.toSorted(byName)).toEqual(plugins.toSorted(byName))
   })
 })

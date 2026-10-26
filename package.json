@@ -18,6 +18,7 @@
   ],
   "exports": {
     "./biome": "./configs/biome/shared.json",
+    "./biome-trousse": "./configs/biome/trousse.json",
     "./commitlint": "./configs/commitlint.json",
     "./semantic-release": "./configs/semantic-release.json",
     "./semantic-release-dry-run": "./configs/semantic-release-dry-run.json"
