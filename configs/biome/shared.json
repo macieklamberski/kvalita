@@ -14,7 +14,6 @@
     "./node_modules/kvalita/configs/biome/plugins/noInlineEachTable.grit",
     "./node_modules/kvalita/configs/biome/plugins/noLiteralEqualityChain.grit",
     "./node_modules/kvalita/configs/biome/plugins/noObjectCast.grit",
-    "./node_modules/kvalita/configs/biome/plugins/noPositionalGroup.grit",
     "./node_modules/kvalita/configs/biome/plugins/noPromiseCatch.grit",
     "./node_modules/kvalita/configs/biome/plugins/noReturnNull.grit",
     "./node_modules/kvalita/configs/biome/plugins/noScreamingConst.grit",
