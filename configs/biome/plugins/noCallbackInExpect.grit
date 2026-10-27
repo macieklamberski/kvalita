@@ -1,0 +1,9 @@
+language js
+
+`expect($subject)` as $call where {
+  $subject <: contains or {
+    JsArrowFunctionExpression(),
+    JsFunctionExpression()
+  },
+  register_diagnostic(span=$call, message="Name the value before asserting on it: assign a call that takes a callback to `const result`, then `expect(result)`.")
+}
