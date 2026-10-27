@@ -6,7 +6,7 @@ import { createInstrumenter } from 'istanbul-lib-instrument'
 import { generateLcov } from './lcov'
 
 type CoverageGlobal = typeof globalThis & {
-  __coverage__?: CoverageMapData
+  kvalitaCoverage?: CoverageMapData
 }
 
 const root = process.cwd()
@@ -16,12 +16,14 @@ const sourceRegex = new RegExp(
 )
 const instrumenters = {
   ts: createInstrumenter({
+    coverageVariable: 'kvalitaCoverage',
     esModules: true,
     compact: false,
     produceSourceMap: false,
     parserPlugins: ['typescript'],
   }),
   tsx: createInstrumenter({
+    coverageVariable: 'kvalitaCoverage',
     esModules: true,
     compact: false,
     produceSourceMap: false,
@@ -30,8 +32,7 @@ const instrumenters = {
 }
 
 const writeCoverage = (): void => {
-  // biome-ignore lint/nursery/noDanglingUnderscore: The name is Istanbul's own coverage variable.
-  const coverage = (globalThis as CoverageGlobal).__coverage__
+  const coverage = (globalThis as CoverageGlobal).kvalitaCoverage
 
   if (!coverage) {
     return
