@@ -1,14 +1,11 @@
 {
   "$schema": "https://biomejs.dev/schemas/latest/schema.json",
   "root": false,
-  "plugins": [
-    "./node_modules/kvalita/configs/biome/plugins/noPositionalGroup.grit",
-    "./node_modules/kvalita/configs/biome/plugins/noWrappedImplicitReturn.grit"
-  ],
+  "plugins": [],
   "overrides": [
     {
       "includes": ["**/*.test.ts", "**/*.test.tsx"],
-      "plugins": ["./node_modules/kvalita/configs/biome/plugins/noInlineTestObject.grit"]
+      "plugins": []
     }
   ]
 }
