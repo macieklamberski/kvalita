@@ -15,8 +15,7 @@
         "./node_modules/kvalita/configs/biome/plugins/noAwaitExpectRejects.grit",
         "./node_modules/kvalita/configs/biome/plugins/noComputedExpected.grit",
         "./node_modules/kvalita/configs/biome/plugins/noInlineHtmlTag.grit",
-        "./node_modules/kvalita/configs/biome/plugins/noInlineTestObject.grit",
-        "./node_modules/kvalita/configs/biome/plugins/useToEqualOverToMatchObject.grit"
+        "./node_modules/kvalita/configs/biome/plugins/noInlineTestObject.grit"
       ]
     }
   ]
