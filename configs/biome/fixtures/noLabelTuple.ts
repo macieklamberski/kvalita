@@ -7,3 +7,7 @@ it.each(cases)('should parse %s', (_name, value, expected) => { // flag
 it.each(values)('should parse %s', (value, expected) => {
   expect(parse(value)).toBe(expected)
 })
+declare const specimens: Record<string, string>
+it.each(Object.entries(specimens))('should keep %s', (_selector, value) => {
+  expect(parse(value)).toBe(value)
+})
