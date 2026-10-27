@@ -1,5 +1,7 @@
 language js
 
-`await expect($value).rejects.$matcher($args)` as $assertion where {
-  register_diagnostic(span=$assertion, message="Drop the await: Bun settles an `expect(...).rejects` assertion before the next line runs, and fails it when the promise resolves. A test with no other await then drops `async` too.")
+JsFunctionBody(statements=$statements) where {
+  $statements <: [..., $last],
+  $last <: JsExpressionStatement(expression=`await expect($value).rejects.$matcher($args)`),
+  register_diagnostic(span=$last, message="Drop the await: nothing after this `expect(...).rejects` assertion needs it settled, and Bun fails it when the promise resolves. A test with no other await then drops `async` too.")
 }
