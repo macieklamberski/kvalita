@@ -1,7 +1,9 @@
 language js
 
+// Two or more top-level members on one line: a comma inside a nested array or call does not count.
 `const $name = $value` where {
-  $value <: JsObjectExpression(),
-  $value <: r"^\{[^\n]*,[^\n]*\}$",
+  $value <: JsObjectExpression(members=$members),
+  $members <: [$_, $_, ...],
+  $value <: r"^\{[^\n]*\}$",
   register_diagnostic(span=$value, message="Put each property of the object on its own line.")
 }

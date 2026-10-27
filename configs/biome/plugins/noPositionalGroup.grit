@@ -1,18 +1,21 @@
 language js
 
+// Only a read that proves two or more groups is flagged: `[2]` or later, or destructuring that
+// names a second group. A lone `[1]` reads the one group a regex has, or a caller's regex whose
+// group a name could not be checked against.
 or {
   JsComputedMemberExpression(object=$object, member=$index) as $read where {
-    $index <: r"^[1-9]$",
+    $index <: r"^[2-9]$",
     or { $object <: `$_.exec($_)`, $object <: `$_.match($_)`, $object <: r"^(?:match|matched|m)$" },
-    register_diagnostic(span=$read, message="Name the capture group and read it from `.groups`, so the reader does not count parentheses.")
+    register_diagnostic(span=$read, message="Name the capture groups and read them from `.groups`, so the reader does not count parentheses.")
   },
-  `const [, $first] = $source` as $read where {
+  `const [, $first, $second] = $source` as $read where {
     or {
       $source <: `$_.exec($_)`,
       $source <: `$_.match($_)`,
       $source <: `$_.exec($_) ?? []`,
       $source <: `$_.match($_) ?? []`
     },
-    register_diagnostic(span=$read, message="Name the capture group and read it from `.groups`, so the reader does not count parentheses.")
+    register_diagnostic(span=$read, message="Name the capture groups and read them from `.groups`, so the reader does not count parentheses.")
   }
 }
