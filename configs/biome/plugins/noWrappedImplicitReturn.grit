@@ -1,10 +1,11 @@
 language js
 
 // A body that fits on the line under the arrow stays: only one running over several lines ends in
-// a closing paren floating under the arrow.
+// a closing paren floating under the arrow. The line break has to follow the arrow's own `=>`, the
+// first in its text, so a nested arrow that wraps does not flag the arrow around it.
 JsArrowFunctionExpression(body=$body) as $arrow where {
   not $body <: JsFunctionBody(),
-  $arrow <: r"(?s).*=>\s*(?://[^\n]*)?\n.*",
+  $arrow <: r"(?s)[^=]*(?:=[^>][^=]*)*=>[ \t]*(?://[^\n]*)?\n.*",
   $body <: r"(?s).*\n.*",
   register_diagnostic(span=$arrow, message="Give the arrow a block body with `return`: its expression runs over several lines under the arrow.")
 }

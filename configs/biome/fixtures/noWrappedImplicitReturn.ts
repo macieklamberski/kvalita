@@ -19,4 +19,14 @@ const call = pages.map((page) => resolve(
   page,
   registry,
 ))
-export { block, call, data, spread, wrapped }
+declare const wrap: (value: unknown, items: Array<unknown>) => unknown
+const outer = pages.map(
+  (page) => wrap(page, [
+    (item: unknown) => // flag
+      make({
+        page,
+        registry: item,
+      }),
+  ]),
+)
+export { block, call, data, outer, spread, wrapped }
