@@ -40,6 +40,7 @@ A project adds the configs that fit it after `kvalita/biome`:
 - `kvalita/biome-library` for a published library, which declares its exports' return types and never logs or exits.
 - `kvalita/biome-react` for a React app's components.
 - `kvalita/biome-drizzle` for a project that queries through Drizzle.
+- `kvalita/biome-locales` for a project that keeps its error messages under `errors` in `src/locales.json`. It reports at info level for now, so it never fails a run.
 
 ```json
 {

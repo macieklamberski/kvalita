@@ -1,0 +1,17 @@
+{
+  "$schema": "https://biomejs.dev/schemas/latest/schema.json",
+  "root": false,
+  "plugins": [],
+  "overrides": [
+    {
+      "includes": [
+        "src/**",
+        "!**/*.test.ts",
+        "!**/*.test.tsx",
+        "!**/tests.ts",
+        "!**/*.stories.tsx"
+      ],
+      "plugins": ["./node_modules/kvalita/configs/biome/plugins/noLiteralErrorMessage.grit"]
+    }
+  ]
+}
