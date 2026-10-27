@@ -1,7 +1,7 @@
 language js
 
 `expect($subject)` as $call where {
-  $subject <: r"(?s).*\n.*",
+  $call <: r"(?s).*\n.*",
   // An object literal bundles several values into one assertion, and a function subject is
   // useThrowingConst's to name.
   $subject <: not r"(?s)\{.*",
