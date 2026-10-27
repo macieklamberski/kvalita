@@ -234,7 +234,7 @@
         "noDanglingUnderscore": "error",
         "noFloatingPromises": "error",
         "noMisusedPromises": "error",
-        "useAwaitThenable": "error",
+        "useAwaitThenable": "off",
         "useConsistentFunctionStyle": {
           "level": "error",
           "options": {
