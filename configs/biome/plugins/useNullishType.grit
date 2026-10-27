@@ -1,7 +1,7 @@
 language js
 
-TsUnionType() as $union where {
-  $union <: contains TsNullLiteralType(),
-  $union <: contains TsUndefinedType(),
+TsUnionType(types=$types) as $union where {
+  $types <: some TsNullLiteralType(),
+  $types <: some TsUndefinedType(),
   register_diagnostic(span=$union, message="Write a value that may be null or undefined as `Nullish<T>` from trousse.")
 }

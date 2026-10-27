@@ -13,7 +13,7 @@
   ],
   "overrides": [
     {
-      "includes": ["**/*.test.ts"],
+      "includes": ["**/*.test.ts", "**/*.test.tsx"],
       "plugins": [
         "./node_modules/kvalita/configs/biome/plugins/noAwaitExpectRejects.grit",
         "./node_modules/kvalita/configs/biome/plugins/noComputedExpected.grit",
