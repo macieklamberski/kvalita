@@ -8,5 +8,5 @@
     "noEmit": true,
     "types": ["bun"]
   },
-  "include": ["configs/biome/plugins.test.ts"]
+  "include": ["configs/biome/plugins.test.ts", "configs/coverage"]
 }
