@@ -37,7 +37,7 @@
     "conventional-changelog-conventionalcommits": "^9.0.0",
     "lefthook": "^2.1.14",
     "semantic-release": "^24.0.0 || ^25.0.0",
-    "typescript": "^6.0.0 || ^7.0.0"
+    "typescript": "^6.0.0 || ^7.0.0 || 7.1.0-beta"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.3",
