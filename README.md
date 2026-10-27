@@ -93,7 +93,7 @@ Create a `lefthook.json` file in your project root and extend the hooks you need
 
 ### Coverage
 
-`bun test` reports line coverage only, so a ternary, a `??` tail or a one-line guard hides an arm no test reaches on a line that counts as covered. The `kvalita/coverage` preload instruments every `.ts` and `.tsx` file under `src` with Istanbul as Bun loads it, test files and declarations aside, and writes `coverage/lcov.info` with a `BRDA` row per branch arm when the run ends:
+`bun test` reports line coverage only, so a ternary, a `??` tail or a one-line guard hides an arm no test reaches on a line that counts as covered. The `kvalita/coverage` preload instruments every `.ts` and `.tsx` file a test loads with Istanbul, `node_modules`, test files and declarations aside, and writes `coverage/lcov.info` with a `BRDA` row per branch arm when the run ends:
 
 ```bash
 bun test --preload kvalita/coverage

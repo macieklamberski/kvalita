@@ -10,9 +10,9 @@ type CoverageGlobal = typeof globalThis & {
 }
 
 const root = process.cwd()
-// Every .ts and .tsx under src, minus test files and declarations.
+// Every .ts and .tsx under the cwd, minus node_modules, test files and declarations.
 const sourceRegex = new RegExp(
-  `^${RegExp.escape(join(root, 'src'))}/(?!.*\\.(?:test\\.tsx?|d\\.ts)$).*\\.tsx?$`,
+  `^${RegExp.escape(root)}/(?!(?:.*/)?node_modules/)(?!.*\\.(?:test\\.tsx?|d\\.ts)$).*\\.tsx?$`,
 )
 const instrumenters = {
   ts: createInstrumenter({
