@@ -2,12 +2,10 @@
   "$schema": "https://biomejs.dev/schemas/latest/schema.json",
   "root": false,
   "plugins": [
-    "./node_modules/kvalita/configs/biome/plugins/noEmptyStringTest.grit",
     "./node_modules/kvalita/configs/biome/plugins/noLiteralSet.grit",
     "./node_modules/kvalita/configs/biome/plugins/noNestedCall.grit",
     "./node_modules/kvalita/configs/biome/plugins/noPositionalGroup.grit",
     "./node_modules/kvalita/configs/biome/plugins/noScreamingConst.grit",
-    "./node_modules/kvalita/configs/biome/plugins/noThen.grit",
     "./node_modules/kvalita/configs/biome/plugins/noWrappedImplicitReturn.grit",
     "./node_modules/kvalita/configs/biome/plugins/useIfOverTernaryGuard.grit"
   ],
@@ -19,7 +17,6 @@
         "./node_modules/kvalita/configs/biome/plugins/noComputedExpected.grit",
         "./node_modules/kvalita/configs/biome/plugins/noInlineHtmlTag.grit",
         "./node_modules/kvalita/configs/biome/plugins/noInlineTestObject.grit",
-        "./node_modules/kvalita/configs/biome/plugins/noLabelTuple.grit",
         "./node_modules/kvalita/configs/biome/plugins/useToEqualOverToMatchObject.grit"
       ]
     }
