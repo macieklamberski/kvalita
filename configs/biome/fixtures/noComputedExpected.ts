@@ -9,10 +9,12 @@ const expectedBlock = `
   <p>one</p>
 `
 const expectedMatch = expect.objectContaining({ url: 'https://example.com/feed' })
+const expectedJson = JSON.stringify({ link: '/post/1' })
+const expectedJsonFromValue = JSON.stringify({ link: base }) // flag
 const value = build('feed')
 it.each(glyphs)('should wrap %s', (glyph) => {
   const expectedRow = `<p>${glyph}</p>`
 
   expect(build(glyph)).toBe(expectedRow)
 })
-export { expected, expectedBlock, expectedCount, expectedMatch, expectedPlain, expectedUrl, value }
+export { expected, expectedBlock, expectedCount, expectedJson, expectedJsonFromValue, expectedMatch, expectedPlain, expectedUrl, value }

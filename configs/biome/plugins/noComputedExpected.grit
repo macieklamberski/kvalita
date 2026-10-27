@@ -10,6 +10,11 @@ language js
   // An asymmetric matcher such as `expect.objectContaining(...)` states the expectation, it does
   // not compute it, and a table test builds its expected value from the row it is given.
   $value <: not r"(?s)expect\..*",
+  // JSON.stringify of a literal spells a fixed value in the form the input takes, and runs none of
+  // the code under test. With a variable in it, it computes again.
+  not $value <: JsCallExpression(callee=`JSON.stringify`, arguments=$arguments) where {
+    $arguments <: not contains JsIdentifierExpression()
+  },
   not $declaration <: within or {
     `it.each($table)($title, $callback)`,
     `test.each($table)($title, $callback)`,
