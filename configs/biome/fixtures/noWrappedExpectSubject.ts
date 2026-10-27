@@ -17,6 +17,9 @@ expect( // flag
     'https://mastodon.social/users/Gargron/statuses/116535232552529093/activity/with/a/long/path',
   ),
 ).toBe(false)
+expect( // flag
+  isObject('https://mastodon.social/users/Gargron/statuses/116535232552529093/activity/x'),
+).toBe(false)
 expect(isObject(() => {})).toBe(false)
 expect(await transformContent(value, { parseHtmlFn: parseHtml })).toEqual(expected)
 expect({
