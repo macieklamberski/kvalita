@@ -1,6 +1,9 @@
 language js
 
-`expect($callback).$matcher($args)` where {
+or {
+  `expect($callback).$matcher($args)`,
+  `expect($callback).not.$matcher($args)`
+} where {
   $callback <: or {
     `() => $body`,
     `async () => $body`
