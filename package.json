@@ -22,6 +22,7 @@
     "./biome-library": "./configs/biome/library.json",
     "./biome-react": "./configs/biome/react.json",
     "./biome-drizzle": "./configs/biome/drizzle.json",
+    "./biome-locales": "./configs/biome/locales.json",
     "./commitlint": "./configs/commitlint.json",
     "./semantic-release": "./configs/semantic-release.json",
     "./semantic-release-dry-run": "./configs/semantic-release-dry-run.json"

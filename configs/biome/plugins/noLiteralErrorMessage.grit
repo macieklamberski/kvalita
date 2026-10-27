@@ -1,0 +1,13 @@
+language js
+
+JsNewExpression(callee=$callee, arguments=JsCallArguments(args=$args)) as $new where {
+  $callee <: r"^[A-Za-z.]*Error$",
+  $args <: [$first, ...],
+  $first <: or {
+    JsStringLiteralExpression(),
+    JsTemplateExpression(),
+    JsBinaryExpression()
+  },
+  not $first <: r"^['\"][A-Z][A-Z0-9_]*['\"]$",
+  register_diagnostic(span=$new, message="Move the error message to locales.json and read it as locales.errors.key.", severity="info")
+}

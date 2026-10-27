@@ -33,6 +33,7 @@ const configs = [
   'library.json',
   'react.json',
   'drizzle.json',
+  'locales.json',
   'upcoming.json',
 ]
 
