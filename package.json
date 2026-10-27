@@ -39,13 +39,11 @@
     "@commitlint/cli": "^20.0.0 || ^21.0.0",
     "@commitlint/config-conventional": "^20.0.0 || ^21.0.0",
     "conventional-changelog-conventionalcommits": "^9.0.0",
+    "istanbul-lib-coverage": "^3.2.2",
+    "istanbul-lib-instrument": "^6.0.3",
     "lefthook": "^2.1.14",
     "semantic-release": "^24.0.0 || ^25.0.0",
     "typescript": "^6.0.0 || ^7.0.0"
-  },
-  "dependencies": {
-    "istanbul-lib-coverage": "^3.2.2",
-    "istanbul-lib-instrument": "^6.0.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.3",
@@ -55,6 +53,8 @@
     "@types/istanbul-lib-coverage": "^2.0.6",
     "@types/istanbul-lib-instrument": "^1.7.8",
     "conventional-changelog-conventionalcommits": "^9.3.1",
+    "istanbul-lib-coverage": "^3.2.2",
+    "istanbul-lib-instrument": "^6.0.3",
     "kvalita": "file:.",
     "lefthook": "^2.1.14",
     "semantic-release": "^25.0.9",

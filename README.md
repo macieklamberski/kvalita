@@ -99,7 +99,7 @@ Create a `lefthook.json` file in your project root and extend the hooks you need
 bun test --preload kvalita/coverage
 ```
 
-`shared-test` runs it in place of Bun's `--coverage` flags, so Codecov reads the branch arms from the same file.
+`shared-test` runs it in place of Bun's `--coverage` flags, so Codecov reads the branch arms from the same file. The preload needs `istanbul-lib-instrument` and `istanbul-lib-coverage` in the project's dev dependencies, like the other tools kvalita configures.
 
 ### Shared Workflows
 
