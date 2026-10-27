@@ -22,6 +22,7 @@
     "./node_modules/kvalita/configs/biome/plugins/noTypeofUndefined.grit",
     "./node_modules/kvalita/configs/biome/plugins/useErrorCatchName.grit",
     "./node_modules/kvalita/configs/biome/plugins/useIfGuard.grit",
+    "./node_modules/kvalita/configs/biome/plugins/useIfOverTernaryGuard.grit",
     "./node_modules/kvalita/configs/biome/plugins/useNamedFunctionType.grit",
     "./node_modules/kvalita/configs/biome/plugins/usePredicateReturnsBoolean.grit",
     "./node_modules/kvalita/configs/biome/plugins/useRecordType.grit",
@@ -34,9 +35,12 @@
     {
       "includes": ["**/*.test.ts", "**/*.test.tsx"],
       "plugins": [
+        "./node_modules/kvalita/configs/biome/plugins/noAwaitExpectRejects.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noComputedExpected.grit",
         "./node_modules/kvalita/configs/biome/plugins/noDenseExpectChain.grit",
         "./node_modules/kvalita/configs/biome/plugins/noEmptyTodo.grit",
         "./node_modules/kvalita/configs/biome/plugins/noExpectResolves.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noInlineHtmlTag.grit",
         "./node_modules/kvalita/configs/biome/plugins/noLabelTuple.grit",
         "./node_modules/kvalita/configs/biome/plugins/noNotToHaveProperty.grit",
         "./node_modules/kvalita/configs/biome/plugins/noNumberedVariant.grit",
@@ -49,6 +53,7 @@
         "./node_modules/kvalita/configs/biome/plugins/noTopLevelTest.grit",
         "./node_modules/kvalita/configs/biome/plugins/noTruthyMatcher.grit",
         "./node_modules/kvalita/configs/biome/plugins/noUndefinedInExpected.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noWrappedExpectSubject.grit",
         "./node_modules/kvalita/configs/biome/plugins/useBlockFixture.grit",
         "./node_modules/kvalita/configs/biome/plugins/useEachPlaceholder.grit",
         "./node_modules/kvalita/configs/biome/plugins/useExpectInTest.grit",

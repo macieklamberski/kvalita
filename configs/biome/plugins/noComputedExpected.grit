@@ -1,11 +1,19 @@
 language js
 
-`const $name = $value` where {
+`const $name = $value` as $declaration where {
   $name <: r"^expected\w*$",
   or {
     $value <: JsTemplateExpression() where { $value <: r"(?s)^`.*\$\{.*" },
     $value <: JsCallExpression(),
     $value <: JsBinaryExpression()
+  },
+  // An asymmetric matcher such as `expect.objectContaining(...)` states the expectation, it does
+  // not compute it, and a table test builds its expected value from the row it is given.
+  $value <: not r"(?s)expect\..*",
+  not $declaration <: within or {
+    `it.each($table)($title, $callback)`,
+    `test.each($table)($title, $callback)`,
+    `describe.each($table)($title, $callback)`
   },
   register_diagnostic(span=$value, message="Hard-code the expected value: one built by code can share the bug it checks.")
 }
