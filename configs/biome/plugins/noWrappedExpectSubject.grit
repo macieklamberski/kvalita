@@ -1,0 +1,12 @@
+language js
+
+`expect($subject)` as $call where {
+  $subject <: r"(?s).*\n.*",
+  // An object literal bundles several values into one assertion, and a function subject is
+  // useThrowingConst's to name.
+  $subject <: not r"(?s)\{.*",
+  $subject <: not r"(?s)\([^)]*\)\s*=>.*",
+  $subject <: not r"(?s)async\s*\([^)]*\)\s*=>.*",
+  $subject <: not r"(?s)function\b.*",
+  register_diagnostic(span=$call, message="Name the value before asserting on it: a subject too long for one line goes in `const result`, and bulky input in `const value`.")
+}
