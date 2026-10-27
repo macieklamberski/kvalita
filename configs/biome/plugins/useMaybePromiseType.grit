@@ -1,0 +1,14 @@
+language js
+
+TsUnionType(types=$types) as $union where {
+  $types <: some TsReferenceType(name=`Promise`, type_arguments=$arguments),
+  $arguments <: TsTypeArguments(ts_type_argument_list=[$value]),
+  or {
+    $types <: some $value,
+    and {
+      $value <: TsUnionType(types=$valueTypes),
+      not $valueTypes <: some $member where { not $types <: some $member }
+    }
+  },
+  register_diagnostic(span=$union, message="Write a value that may be a promise as `MaybePromise<T>` from trousse.")
+}

@@ -1,5 +1,9 @@
 {
   "$schema": "https://biomejs.dev/schemas/latest/schema.json",
   "root": false,
-  "plugins": ["./node_modules/kvalita/configs/biome/plugins/useAnyOf.grit"]
+  "plugins": [
+    "./node_modules/kvalita/configs/biome/plugins/useAnyOf.grit",
+    "./node_modules/kvalita/configs/biome/plugins/useMaybePromiseType.grit",
+    "./node_modules/kvalita/configs/biome/plugins/useNullishType.grit"
+  ]
 }
