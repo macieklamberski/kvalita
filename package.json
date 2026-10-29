@@ -14,7 +14,9 @@
   "files": [
     "configs",
     "!configs/biome/fixtures",
-    "!configs/biome/plugins.test.ts"
+    "!configs/biome/plugins.test.ts",
+    "!configs/coverage/fixtures",
+    "!configs/coverage/preload.test.ts"
   ],
   "exports": {
     "./biome": "./configs/biome/shared.json",
@@ -23,6 +25,7 @@
     "./biome-react": "./configs/biome/react.json",
     "./biome-drizzle": "./configs/biome/drizzle.json",
     "./biome-locales": "./configs/biome/locales.json",
+    "./coverage": "./configs/coverage/preload.ts",
     "./commitlint": "./configs/commitlint.json",
     "./semantic-release": "./configs/semantic-release.json",
     "./semantic-release-dry-run": "./configs/semantic-release-dry-run.json"
@@ -36,6 +39,8 @@
     "@commitlint/cli": "^20.0.0 || ^21.0.0",
     "@commitlint/config-conventional": "^20.0.0 || ^21.0.0",
     "conventional-changelog-conventionalcommits": "^9.0.0",
+    "istanbul-lib-coverage": "^3.2.2",
+    "istanbul-lib-instrument": "^6.0.3",
     "lefthook": "^2.1.14",
     "semantic-release": "^24.0.0 || ^25.0.0",
     "typescript": "^6.0.0 || ^7.0.0"
@@ -45,7 +50,11 @@
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.2",
     "@types/bun": "^1.4.4",
+    "@types/istanbul-lib-coverage": "^2.0.6",
+    "@types/istanbul-lib-instrument": "^1.7.8",
     "conventional-changelog-conventionalcommits": "^9.3.1",
+    "istanbul-lib-coverage": "^3.2.2",
+    "istanbul-lib-instrument": "^6.0.3",
     "kvalita": "file:.",
     "lefthook": "^2.1.14",
     "semantic-release": "^25.0.9",

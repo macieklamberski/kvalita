@@ -91,6 +91,16 @@ Create a `lefthook.json` file in your project root and extend the hooks you need
 - `lefthook-typescript.json` - Type checks TypeScript files (pre-commit)
 - `lefthook-commitlint.json` - Validates commit messages (commit-msg)
 
+### Coverage
+
+`bun test` reports line coverage only, so a ternary, a `??` tail or a one-line guard hides an arm no test reaches on a line that counts as covered. The `kvalita/coverage` preload instruments every `.ts` and `.tsx` file a test loads with Istanbul, `node_modules`, test files and declarations aside, and writes `coverage/lcov.info` with a `BRDA` row per branch arm when the run ends:
+
+```bash
+bun test --preload kvalita/coverage
+```
+
+`shared-test` runs it in place of Bun's `--coverage` flags, so Codecov reads the branch arms from the same file. The preload needs `istanbul-lib-instrument` and `istanbul-lib-coverage` in the project's dev dependencies, like the other tools kvalita configures.
+
 ### Shared Workflows
 
 Call them instead of copying the job into every repo. `secrets: inherit` passes `CODECOV_TOKEN` and `NPM_TOKEN` through.
