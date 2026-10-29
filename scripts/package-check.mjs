@@ -45,9 +45,9 @@ const getVersions = async (packageDir) => {
   const floor = getFloor(readPackage(packageDir).engines?.node)
   const response = await fetch('https://nodejs.org/dist/index.json')
   const releases = await response.json()
-  const latest = Math.max(
-    ...releases.map((release) => Number(release.version.match(majorRegex)[0])),
-  )
+  // The index lists a pre-release such as `v27.0.0-alpha.0.0.0` before setup-node can install it.
+  const stable = releases.filter((release) => !release.version.includes('-'))
+  const latest = Math.max(...stable.map((release) => Number(release.version.match(majorRegex)[0])))
   const versions = []
 
   // Odd majors never become LTS, so only the latest one is worth testing.
