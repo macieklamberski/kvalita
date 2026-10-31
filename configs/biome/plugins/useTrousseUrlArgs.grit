@@ -1,0 +1,63 @@
+language js
+
+// Calls into trousse url helpers written for an older or narrower signature. The trim and empty
+// fallbacks match two-argument reader calls only, since trimValues and preserveEmptyValues opt out.
+or {
+  // With a base, an empty string resolves to the base itself where undefined returns undefined.
+  `parseUrl($_ ?? '')` as $call where {
+    register_diagnostic(span=$call, message="Pass the value to parseUrl from trousse as is, since it accepts null and undefined: parseUrl(value).")
+  },
+  `$reader(new URLSearchParams($_), $...)` as $call where {
+    $reader <: or {
+      `getQueryParam`,
+      `getQueryParams`,
+      `getQueryParamValues`,
+      `hasQueryParam`
+    },
+    register_diagnostic(span=$call, message="Pass the query string to the trousse reader as is, since it accepts a string: getQueryParam(query, 'v').")
+  },
+  `$reader($_, $_)?.trim()` as $call where {
+    $reader <: or {
+      `getQueryParam`,
+      `getFragmentParam`
+    },
+    register_diagnostic(span=$call, message="Drop the trim, since the trousse reader already trims the value: getQueryParam(url, 'v').")
+  },
+  `$reader($_, $_) || undefined` as $call where {
+    $reader <: or {
+      `getQueryParam`,
+      `getFragmentParam`
+    },
+    register_diagnostic(span=$call, message="Drop the fallback, since the trousse reader already returns undefined for an empty value: getQueryParam(url, 'v').")
+  },
+  `composeQuery($_).replace('?', '#')` as $call where {
+    register_diagnostic(span=$call, message="Build the fragment with composeFragment from trousse: composeFragment({ t: time }).")
+  },
+  `$helper($_, $list)` as $call where {
+    $list <: JsArrayExpression(),
+    $list <: r"\[\s*[^,\s][^,]*\]",
+    $helper <: or {
+      `isHostOf`,
+      `isHostOrSubdomainOf`,
+      `isSubdomainOf`,
+      `getSubdomain`
+    },
+    register_diagnostic(span=$call, message="Pass the one host to the trousse helper as a string, since it accepts a single value: isHostOf(url, 'example.com').")
+  },
+  `composeQuery($params)` as $call where {
+    $params <: contains or {
+      `String($_)`,
+      `$_.toString()`
+    },
+    register_diagnostic(span=$call, message="Pass the number to composeQuery from trousse as is, since it accepts numbers: composeQuery({ page: 2 }).")
+  },
+  `$alias($...)` as $call where {
+    $alias <: or {
+      `fixMalformedProtocol`,
+      `resolveFeedProtocol`,
+      `addMissingProtocol`,
+      `upgradeProtocol`
+    },
+    register_diagnostic(span=$call, message="Call the Scheme-named trousse helper, since this Protocol-named alias is deprecated: addMissingProtocol becomes addMissingScheme.")
+  }
+}

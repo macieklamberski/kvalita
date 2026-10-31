@@ -1,0 +1,12 @@
+language js
+
+// A try whose first statement builds a url is a parse guarded against a throw. A line comment
+// after the brace is skipped.
+or {
+  `URL.parse($...)`,
+  JsTryStatement() as $try where {
+    $try <: r"(?s)try \{\s*(?://[^\n]*\s*)?[^\n]*new URL\([^\n]*\s*\} catch.*"
+  }
+} as $parse where {
+  register_diagnostic(span=$parse, message="Parse with parseUrl from trousse, which returns undefined for bad input instead of throwing or returning null: parseUrl(value).")
+}

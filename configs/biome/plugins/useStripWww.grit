@@ -1,0 +1,8 @@
+language js
+
+// A leading www label cut by an anchored regex, written bare or as an optional group.
+`$_.replace($pattern, '')` as $strip where {
+  $pattern <: JsRegexLiteralExpression(),
+  $pattern <: r"/\^(?:\((?:\?:)?www\\\.\)\??|www\\\.)/i?",
+  register_diagnostic(span=$strip, message="Drop the www label with stripWww from trousse: stripWww(hostname).")
+}

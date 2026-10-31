@@ -1,0 +1,15 @@
+language js
+
+// getAttribute returns null, which the matchers do not take, so its fallback stays.
+`$helper($value, $_)` as $call where {
+  $helper <: or {
+    `isAnyOf`,
+    `getAnyOf`,
+    `includesAnyOf`,
+    `startsWithAnyOf`,
+    `endsWithAnyOf`
+  },
+  $value <: `$_ ?? ''`,
+  not $value <: `$_.getAttribute($_) ?? ''`,
+  register_diagnostic(span=$value, message="Drop the empty-string fallback, since the trousse matcher returns false for undefined: isAnyOf(type, 'video').")
+}

@@ -1,0 +1,18 @@
+language js
+
+// isSameText returns false when either side is missing, so a compare where both sides can be
+// undefined, and so equal, is left alone. Both sides fold the same way, since toLowerCase and
+// toUpperCase disagree on a few letters.
+or {
+  `$left === $right`,
+  `$left !== $right`
+} as $compare where {
+  $left <: JsCallExpression(),
+  $right <: JsCallExpression(),
+  or {
+    and { $left <: r"[\s\S]*\.toLowerCase\(\)", $right <: r"[\s\S]*\.toLowerCase\(\)" },
+    and { $left <: r"[\s\S]*\.toUpperCase\(\)", $right <: r"[\s\S]*\.toUpperCase\(\)" }
+  },
+  not and { $left <: r"[\s\S]*\?\.[\s\S]*", $right <: r"[\s\S]*\?\.[\s\S]*" },
+  register_diagnostic(span=$compare, message="Compare the two values with isSameText from trousse, which folds case and trims: isSameText(left, right).")
+}
