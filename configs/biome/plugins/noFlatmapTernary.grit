@@ -3,8 +3,17 @@ language js
 `$list.flatMap($callback)` as $call where {
   $callback <: JsArrowFunctionExpression(body=$body),
   or {
-    $body <: JsConditionalExpression(),
-    $body <: JsParenthesizedExpression(expression=JsConditionalExpression())
+    $body <: JsConditionalExpression() as $ternary,
+    $body <: JsParenthesizedExpression(expression=JsConditionalExpression() as $ternary),
+    $body <: JsFunctionBody(statements=[
+      JsReturnStatement(argument=JsConditionalExpression() as $ternary)
+    ])
+  },
+  $ternary <: `$condition ? $kept : []`,
+  // A condition that tests the value the branch keeps narrows it, which a filter callback cannot.
+  not and {
+    $condition <: contains JsStaticMemberExpression(member=$tested),
+    $kept <: contains JsStaticMemberExpression(member=$tested)
   },
   register_diagnostic(span=$call, message="Take the ternary out of the `flatMap` callback: filter first, then map.")
 }

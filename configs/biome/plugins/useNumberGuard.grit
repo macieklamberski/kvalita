@@ -1,0 +1,10 @@
+language js
+
+or {
+  `isNumber($value) && Number.isInteger($value)`,
+  `typeof $value === 'number' && Number.isInteger($value)`,
+  `isNumber($value) && Number.isFinite($value)`,
+  `typeof $value === 'number' && Number.isFinite($value)`
+} as $check where {
+  register_diagnostic(span=$check, message="Narrow with isInteger or isFiniteNumber from trousse, which reject NaN and Infinity: isInteger(value).")
+}

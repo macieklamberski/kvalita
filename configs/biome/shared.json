@@ -30,7 +30,8 @@
     "./node_modules/kvalita/configs/biome/plugins/useRegexSuffix.grit",
     "./node_modules/kvalita/configs/biome/plugins/useShouldTitle.grit",
     "./node_modules/kvalita/configs/biome/plugins/useThrowingConst.grit",
-    "./node_modules/kvalita/configs/biome/plugins/useToBeUndefined.grit"
+    "./node_modules/kvalita/configs/biome/plugins/useToBeUndefined.grit",
+    "./node_modules/kvalita/configs/biome/plugins/noInlineGlobalRegex.grit"
   ],
   "overrides": [
     {
