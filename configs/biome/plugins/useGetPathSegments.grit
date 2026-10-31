@@ -1,0 +1,5 @@
+language js
+
+`$_.pathname.split('/').filter(Boolean)` as $split where {
+  register_diagnostic(span=$split, message="Split the path with getPathSegments from trousse, which drops empty segments: getPathSegments(url).")
+}

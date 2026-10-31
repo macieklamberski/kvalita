@@ -1,0 +1,28 @@
+language js
+
+// '\\$&' also escapes quotes for a string literal, and a glob builder leaves `*` out of its class
+// to rewrite it after, so only a class that escapes `*`, `+` and `?` is a full regex escape.
+or {
+  `$value.replace($regex, $replacement)`,
+  `$value.replaceAll($regex, $replacement)`,
+  `RegExp.escape($value)`
+} as $call where {
+  or {
+    and {
+      $replacement <: r"['\"`]\\\\\$&['\"`]",
+      or {
+        $regex <: JsRegexLiteralExpression() as $source,
+        $regex <: JsIdentifierExpression() where {
+          $program <: contains `const $regex = $source` where {
+            $source <: JsRegexLiteralExpression()
+          }
+        }
+      },
+      $source <: r"(?s).*\*.*",
+      $source <: r"(?s).*\+.*",
+      $source <: r"(?s).*\?.*"
+    },
+    $call <: `RegExp.escape($_)`
+  },
+  register_diagnostic(span=$call, message="Escape the literal with escapeRegex from trousse: new RegExp(escapeRegex(value)).")
+}

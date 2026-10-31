@@ -1,0 +1,10 @@
+language js
+
+or {
+  `Array.isArray($value) ? $value : [$value]`,
+  `!Array.isArray($value) ? [$value] : $value`,
+  `Array.isArray($value) ? $value[0] : $value`,
+  `!Array.isArray($value) ? $value : $value[0]`
+} as $test where {
+  register_diagnostic(span=$test, message="Coerce with coerceArray or coerceSingular from trousse: coerceArray(value).")
+}

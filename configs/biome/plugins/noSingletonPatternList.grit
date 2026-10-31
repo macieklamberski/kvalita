@@ -1,0 +1,17 @@
+language js
+
+`$helper($value, $patterns, $...)` as $call where {
+  $helper <: or {
+    `isAnyOf`,
+    `includesAnyOf`,
+    `startsWithAnyOf`,
+    `endsWithAnyOf`,
+    `isHostOf`,
+    `isSubdomainOf`,
+    `isHostOrSubdomainOf`
+  },
+  $patterns <: `[$single]`,
+  not $patterns <: `[$first, $second, $...]`,
+  not $single <: r"\.\.\..*",
+  register_diagnostic(span=$patterns, message="Pass the one pattern bare, since the trousse matcher takes a single pattern: isAnyOf(value, 'embed').")
+}

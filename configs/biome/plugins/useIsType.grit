@@ -1,0 +1,11 @@
+language js
+
+or {
+  `typeof $value === $type`,
+  `typeof $value !== $type`,
+  `$type === typeof $value`,
+  `$type !== typeof $value`
+} as $compare where {
+  $type <: r"['\"`](?:string|number|boolean|function)['\"`]",
+  register_diagnostic(span=$compare, message="Check the type with isString, isNumber, isBoolean or isFunction from trousse: isString(value).")
+}

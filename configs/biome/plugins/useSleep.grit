@@ -1,0 +1,15 @@
+language js
+
+or {
+  `new Promise(($resolve) => setTimeout($resolve, $ms))`,
+  `new Promise(($resolve) => { setTimeout($resolve, $ms) })`,
+  `new Promise(($resolve) => setTimeout(() => $resolve(), $ms))`,
+  `new Promise(($resolve) => { setTimeout(() => $resolve(), $ms) })`,
+  `new Promise<void>(($resolve) => setTimeout($resolve, $ms))`,
+  `new Promise<void>(($resolve) => { setTimeout($resolve, $ms) })`,
+  `new Promise<void>(($resolve) => setTimeout(() => $resolve(), $ms))`,
+  `new Promise<void>(($resolve) => { setTimeout(() => $resolve(), $ms) })`,
+  `Bun.sleep($ms)`
+} as $wait where {
+  register_diagnostic(span=$wait, message="Wait with sleep from trousse: await sleep(ms).")
+}

@@ -1,0 +1,16 @@
+language js
+
+or {
+  `typeof $value === 'object' && $value !== null && !Array.isArray($value)`,
+  `$value !== null && typeof $value === 'object' && !Array.isArray($value)`,
+  `typeof $value === 'object' && !Array.isArray($value) && $value !== null`,
+  `!!$value && typeof $value === 'object' && !Array.isArray($value)`,
+  `$value && typeof $value === 'object' && !Array.isArray($value)`,
+  `typeof $value === 'object' && !!$value && !Array.isArray($value)`,
+  `typeof $value === 'object' && $value && !Array.isArray($value)`,
+  `typeof $value !== 'object' || $value === null || Array.isArray($value)`,
+  `$value === null || typeof $value !== 'object' || Array.isArray($value)`,
+  `!$value || typeof $value !== 'object' || Array.isArray($value)`
+} as $test where {
+  register_diagnostic(span=$test, message="Test for a non-array object with isObject from trousse: isObject(value).")
+}

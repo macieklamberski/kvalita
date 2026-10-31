@@ -1,0 +1,17 @@
+language js
+
+// A compare against the page's own location stays raw, and a host-or-subdomain test is left to
+// useSubdomainOf.
+or {
+  `$left === $right`,
+  `$left !== $right`,
+  `$_.includes($right)`
+} as $compare where {
+  or { $left <: `$_.hostname`, $left <: `$_.host`, $right <: `$_.hostname`, $right <: `$_.host` },
+  not $compare <: contains `location`,
+  not $compare <: within or {
+    `$_ === $_ || $_.endsWith($_)`,
+    `$_ !== $_ && !$_.endsWith($_)`
+  },
+  register_diagnostic(span=$compare, message="Compare the host with isHostOf from trousse, which folds case and ignores a trailing dot: isHostOf(url, 'example.com').")
+}

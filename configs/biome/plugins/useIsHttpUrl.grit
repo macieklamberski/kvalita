@@ -1,0 +1,26 @@
+language js
+
+// Only a test that admits both schemes is isHttpUrl: `protocol === 'http:'` alone tests plain http,
+// as an upgrade check does, and `'https:'` alone tests a secure url.
+or {
+  `$a === 'http:' || $b === 'https:'`,
+  `$a === 'https:' || $b === 'http:'`,
+  `$a !== 'http:' && $b !== 'https:'`,
+  `$a !== 'https:' && $b !== 'http:'`,
+  `$list.includes($a)` where {
+    $list <: JsArrayExpression(),
+    $list <: r"\[\s*'https?:',\s*'https?:',?\s*\]",
+    $b = $a
+  },
+  `$a.startsWith('http')` where { $b = $a }
+} as $test where {
+  $a <: or {
+    `$_.protocol`,
+    `protocol`
+  },
+  $b <: or {
+    `$_.protocol`,
+    `protocol`
+  },
+  register_diagnostic(span=$test, message="Test the scheme with isHttpUrl from trousse, which admits both http and https: isHttpUrl(url).")
+}

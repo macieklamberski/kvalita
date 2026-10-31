@@ -1,0 +1,34 @@
+language js
+
+// The trousse helpers take a url, so a bare `host` or `hostname` counts only when it was declared
+// from a url's own member: a hostname string cut out of text by a regex has no url to pass.
+or {
+  `$host === $_ || $host.endsWith($_)`,
+  `$host !== $_ && !$host.endsWith($_)`,
+  `$_.hostname.endsWith($suffix)` as $test where {
+    not $suffix <: `'.'`,
+    not $test <: within `$_.find($_)`,
+    not $test <: within or {
+      `$_ === $_ || $_`,
+      `$_ !== $_ && $_`
+    }
+  }
+} as $test where {
+  or {
+    $test <: `$_.hostname.endsWith($_)`,
+    $host <: or {
+      `$_.hostname`,
+      `$_.host`
+    },
+    and { $host <: `hostname`, $program <: contains `const { hostname } = $_` },
+    and { $host <: `host`, $program <: contains `const { host } = $_` },
+    and {
+      $host <: JsIdentifierExpression(),
+      $program <: contains or {
+        `const $host = $_.hostname`,
+        `const $host = $_.host`
+      }
+    }
+  },
+  register_diagnostic(span=$test, message="Test the domain with isHostOrSubdomainOf or isSubdomainOf from trousse, which match whole labels only, or cut the leading labels off with getSubdomain: isHostOrSubdomainOf(url, 'example.com').")
+}

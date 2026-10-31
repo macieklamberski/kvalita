@@ -1,0 +1,27 @@
+language js
+
+// A runtime pattern can be '', which every raw affix test accepts and the trousse matchers never
+// match, so only a literal, a template or a const holding a literal is flagged.
+or {
+  `$value.toLowerCase().startsWith($pattern)`,
+  `$value.toLowerCase().endsWith($pattern)`,
+  `$value.toLowerCase().includes($pattern)`,
+  `$value?.toLowerCase().startsWith($pattern)`,
+  `$value?.toLowerCase().endsWith($pattern)`,
+  `$value?.toLowerCase().includes($pattern)`
+} as $call where {
+  or {
+    $pattern <: string(),
+    $pattern <: JsTemplateExpression(),
+    $pattern <: `$text.toLowerCase()` where {
+      $text <: or {
+        string(),
+        JsTemplateExpression()
+      }
+    },
+    $pattern <: JsIdentifierExpression() where {
+      $program <: contains `const $pattern = $init` where { $init <: string() }
+    }
+  },
+  register_diagnostic(span=$call, message="Match the affix in any case with startsWithAnyOf, endsWithAnyOf or includesAnyOf from trousse: startsWithAnyOf(type, 'image/').")
+}
