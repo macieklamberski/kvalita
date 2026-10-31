@@ -15,6 +15,11 @@ or {
   `$literal === $value?.toLowerCase()` where { $literal <: string() },
   `$literal !== $value?.toLowerCase()` where { $literal <: string() },
   `$list.some(($item) => $item === $value.toLowerCase())`,
+  `$list.some($callback)` where {
+    $callback <: JsArrowFunctionExpression(body=JsFunctionBody(statements=[
+      JsReturnStatement(argument=`$item === $value.toLowerCase()`)
+    ]))
+  },
   `$regex.test($value)` where { $regex <: r"/\^\((?:\?:)?[\w|-]+\)\$/i" }
 } as $compare where {
   not $value <: r"(?s).*\b(?:tagName|nodeName|localName)$",

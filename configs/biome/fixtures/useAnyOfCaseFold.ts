@@ -13,6 +13,9 @@ const isNotVideo = kind?.toLowerCase() !== 'video' // flag
 const isReversed = 'video' === kind?.toLowerCase() // flag
 const isNotReversed = 'video' !== kind?.toLowerCase() // flag
 const isSome = list.some((item) => item === route.toLowerCase()) // flag
+const isSomeBlock = list.some((item) => { // flag
+  return item === route.toLowerCase()
+})
 const isAlternation = /^(embed|watch)$/i.test(route) // flag
 const isGroup = /^(?:embed|watch)$/i.test(route) // flag
 const hasRaw = set.has(route)
