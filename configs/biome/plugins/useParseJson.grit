@@ -1,0 +1,6 @@
+language js
+
+JsTryStatement() as $try where {
+  $try <: `try { return JSON.parse($value) } catch { $fallback }`,
+  register_diagnostic(span=$try, message="Parse with parseJson from trousse, which returns undefined for invalid JSON: parseJson(value) ?? fallback.")
+}
