@@ -4,3 +4,6 @@ const segments = url.pathname.split('/').filter(Boolean) // flag
 const parts = url.pathname.split('/')
 const last = url.pathname.split('/').at(-1)
 const pieces = path.split('/').filter(Boolean)
+declare const maybeUrl: URL | undefined
+const maybeSegments = maybeUrl?.pathname.split('/').filter(Boolean) // flag
+const maybeParts = maybeUrl?.pathname.split('/')

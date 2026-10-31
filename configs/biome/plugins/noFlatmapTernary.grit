@@ -1,6 +1,9 @@
 language js
 
-`$list.flatMap($callback)` as $call where {
+or {
+  `$list.flatMap($callback)`,
+  `$list?.flatMap($callback)`
+} as $call where {
   $callback <: JsArrowFunctionExpression(body=$body),
   or {
     $body <: JsConditionalExpression() as $ternary,

@@ -11,3 +11,5 @@ const isPrefixed = startsWithAnyOf(type ?? "", 'a') // flag
 const isFallback = isAnyOf(type ?? 'x', list)
 const isBare = isAnyOf(type, list)
 const isAttribute = isAnyOf(element.getAttribute('type') ?? '', list)
+declare const maybeElement: { getAttribute: (name: string) => string | null } | undefined
+const isMaybeAttribute = isAnyOf(maybeElement?.getAttribute('type') ?? '', list)

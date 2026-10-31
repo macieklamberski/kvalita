@@ -5,9 +5,17 @@ language js
 or {
   `$host === $_ || $host.endsWith($_)`,
   `$host !== $_ && !$host.endsWith($_)`,
-  `$_.hostname.endsWith($suffix)` as $test where {
+  `$host === $_ || $host?.endsWith($_)`,
+  `$host !== $_ && !$host?.endsWith($_)`,
+  or {
+    `$_.hostname.endsWith($suffix)`,
+    `$_?.hostname.endsWith($suffix)`
+  } as $test where {
     not $suffix <: `'.'`,
-    not $test <: within `$_.find($_)`,
+    not $test <: within or {
+      `$_.find($_)`,
+      `$_?.find($_)`
+    },
     not $test <: within or {
       `$_ === $_ || $_`,
       `$_ !== $_ && $_`
@@ -15,10 +23,15 @@ or {
   }
 } as $test where {
   or {
-    $test <: `$_.hostname.endsWith($_)`,
+    $test <: or {
+      `$_.hostname.endsWith($_)`,
+      `$_?.hostname.endsWith($_)`
+    },
     $host <: or {
       `$_.hostname`,
-      `$_.host`
+      `$_.host`,
+      `$_?.hostname`,
+      `$_?.host`
     },
     and { $host <: `hostname`, $program <: contains `const { hostname } = $_` },
     and { $host <: `host`, $program <: contains `const { host } = $_` },
@@ -26,7 +39,9 @@ or {
       $host <: JsIdentifierExpression(),
       $program <: contains or {
         `const $host = $_.hostname`,
-        `const $host = $_.host`
+        `const $host = $_.host`,
+        `const $host = $_?.hostname`,
+        `const $host = $_?.host`
       }
     }
   },

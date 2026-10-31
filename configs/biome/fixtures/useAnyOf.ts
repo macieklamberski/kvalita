@@ -41,3 +41,18 @@ const isDigits = /^embed\d+$/i.test(route)
 const isCased = /^(embed|watch)$/.test(route)
 const isWildcard = /^(e.bed|watch)$/i.test(route)
 const isPlural = /^(embeds?|watch)$/i.test(route)
+declare const maybeRoutes: Array<string> | undefined
+const isMaybeUpper = kind?.toUpperCase() === 'EMBED' // flag
+const isMaybeNotUpper = 'EMBED' !== kind?.toUpperCase() // flag
+const isMaybeListed = routes.includes(kind?.toLowerCase()) // flag
+const isMaybeInline = ['embed', 'share'].includes(kind?.toUpperCase()) // flag
+const isListMaybe = maybeRoutes?.includes(route.toLowerCase()) // flag
+const isBothMaybe = maybeRoutes?.includes(kind?.toLowerCase()) // flag
+const isMaybeSome = list.some((item) => item === kind?.toLowerCase()) // flag
+const isSomeMaybe = maybeRoutes?.some((item) => item === route.toLowerCase()) // flag
+const isSomeBlockMaybe = maybeRoutes?.some((item) => { // flag
+  return item === kind?.toLowerCase()
+})
+const isMaybeKey = kind?.toUpperCase() === text
+const hasMaybeTag = maybeRoutes?.includes(element?.tagName.toLowerCase())
+const isMaybeSameUpper = kind?.toUpperCase() === text.toUpperCase()

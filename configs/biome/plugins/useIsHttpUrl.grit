@@ -16,10 +16,12 @@ or {
   } as $test where {
     $a <: or {
       `$_.protocol`,
+      `$_?.protocol`,
       `protocol`
     },
     $b <: or {
       `$_.protocol`,
+      `$_?.protocol`,
       `protocol`
     },
     register_diagnostic(span=$test, message="Test the scheme with isHttpUrl from trousse, which admits both http and https: isHttpUrl(url).")

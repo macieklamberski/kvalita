@@ -20,3 +20,13 @@ const { searchParams: linkParams } = link
 const namedHas = linkParams.has('v') // flag
 const dynamic = params.get(key)
 const cached = map.get('v')
+declare const maybeUrl: URL | undefined
+const maybeId = maybeUrl?.searchParams.get('v') // flag
+const maybeIds = maybeUrl?.searchParams.getAll('v') // flag
+const maybeHasId = maybeUrl?.searchParams.has('v') // flag
+const maybeTime = new URLSearchParams(maybeUrl?.hash.slice(1)).get('t') // flag
+declare const maybeParams: URLSearchParams | undefined
+const maybeNamed = maybeParams?.get('v')
+const maybeSearch = maybeUrl?.searchParams
+const maybeSearched = maybeSearch?.get('v') // flag
+const maybeDynamic = maybeSearch?.get(key)

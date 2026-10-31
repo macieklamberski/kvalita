@@ -1,13 +1,21 @@
 language js
 
-`$subject.$method($pattern, $...)` where {
-  $method <: or {
-    `replace`,
-    `replaceAll`,
-    `split`,
-    `match`,
-    `matchAll`
+or {
+  `$subject.$method($pattern, $...)` where {
+    $method <: or {
+      `replace`,
+      `replaceAll`,
+      `split`,
+      `match`,
+      `matchAll`
+    }
   },
+  `$subject?.replace($pattern, $...)`,
+  `$subject?.replaceAll($pattern, $...)`,
+  `$subject?.split($pattern, $...)`,
+  `$subject?.match($pattern, $...)`,
+  `$subject?.matchAll($pattern, $...)`
+} where {
   $pattern <: JsRegexLiteralExpression(),
   $pattern <: r"/.*/[a-z]*[gy][a-z]*",
   register_diagnostic(span=$pattern, message="Name the regex as a module constant, or for a literal pattern call replaceAll with a string: value.replaceAll('-', '+').")

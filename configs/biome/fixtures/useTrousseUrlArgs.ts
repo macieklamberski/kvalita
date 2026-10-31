@@ -30,3 +30,5 @@ const plain = composeQuery({ page })
 const fixed = fixMalformedProtocol(query) // flag
 const added = addMissingProtocol(query) // flag
 const read = getQueryParam(url, 'v')
+declare const maybePage: number | undefined
+const maybeCounted = composeQuery({ page: maybePage?.toString() }) // flag

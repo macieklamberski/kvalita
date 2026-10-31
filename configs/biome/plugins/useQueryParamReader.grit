@@ -4,7 +4,10 @@ language js
 // a case-sensitive delete or set reads a name the write then misses.
 or {
   `new URLSearchParams($source).$method($_)` as $read where {
-    $source <: contains `$_.hash`,
+    $source <: contains or {
+      `$_.hash`,
+      `$_?.hash`
+    },
     $method <: or {
       `get`,
       `getAll`,
@@ -13,61 +16,86 @@ or {
     not $program <: contains or {
       `$_.searchParams.delete($_)`,
       `$_.searchParams.set($_, $_)`,
-      `$_.searchParams.append($_, $_)`
+      `$_.searchParams.append($_, $_)`,
+      `$_?.searchParams.delete($_)`,
+      `$_?.searchParams.set($_, $_)`,
+      `$_?.searchParams.append($_, $_)`
     },
     register_diagnostic(span=$read, message="Read the fragment with getFragmentParam, getFragmentParamValues or hasFragmentParam from trousse, which match the name in any case and trim the value: getFragmentParam(url, 't').")
   },
   or {
     `$_.searchParams.get($_)`,
+    `$_?.searchParams.get($_)`,
     `new URLSearchParams($_).get($_)`
   } as $read where {
     not $program <: contains or {
       `$_.searchParams.delete($_)`,
       `$_.searchParams.set($_, $_)`,
-      `$_.searchParams.append($_, $_)`
+      `$_.searchParams.append($_, $_)`,
+      `$_?.searchParams.delete($_)`,
+      `$_?.searchParams.set($_, $_)`,
+      `$_?.searchParams.append($_, $_)`
     },
     register_diagnostic(span=$read, message="Read the param with getQueryParam from trousse, which matches the name in any case, trims the value and returns undefined for an empty one: getQueryParam(url, 'v').")
   },
   or {
     `$_.searchParams.getAll($_)`,
+    `$_?.searchParams.getAll($_)`,
     `new URLSearchParams($_).getAll($_)`
   } as $read where {
     not $program <: contains or {
       `$_.searchParams.delete($_)`,
       `$_.searchParams.set($_, $_)`,
-      `$_.searchParams.append($_, $_)`
+      `$_.searchParams.append($_, $_)`,
+      `$_?.searchParams.delete($_)`,
+      `$_?.searchParams.set($_, $_)`,
+      `$_?.searchParams.append($_, $_)`
     },
     register_diagnostic(span=$read, message="Read the values with getQueryParamValues from trousse, which matches the name in any case and drops empty values: getQueryParamValues(url, 'v').")
   },
   or {
     `$_.searchParams.has($_)`,
+    `$_?.searchParams.has($_)`,
     `new URLSearchParams($_).has($_)`
   } as $read where {
     not $program <: contains or {
       `$_.searchParams.delete($_)`,
       `$_.searchParams.set($_, $_)`,
-      `$_.searchParams.append($_, $_)`
+      `$_.searchParams.append($_, $_)`,
+      `$_?.searchParams.delete($_)`,
+      `$_?.searchParams.set($_, $_)`,
+      `$_?.searchParams.append($_, $_)`
     },
     register_diagnostic(span=$read, message="Test the param with hasQueryParam from trousse, which matches the name in any case: hasQueryParam(url, 'v').")
   },
   // A params object read by name, when the file declares it from a url or a query string.
-  `$params.$method($name)` as $read where {
-    $method <: or {
-      `get`,
-      `getAll`,
-      `has`
+  or {
+    `$params.$method($name)` where {
+      $method <: or {
+        `get`,
+        `getAll`,
+        `has`
+      }
     },
+    `$params?.get($name)`,
+    `$params?.getAll($name)`,
+    `$params?.has($name)`
+  } as $read where {
     $name <: string(),
     $params <: JsIdentifierExpression(),
     $program <: contains or {
       `const $params = new URLSearchParams($_)`,
       `const $params = $_.searchParams`,
+      `const $params = $_?.searchParams`,
       `const { searchParams: $params } = $_`
     },
     not $program <: contains or {
       `$_.searchParams.delete($_)`,
       `$_.searchParams.set($_, $_)`,
-      `$_.searchParams.append($_, $_)`
+      `$_.searchParams.append($_, $_)`,
+      `$_?.searchParams.delete($_)`,
+      `$_?.searchParams.set($_, $_)`,
+      `$_?.searchParams.append($_, $_)`
     },
     register_diagnostic(span=$read, message="Read the param with getQueryParam, getQueryParamValues or hasQueryParam from trousse, which match the name in any case and trim the value: getQueryParam(url, 'v').")
   }

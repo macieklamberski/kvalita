@@ -30,10 +30,38 @@ or {
     `$value?.toLowerCase() !== $literal` where { $literal <: string() },
     `$literal === $value?.toLowerCase()` where { $literal <: string() },
     `$literal !== $value?.toLowerCase()` where { $literal <: string() },
+    `$value?.toUpperCase() === $literal` where { $literal <: string() },
+    `$value?.toUpperCase() !== $literal` where { $literal <: string() },
+    `$literal === $value?.toUpperCase()` where { $literal <: string() },
+    `$literal !== $value?.toUpperCase()` where { $literal <: string() },
+    `$list.includes($value?.toLowerCase())` where {
+      or { $list <: JsArrayExpression(), $list <: JsIdentifierExpression() }
+    },
+    `$list.includes($value?.toUpperCase())` where {
+      or { $list <: JsArrayExpression(), $list <: JsIdentifierExpression() }
+    },
+    `$list?.includes($value.toLowerCase())` where { $list <: JsIdentifierExpression() },
+    `$list?.includes($value?.toLowerCase())` where { $list <: JsIdentifierExpression() },
+    `$list?.includes($value.toUpperCase())` where { $list <: JsIdentifierExpression() },
+    `$list?.includes($value?.toUpperCase())` where { $list <: JsIdentifierExpression() },
     `$list.some(($item) => $item === $value.toLowerCase())`,
+    `$list.some(($item) => $item === $value?.toLowerCase())`,
+    `$list?.some(($item) => $item === $value.toLowerCase())`,
+    `$list?.some(($item) => $item === $value?.toLowerCase())`,
     `$list.some($callback)` where {
       $callback <: JsArrowFunctionExpression(body=JsFunctionBody(statements=[
-        JsReturnStatement(argument=`$item === $value.toLowerCase()`)
+        JsReturnStatement(argument=or {
+          `$item === $value.toLowerCase()`,
+          `$item === $value?.toLowerCase()`
+        }),
+      ]))
+    },
+    `$list?.some($callback)` where {
+      $callback <: JsArrowFunctionExpression(body=JsFunctionBody(statements=[
+        JsReturnStatement(argument=or {
+          `$item === $value.toLowerCase()`,
+          `$item === $value?.toLowerCase()`
+        }),
       ]))
     },
     `$regex.test($value)` where { $regex <: r"/\^\((?:\?:)?[\w|-]+\)\$/i" }

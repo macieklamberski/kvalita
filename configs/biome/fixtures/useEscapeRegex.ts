@@ -10,3 +10,7 @@ const glob = value.replace(globRegex, '\\$&').replaceAll('*', '.*')
 const quoted = value.replace(quoteRegex, '\\$&')
 const marked = value.replace(/a/g, '$&!')
 const replaced = value.replace(/a/g, 'b')
+declare const maybeValue: string | undefined
+const maybeEscaped = maybeValue?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // flag
+const maybeEscapedAll = maybeValue?.replaceAll(specialRegex, '\\$&') // flag
+const maybeQuoted = maybeValue?.replace(quoteRegex, '\\$&')

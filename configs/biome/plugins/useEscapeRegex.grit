@@ -5,6 +5,8 @@ language js
 or {
   `$value.replace($regex, $replacement)`,
   `$value.replaceAll($regex, $replacement)`,
+  `$value?.replace($regex, $replacement)`,
+  `$value?.replaceAll($regex, $replacement)`,
   `RegExp.escape($value)`
 } as $call where {
   or {
