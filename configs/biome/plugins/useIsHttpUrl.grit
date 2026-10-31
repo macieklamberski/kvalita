@@ -1,26 +1,38 @@
 language js
 
-// Only a test that admits both schemes is isHttpUrl: `protocol === 'http:'` alone tests plain http,
-// as an upgrade check does, and `'https:'` alone tests a secure url.
 or {
-  `$a === 'http:' || $b === 'https:'`,
-  `$a === 'https:' || $b === 'http:'`,
-  `$a !== 'http:' && $b !== 'https:'`,
-  `$a !== 'https:' && $b !== 'http:'`,
-  `$list.includes($a)` where {
-    $list <: JsArrayExpression(),
-    $list <: r"\[\s*'https?:',\s*'https?:',?\s*\]",
-    $b = $a
+  // Only a test that admits both schemes is isHttpUrl: `protocol === 'http:'` alone tests plain
+  // http, as an upgrade check does, and `'https:'` alone tests a secure url.
+  or {
+    `$a === 'http:' || $b === 'https:'`,
+    `$a === 'https:' || $b === 'http:'`,
+    `$a !== 'http:' && $b !== 'https:'`,
+    `$a !== 'https:' && $b !== 'http:'`,
+    `$list.includes($a)` where {
+      $list <: JsArrayExpression(),
+      $list <: r"\[\s*'https?:',\s*'https?:',?\s*\]",
+      $b = $a
+    }
+  } as $test where {
+    $a <: or {
+      `$_.protocol`,
+      `protocol`
+    },
+    $b <: or {
+      `$_.protocol`,
+      `protocol`
+    },
+    register_diagnostic(span=$test, message="Test the scheme with isHttpUrl from trousse, which admits both http and https: isHttpUrl(url).")
   },
-  `$a.startsWith('http')` where { $b = $a }
-} as $test where {
-  $a <: or {
-    `$_.protocol`,
-    `protocol`
-  },
-  $b <: or {
-    `$_.protocol`,
-    `protocol`
-  },
-  register_diagnostic(span=$test, message="Test the scheme with isHttpUrl from trousse, which admits both http and https: isHttpUrl(url).")
+  // A bare `'http'` prefix also admits `httpbin`, and either prefix misses `HTTP://`.
+  or {
+    `$value.startsWith($scheme)`,
+    `$value?.startsWith($scheme)`
+  } as $test where {
+    $scheme <: or {
+      `'http'`,
+      `'https'`
+    },
+    register_diagnostic(span=$test, message="Test the scheme with isHttpUrl from trousse, which parses the url and admits any case: isHttpUrl(url).")
+  }
 }
