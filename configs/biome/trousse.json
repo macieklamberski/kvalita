@@ -4,6 +4,33 @@
   "plugins": [
     "./node_modules/kvalita/configs/biome/plugins/useAnyOf.grit",
     "./node_modules/kvalita/configs/biome/plugins/useMaybePromiseType.grit",
-    "./node_modules/kvalita/configs/biome/plugins/useNullishType.grit"
+    "./node_modules/kvalita/configs/biome/plugins/useNullishType.grit",
+    "./node_modules/kvalita/configs/biome/plugins/useSleep.grit"
+  ],
+  "overrides": [
+    {
+      "includes": ["**", "!**/*.test.ts", "!**/*.test.tsx"],
+      "plugins": [
+        "./node_modules/kvalita/configs/biome/plugins/useQueryParamReader.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useComposeQuery.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noRawHostCompare.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useDecodePercent.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useTrousseUrlArgs.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useParseUrl.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useSubdomainOf.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useStripWww.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useGetPathSegments.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useIsHttpUrl.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useCaseFoldedAffix.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useEscapeRegex.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noSingletonPatternList.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noEmptyFallbackPattern.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useIsSameText.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useCoerceArray.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useIsObject.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useParseJson.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useNumberGuard.grit"
+      ]
+    }
   ]
 }
