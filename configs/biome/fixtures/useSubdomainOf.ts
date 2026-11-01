@@ -14,3 +14,13 @@ const isCut = host === 'example.com' || host.endsWith('.example.com')
 const isFound = suffixes.find((suffix) => url.hostname.endsWith(suffix))
 const isRooted = url.hostname.endsWith('.')
 const isField = raw === 'id' || raw.endsWith('Id')
+declare const maybeUrl: URL | undefined
+declare const maybeSuffixes: Array<string> | undefined
+const isMaybeDomain = maybeUrl?.hostname === 'example.com' || maybeUrl?.hostname.endsWith('.example.com') // flag
+const isMaybeSubdomain = maybeUrl?.hostname.endsWith('.example.com') // flag
+const maybeHost = maybeUrl?.hostname
+const isMaybeNamed = maybeHost === 'example.com' || maybeHost?.endsWith('.example.com') // flag
+const isMaybeForeign = maybeHost !== 'example.com' && !maybeHost?.endsWith('.example.com') // flag
+const isMaybeFound = maybeSuffixes?.find((suffix) => url.hostname.endsWith(suffix))
+const maybeCut = raw.match(/\/\/([^/]+)/)?.[1]
+const isMaybeCut = maybeCut === 'example.com' || maybeCut?.endsWith('.example.com')

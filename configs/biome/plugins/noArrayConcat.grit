@@ -1,6 +1,9 @@
 language js
 
-`$target.concat($arguments)` as $call where {
+or {
+  `$target.concat($arguments)`,
+  `$target?.concat($arguments)`
+} as $call where {
   not $target <: `Buffer`,
   register_diagnostic(span=$call, message="Merge arrays with spread, `[...first, ...second]`, and strings with a template literal, never `.concat()`.")
 }

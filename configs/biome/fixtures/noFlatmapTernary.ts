@@ -12,4 +12,7 @@ const twoStatements = items.flatMap((item) => {
   const next = item.method
   return next ? [next] : []
 })
+declare const maybeItems: typeof items | undefined
+const maybeDoubled = maybeItems?.flatMap((item) => (item.status === 'ok' ? [item.method] : [])) // flag
+const maybeNarrowed = maybeItems?.flatMap((item) => (item.tagId ? [item.tagId] : []))
 export { doubled, block, narrowed, narrowedObject, inserted, twoStatements }

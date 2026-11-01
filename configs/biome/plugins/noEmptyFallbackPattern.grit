@@ -10,6 +10,9 @@ language js
     `endsWithAnyOf`
   },
   $value <: `$_ ?? ''`,
-  not $value <: `$_.getAttribute($_) ?? ''`,
+  not $value <: or {
+    `$_.getAttribute($_) ?? ''`,
+    `$_?.getAttribute($_) ?? ''`
+  },
   register_diagnostic(span=$value, message="Drop the empty-string fallback, since the trousse matcher returns false for undefined: isAnyOf(type, 'video').")
 }

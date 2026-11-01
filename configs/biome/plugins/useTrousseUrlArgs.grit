@@ -47,7 +47,8 @@ or {
   `composeQuery($params)` as $call where {
     $params <: contains or {
       `String($_)`,
-      `$_.toString()`
+      `$_.toString()`,
+      `$_?.toString()`
     },
     register_diagnostic(span=$call, message="Pass the number to composeQuery from trousse as is, since it accepts numbers: composeQuery({ page: 2 }).")
   },

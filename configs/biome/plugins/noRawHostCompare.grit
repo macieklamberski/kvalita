@@ -5,9 +5,23 @@ language js
 or {
   `$left === $right`,
   `$left !== $right`,
-  `$_.includes($right)`
+  `$_.includes($right)`,
+  `$_?.includes($right)`
 } as $compare where {
-  or { $left <: `$_.hostname`, $left <: `$_.host`, $right <: `$_.hostname`, $right <: `$_.host` },
+  or {
+    $left <: or {
+      `$_.hostname`,
+      `$_.host`,
+      `$_?.hostname`,
+      `$_?.host`
+    },
+    $right <: or {
+      `$_.hostname`,
+      `$_.host`,
+      `$_?.hostname`,
+      `$_?.host`
+    }
+  },
   not $compare <: contains `location`,
   not $compare <: within or {
     `$_ === $_ || $_.endsWith($_)`,
