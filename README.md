@@ -158,6 +158,18 @@ jobs:
 
 The `workflow_call` trigger lets the release workflow run it as a gate with `ref: ${{ inputs.branch }}`, next to `shared-test`.
 
+### Dependabot Configuration
+
+Dependabot can't share a config between repos, so kvalita generates each repo's `.github/dependabot.yml` from the files it tracks:
+
+```bash
+bun node_modules/kvalita/configs/dependabot/dependabot.ts --write
+```
+
+Every repo gets `bun` and `github-actions`. `docker-compose` and `docker` are added when the repo has a compose file or a Dockerfile, and they cover every directory through `/**/*`, so a new Docker directory needs no regeneration. All entries share one group that runs weekly and waits 7 days after a release, so each repo gets one PR a week with every update in it, majors included.
+
+`shared-lint` runs the same script without `--write` and fails when the committed config differs.
+
 ### Ignore File Templates
 
 Copy the templates into your project root, then add whatever the project itself produces:
