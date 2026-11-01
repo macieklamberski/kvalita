@@ -37,7 +37,7 @@ The plugins load from `node_modules/kvalita`, so the config expects kvalita inst
 A project adds the configs that fit it after `kvalita/biome`:
 
 - `kvalita/biome-trousse` for a project that depends on [trousse](https://github.com/macieklamberski/trousse).
-- `kvalita/biome-library` for a published library, which declares its exports' return types, never logs or exits, and never reads a computed key through the prototype chain.
+- `kvalita/biome-library` for a published library, which declares its exports' return types and never logs or exits.
 - `kvalita/biome-react` for a React app's components.
 - `kvalita/biome-drizzle` for a project that queries through Drizzle.
 - `kvalita/biome-locales` for a project that keeps its error messages under `errors` in `src/locales.json`. It reports at info level for now, so it never fails a run.
