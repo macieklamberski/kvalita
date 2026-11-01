@@ -3,9 +3,7 @@ language js
 // A template counts when an interpolation follows a query or fragment name and `=`, so a path
 // template or a fixed query stays out.
 or {
-  JsTemplateExpression() as $query where {
-    $query <: r"(?s)`[^`]*[?&#][A-Za-z_][\w.\[\]-]*=\$\{.*"
-  },
+  JsTemplateExpression() as $query where { $query <: r"(?s)`[^`]*[?&#][\w][\w.\[\]-]*=\$\{.*" },
   `new URLSearchParams($_).toString()` as $query,
   `new URLSearchParams($_)` as $query where {
     $query <: within JsTemplateExpression(),
