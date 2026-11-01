@@ -1,0 +1,11 @@
+language js
+
+// A literal key tests a field of a known shape and a private name cannot be inherited, so only a
+// computed key is flagged.
+JsInExpression(property=$key) as $test where {
+  not $key <: or {
+    JsStringLiteralExpression(),
+    JsPrivateName()
+  },
+  register_diagnostic(span=$test, message="Test an own key with Object.hasOwn(object, key): 'constructor' in {} is true.")
+}

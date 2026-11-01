@@ -1,0 +1,25 @@
+language js
+
+// A module-level object literal keyed by string reaches inherited keys through a computed lookup.
+// One keyed by a union type, or untyped and so keyed by its own fields, takes only its members,
+// unless the key is cast to them.
+JsComputedMemberExpression(object=$table, member=$key) as $lookup where {
+  not $key <: or {
+    JsStringLiteralExpression(),
+    JsNumberLiteralExpression()
+  },
+  $program <: contains JsVariableDeclarator(id=$id, variable_annotation=$annotation, initializer=JsInitializerClause(expression=$value)) as $declarator where {
+    $id <: $table,
+    not $declarator <: within JsFunctionBody(),
+    $value <: or {
+      JsObjectExpression(),
+      TsAsExpression(expression=JsObjectExpression()),
+      TsSatisfiesExpression(expression=JsObjectExpression())
+    },
+    or {
+      $annotation <: contains `Record<string, $_>`,
+      and { $annotation <: ., $key <: TsAsExpression() }
+    }
+  },
+  register_diagnostic(span=$lookup, message="Look up a computed key in a Map, or key the table by a union type: table['constructor'] returns a function, not undefined.")
+}
