@@ -93,7 +93,7 @@ Create a `lefthook.json` file in your project root and extend the hooks you need
 
 ### Shared Workflows
 
-Call them instead of copying the job into every repo. `secrets: inherit` passes `CODECOV_TOKEN` and `NPM_TOKEN` through.
+Call them instead of copying the job into every repo. `secrets: inherit` passes `CODECOV_TOKEN` through. npm publishing authenticates through OIDC, so no npm token is needed.
 
 ```yaml
 # .github/workflows/test.yml
