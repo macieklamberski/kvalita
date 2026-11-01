@@ -1,7 +1,10 @@
 language js
 
 // decodeURI keeps reserved escapes such as %2F and unescape reads %E9 as Latin-1, so neither is a
-// decodePercent swap: only decodeURIComponent is matched.
-`decodeURIComponent($_)` as $decode where {
+// decodePercent swap: only decodeURIComponent is matched, called bare or through globalThis.
+or {
+  `decodeURIComponent($_)`,
+  `$_.decodeURIComponent($_)`
+} as $decode where {
   register_diagnostic(span=$decode, message="Decode with decodePercent from trousse, which never throws and keeps a malformed escape as written: decodePercent(value).")
 }
