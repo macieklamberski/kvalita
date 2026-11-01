@@ -47,9 +47,9 @@ const renderEcosystem = (ecosystem: Ecosystem): string => {
   const location =
     ecosystem.directory === '/'
       ? `    directory: ${ecosystem.directory}`
-      : `    directories:\n      - ${ecosystem.directory}`
+      : `    directories: ['${ecosystem.directory}']`
 
-  return `  - package-ecosystem: ${ecosystem.name}\n${location}\n    patterns:\n      - '*'\n    multi-ecosystem-group: dependencies\n`
+  return `  - package-ecosystem: ${ecosystem.name}\n${location}\n    patterns: ['*']\n    multi-ecosystem-group: dependencies\n`
 }
 
 export const renderConfig = (ecosystems: Array<Ecosystem>): string => {

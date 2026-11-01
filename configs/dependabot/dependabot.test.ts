@@ -13,28 +13,22 @@ multi-ecosystem-groups:
 updates:
   - package-ecosystem: bun
     directory: /
-    patterns:
-      - '*'
+    patterns: ['*']
     multi-ecosystem-group: dependencies
 
   - package-ecosystem: github-actions
     directory: /
-    patterns:
-      - '*'
+    patterns: ['*']
     multi-ecosystem-group: dependencies
 
   - package-ecosystem: docker-compose
-    directories:
-      - /**/*
-    patterns:
-      - '*'
+    directories: ['/**/*']
+    patterns: ['*']
     multi-ecosystem-group: dependencies
 
   - package-ecosystem: docker
-    directories:
-      - /**/*
-    patterns:
-      - '*'
+    directories: ['/**/*']
+    patterns: ['*']
     multi-ecosystem-group: dependencies
 `
 
