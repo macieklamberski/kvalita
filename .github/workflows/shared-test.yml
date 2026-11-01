@@ -13,6 +13,11 @@ on:
         required: false
         type: string
         default: ''
+      codecov-oidc:
+        description: Upload coverage through OIDC. The caller job needs the id-token write permission.
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   test:
@@ -39,4 +44,5 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: ${{ inputs.codecov-oidc }}
           files: ./coverage/lcov.info
