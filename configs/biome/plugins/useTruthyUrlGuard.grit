@@ -1,0 +1,16 @@
+language js
+
+// The url a trousse predicate takes is a string or a URL, so truthiness guards it exactly.
+or {
+  `$url !== undefined && $helper($url, $...)`,
+  `$url === undefined || !$helper($url, $...)`
+} as $guard where {
+  $helper <: or {
+    `isHostOf`,
+    `isHostOrSubdomainOf`,
+    `isSubdomainOf`,
+    `isHttpUrl`,
+    `getSubdomain`
+  },
+  register_diagnostic(span=$guard, message="Guard the url by truthiness, or return early where the result must be a boolean: !url || !isHostOf(url, hosts).")
+}

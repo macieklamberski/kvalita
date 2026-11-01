@@ -29,7 +29,8 @@
         "./node_modules/kvalita/configs/biome/plugins/useCoerceArray.grit",
         "./node_modules/kvalita/configs/biome/plugins/useIsObject.grit",
         "./node_modules/kvalita/configs/biome/plugins/useParseJson.grit",
-        "./node_modules/kvalita/configs/biome/plugins/useNumberGuard.grit"
+        "./node_modules/kvalita/configs/biome/plugins/useNumberGuard.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useTruthyUrlGuard.grit"
       ]
     }
   ]
