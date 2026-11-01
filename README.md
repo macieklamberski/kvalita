@@ -166,7 +166,7 @@ Dependabot can't share a config between repos, so kvalita generates each repo's 
 bun node_modules/kvalita/configs/dependabot/dependabot.ts --write
 ```
 
-It adds an entry for `bun` when there's a `bun.lock`, for `github-actions` when a workflow pins an action, for `docker-compose` for every directory with a compose file, and for `docker` for every directory with a Dockerfile. Workflows that only call kvalita's shared workflows or local ones pin nothing, so they get no actions entry. Every entry runs weekly, waits 7 days after a release, and groups minor and patch bumps, so majors arrive in their own PRs. Docker images used in several directories are bumped in one PR across all of them.
+Every repo gets `bun` and `github-actions`. `docker-compose` and `docker` are added when the repo has a compose file or a Dockerfile, and they cover every directory through `/**/*`, so a new Docker directory needs no regeneration. All entries share one group that runs weekly and waits 7 days after a release, so each repo gets one PR a week with every update in it, majors included.
 
 `shared-lint` runs the same script without `--write` and fails when the committed config differs.
 

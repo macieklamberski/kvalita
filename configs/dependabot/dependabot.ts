@@ -4,85 +4,38 @@ import { dirname } from 'node:path'
 
 export type Ecosystem = {
   name: string
-  directories: Array<string>
+  directory: string
 }
 
-export type ReadFile = (path: string) => string
-
 const configPath = '.github/dependabot.yml'
-const lockfiles = ['bun.lock', 'bun.lockb']
-// Workflows calling these at a branch pin nothing Dependabot could bump.
-const ignoredActionPrefixes = ['./', 'docker://', 'macieklamberski/kvalita/']
 
 const dockerfileRegex = /(^|\/)Dockerfile[^/]*$/
 const composeRegex = /(^|\/)(docker-)?compose[^/]*\.ya?ml$/
-const workflowRegex = /^\.github\/workflows\/[^/]+\.ya?ml$/
-const usesRegex = /^\s*-?\s*uses:\s*['"]?([^\s'"]+)/gm
 
-const toDirectory = (file: string): string => {
-  const directory = dirname(file)
-
-  if (directory === '.') {
-    return '/'
-  }
-
-  return `/${directory}`
-}
-
-const toDirectories = (files: Array<string>, regex: RegExp): Array<string> => {
-  const directories = files.filter((file) => regex.test(file)).map(toDirectory)
-
-  return [...new Set(directories)].sort((left, right) => left.localeCompare(right))
-}
-
-const hasPinnedActions = (files: Array<string>, readFile: ReadFile): boolean => {
-  for (const file of files) {
-    if (!workflowRegex.test(file)) {
-      continue
-    }
-
-    for (const match of readFile(file).matchAll(usesRegex)) {
-      const action = match[1] ?? ''
-
-      if (!ignoredActionPrefixes.some((prefix) => action.startsWith(prefix))) {
-        return true
-      }
-    }
-  }
-
-  return false
-}
-
-export const detectEcosystems = (files: Array<string>, readFile: ReadFile): Array<Ecosystem> => {
-  const ecosystems: Array<Ecosystem> = []
-  const composeDirectories = toDirectories(files, composeRegex)
-  const dockerDirectories = toDirectories(files, dockerfileRegex)
-
-  if (lockfiles.some((lockfile) => files.includes(lockfile))) {
-    ecosystems.push({
+// A glob matching no file fails the update job on every run, so these entries need a file to exist.
+export const detectEcosystems = (files: Array<string>): Array<Ecosystem> => {
+  const ecosystems: Array<Ecosystem> = [
+    {
       name: 'bun',
-      directories: ['/'],
-    })
-  }
-
-  if (hasPinnedActions(files, readFile)) {
-    ecosystems.push({
+      directory: '/',
+    },
+    {
       name: 'github-actions',
-      directories: ['/'],
-    })
-  }
+      directory: '/',
+    },
+  ]
 
-  if (composeDirectories.length > 0) {
+  if (files.some((file) => composeRegex.test(file))) {
     ecosystems.push({
       name: 'docker-compose',
-      directories: composeDirectories,
+      directory: '/**/*',
     })
   }
 
-  if (dockerDirectories.length > 0) {
+  if (files.some((file) => dockerfileRegex.test(file))) {
     ecosystems.push({
       name: 'docker',
-      directories: dockerDirectories,
+      directory: '/**/*',
     })
   }
 
@@ -90,52 +43,25 @@ export const detectEcosystems = (files: Array<string>, readFile: ReadFile): Arra
 }
 
 const renderEcosystem = (ecosystem: Ecosystem): string => {
-  const lines = [`  - package-ecosystem: ${ecosystem.name}`]
-  const isMultiDirectory = ecosystem.directories.length > 1
+  // A glob is only accepted under `directories`.
+  const location =
+    ecosystem.directory === '/'
+      ? `    directory: ${ecosystem.directory}`
+      : `    directories:\n      - ${ecosystem.directory}`
 
-  if (isMultiDirectory) {
-    lines.push(
-      '    directories:',
-      ...ecosystem.directories.map((directory) => `      - ${directory}`),
-    )
-  } else {
-    lines.push(`    directory: ${ecosystem.directories[0]}`)
-  }
-
-  lines.push(
-    '    schedule:',
-    '      interval: weekly',
-    '    cooldown:',
-    '      default-days: 7',
-    '    groups:',
-  )
-
-  if (ecosystem.name === 'github-actions') {
-    lines.push('      actions:', '        patterns:', "          - '*'")
-
-    return `${lines.join('\n')}\n`
-  }
-
-  lines.push('      minor-and-patch:')
-
-  // Without it, a group spanning several directories opens one PR per directory.
-  if (isMultiDirectory) {
-    lines.push('        group-by: dependency-name')
-  }
-
-  lines.push('        update-types:', '          - minor', '          - patch')
-
-  return `${lines.join('\n')}\n`
+  return `  - package-ecosystem: ${ecosystem.name}\n${location}\n    patterns:\n      - '*'\n    multi-ecosystem-group: dependencies\n`
 }
 
 export const renderConfig = (ecosystems: Array<Ecosystem>): string => {
-  return `version: 2\n\nupdates:\n${ecosystems.map(renderEcosystem).join('\n')}`
+  const group =
+    'multi-ecosystem-groups:\n  dependencies:\n    schedule:\n      interval: weekly\n    cooldown:\n      default-days: 7\n'
+
+  return `version: 2\n\n${group}\nupdates:\n${ecosystems.map(renderEcosystem).join('\n')}`
 }
 
 const run = (): void => {
   const files = execFileSync('git', ['ls-files'], { encoding: 'utf8' }).split('\n')
-  const readFile: ReadFile = (path) => readFileSync(path, 'utf8')
-  const expected = renderConfig(detectEcosystems(files, readFile))
+  const expected = renderConfig(detectEcosystems(files))
 
   if (process.argv.includes('--write')) {
     mkdirSync(dirname(configPath), { recursive: true })

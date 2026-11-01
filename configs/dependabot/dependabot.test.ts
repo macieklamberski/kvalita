@@ -1,165 +1,107 @@
 import { describe, expect, it } from 'bun:test'
-import { detectEcosystems, type Ecosystem, type ReadFile, renderConfig } from './dependabot.ts'
+import { detectEcosystems, type Ecosystem, renderConfig } from './dependabot.ts'
 
-const workflows: Record<string, string> = {
-  '.github/workflows/test.yml': `
-jobs:
-  test:
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-`,
-  '.github/workflows/lint.yml': `
-jobs:
-  lint:
-    uses: macieklamberski/kvalita/.github/workflows/shared-lint.yml@main
-  package:
-    uses: ./.github/workflows/package.yml
-`,
-}
+const fullConfig = `version: 2
 
-const readFile: ReadFile = (path) => workflows[path] ?? ''
-
-const monorepoConfig = `version: 2
+multi-ecosystem-groups:
+  dependencies:
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
 
 updates:
   - package-ecosystem: bun
     directory: /
-    schedule:
-      interval: weekly
-    cooldown:
-      default-days: 7
-    groups:
-      minor-and-patch:
-        update-types:
-          - minor
-          - patch
+    patterns:
+      - '*'
+    multi-ecosystem-group: dependencies
 
   - package-ecosystem: github-actions
     directory: /
-    schedule:
-      interval: weekly
-    cooldown:
-      default-days: 7
-    groups:
-      actions:
-        patterns:
-          - '*'
+    patterns:
+      - '*'
+    multi-ecosystem-group: dependencies
 
   - package-ecosystem: docker-compose
-    directory: /.docker
-    schedule:
-      interval: weekly
-    cooldown:
-      default-days: 7
-    groups:
-      minor-and-patch:
-        update-types:
-          - minor
-          - patch
+    directories:
+      - /**/*
+    patterns:
+      - '*'
+    multi-ecosystem-group: dependencies
 
   - package-ecosystem: docker
     directories:
-      - /apps/backend/.docker
-      - /apps/frontend/.docker
-    schedule:
-      interval: weekly
-    cooldown:
-      default-days: 7
-    groups:
-      minor-and-patch:
-        group-by: dependency-name
-        update-types:
-          - minor
-          - patch
+      - /**/*
+    patterns:
+      - '*'
+    multi-ecosystem-group: dependencies
 `
 
 describe('detectEcosystems', () => {
-  it('should detect bun from its lockfile', () => {
+  it('should include bun and actions in a repo without Docker files', () => {
     const expected: Array<Ecosystem> = [
       {
         name: 'bun',
-        directories: ['/'],
+        directory: '/',
       },
-    ]
-
-    expect(detectEcosystems(['bun.lock'], readFile)).toEqual(expected)
-  })
-
-  it('should detect actions pinned in a workflow', () => {
-    const expected: Array<Ecosystem> = [
       {
         name: 'github-actions',
-        directories: ['/'],
+        directory: '/',
       },
     ]
 
-    expect(detectEcosystems(['.github/workflows/test.yml'], readFile)).toEqual(expected)
+    expect(detectEcosystems(['bun.lock', 'src/index.ts'])).toEqual(expected)
   })
 
-  it('should skip actions when workflows only call shared and local workflows', () => {
-    expect(detectEcosystems(['.github/workflows/lint.yml'], readFile)).toEqual([])
-  })
-
-  it('should map a root Dockerfile to the root directory', () => {
+  it('should add docker when a Dockerfile exists', () => {
     const expected: Array<Ecosystem> = [
       {
-        name: 'docker',
-        directories: ['/'],
+        name: 'bun',
+        directory: '/',
       },
-    ]
-
-    expect(detectEcosystems(['Dockerfile'], readFile)).toEqual(expected)
-  })
-
-  it('should list each directory holding a Dockerfile once', () => {
-    const files = [
-      'apps/backend/.docker/Dockerfile.dev',
-      'apps/backend/.docker/Dockerfile.prod',
-      'apps/frontend/.docker/Dockerfile.prod',
-    ]
-    const expected: Array<Ecosystem> = [
+      {
+        name: 'github-actions',
+        directory: '/',
+      },
       {
         name: 'docker',
-        directories: ['/apps/backend/.docker', '/apps/frontend/.docker'],
+        directory: '/**/*',
       },
     ]
 
-    expect(detectEcosystems(files, readFile)).toEqual(expected)
+    expect(detectEcosystems(['bun.lock', 'docs/.docker/Dockerfile'])).toEqual(expected)
   })
 
-  it('should detect compose files', () => {
+  it('should add docker-compose when a compose file exists', () => {
     const expected: Array<Ecosystem> = [
+      {
+        name: 'bun',
+        directory: '/',
+      },
+      {
+        name: 'github-actions',
+        directory: '/',
+      },
       {
         name: 'docker-compose',
-        directories: ['/.docker'],
+        directory: '/**/*',
+      },
+      {
+        name: 'docker',
+        directory: '/**/*',
       },
     ]
+    const files = ['.docker/docker-compose.prod.yml', 'apps/backend/.docker/Dockerfile.prod']
 
-    expect(detectEcosystems(['.docker/docker-compose.prod.yml'], readFile)).toEqual(expected)
+    expect(detectEcosystems(files)).toEqual(expected)
   })
 })
 
 describe('renderConfig', () => {
-  it('should render every ecosystem with the shared schedule, cooldown and groups', () => {
-    const ecosystems: Array<Ecosystem> = [
-      {
-        name: 'bun',
-        directories: ['/'],
-      },
-      {
-        name: 'github-actions',
-        directories: ['/'],
-      },
-      {
-        name: 'docker-compose',
-        directories: ['/.docker'],
-      },
-      {
-        name: 'docker',
-        directories: ['/apps/backend/.docker', '/apps/frontend/.docker'],
-      },
-    ]
+  it('should render every ecosystem into the shared group', () => {
+    const files = ['.docker/docker-compose.prod.yml', 'apps/backend/.docker/Dockerfile.prod']
 
-    expect(renderConfig(ecosystems)).toBe(monorepoConfig)
+    expect(renderConfig(detectEcosystems(files))).toBe(fullConfig)
   })
 })
