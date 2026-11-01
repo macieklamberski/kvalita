@@ -27,19 +27,19 @@ jobs:
       latest: ${{ steps.versions.outputs.latest }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref }}
 
       - name: Checkout kvalita
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: macieklamberski/kvalita
           ref: ${{ job.workflow_sha }}
           path: .kvalita
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 24
 
@@ -60,19 +60,19 @@ jobs:
         node: ${{ fromJSON(needs.versions.outputs.versions) }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref }}
 
       - name: Checkout kvalita
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: macieklamberski/kvalita
           ref: ${{ job.workflow_sha }}
           path: .kvalita
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 24
 
@@ -99,7 +99,7 @@ jobs:
           node "$GITHUB_WORKSPACE/.kvalita/scripts/package-check.mjs" entries "$GITHUB_WORKSPACE" .
 
       - name: Setup Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
 
@@ -129,19 +129,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref }}
 
       - name: Checkout kvalita
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: macieklamberski/kvalita
           ref: ${{ job.workflow_sha }}
           path: .kvalita
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 24
 
