@@ -33,7 +33,7 @@
     "test": "bun test"
   },
   "peerDependencies": {
-    "@biomejs/biome": "^2.6.3",
+    "@biomejs/biome": "^2.6.4",
     "@commitlint/cli": "^20.0.0 || ^21.0.0",
     "@commitlint/config-conventional": "^20.0.0 || ^21.0.0",
     "conventional-changelog-conventionalcommits": "^9.0.0",
@@ -42,7 +42,7 @@
     "typescript": "^6.0.0 || ^7.0.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.6.3",
+    "@biomejs/biome": "^2.6.4",
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "@types/bun": "^1.4.4",
