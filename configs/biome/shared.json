@@ -81,7 +81,6 @@
       "includes": ["**/*.ts", "**/*.tsx", "!**/*.test.ts", "!**/*.test.tsx"],
       "plugins": [
         "./node_modules/kvalita/configs/biome/plugins/noKeyInObject.grit",
-        "./node_modules/kvalita/configs/biome/plugins/noRecordLookup.grit",
         "./node_modules/kvalita/configs/biome/plugins/useTopLevelLiteralList.grit",
         "./node_modules/kvalita/configs/biome/plugins/useTypedEmptyCollection.grit"
       ]
