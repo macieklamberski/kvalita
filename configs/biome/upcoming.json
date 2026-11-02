@@ -5,7 +5,7 @@
   "overrides": [
     {
       "includes": ["**/*.test.ts", "**/*.test.tsx"],
-      "plugins": []
+      "plugins": ["./node_modules/kvalita/configs/biome/plugins/noTestLoop.grit"]
     }
   ]
 }

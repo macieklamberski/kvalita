@@ -1,0 +1,14 @@
+language js
+
+or {
+  JsForOfStatement(),
+  JsForInStatement(),
+  JsForStatement()
+} as $loop where {
+  $loop <: contains or {
+    `it($title, $callback)`,
+    `test($title, $callback)`,
+    `describe($title, $callback)`
+  },
+  register_diagnostic(span=$loop, message="Run the cases through `it.each` instead of declaring tests in a loop.")
+}
