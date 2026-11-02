@@ -184,6 +184,7 @@
         "useImportsFirst": "error",
         "useNumberNamespace": "error",
         "useObjectSpread": "error",
+        "useReduceTypeParameter": "error",
         "useSelfClosingElements": "error",
         "useShorthandAssign": "error",
         "useSingleVarDeclarator": "error",
@@ -243,11 +244,17 @@
         "noScriptUrl": "error"
       },
       "nursery": {
+        "noArraySortForMinMax": "error",
         "noBaseToString": "error",
         "noDanglingUnderscore": "error",
         "noFloatingPromises": "error",
+        "noMeaninglessVoidOperator": "error",
         "noMisusedPromises": "error",
+        "noPathConcat": "error",
+        "noUselessDateGetTime": "error",
+        "noUselessSplice": "error",
         "useAwaitThenable": "off",
+        "useBetterDomTraversing": "error",
         "useConsistentFunctionStyle": {
           "level": "error",
           "options": {
@@ -255,7 +262,11 @@
           }
         },
         "useExhaustiveSwitchCases": "error",
+        "useFlatMathMinMax": "error",
         "useIncludes": "error",
+        "useMathAbs": "error",
+        "useMathTrunc": "error",
+        "useModernMathApis": "error",
         "useNullishCoalescing": {
           "level": "error",
           "options": {
