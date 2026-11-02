@@ -55,6 +55,11 @@ jobs:
         if: hashFiles('node_modules/kvalita/configs/layout/layout.ts') != ''
         run: bun node_modules/kvalita/configs/layout/layout.ts
 
+      # Runs only once the repo depends on a kvalita release that ships the script.
+      - name: Check comment and blank-line style
+        if: hashFiles('node_modules/kvalita/configs/style/style.ts') != ''
+        run: bun node_modules/kvalita/configs/style/style.ts
+
       # Dependabot writes a lower-case subject after the prefix and offers no option to
       # change it (dependabot/dependabot-core#11705), which the sentence-case rule rejects.
       # Only this step skips, so Biome and TypeScript still cover the lockfile it changed.

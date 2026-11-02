@@ -16,7 +16,8 @@
     "!configs/biome/fixtures",
     "!configs/biome/plugins.test.ts",
     "!configs/dependabot/dependabot.test.ts",
-    "!configs/layout/layout.test.ts"
+    "!configs/layout/layout.test.ts",
+    "!configs/style/style.test.ts"
   ],
   "exports": {
     "./biome": "./configs/biome/shared.json",
