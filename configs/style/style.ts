@@ -9,6 +9,12 @@ export type SourceFile = {
 const sourceRegex = /\.[cm]?[jt]sx?$/
 const blockCommentRegex = /^\/\*(?!\*)/
 const backtickRegex = /(?<!\\)`/g
+const regexConstRegex = /^(export )?const \w+Regex(: RegExp)? = (\/|new RegExp)/
+const continuationRegex = /^(\s|[)\]}])/
+const jsdocTagRegex = /@(deprecated|internal)\b/
+const testPathRegex = /\.(test|spec)\.[cm]?[jt]sx?$|\/__tests__\//
+const misnamedTestRegex = /\.spec\.[cm]?[jt]sx?$|\/__tests__\//
+const expectErrorRegex = /^\s*\/\/\s*@ts-expect-error(?!: This is for testing purposes\.)/
 const importStartRegex = /^import\s/
 const reexportStartRegex = /^export\s+(type\s+)?[*{]/
 const moduleEndRegex = /(^import\s+|\bfrom\s*)['"][^'"]*['"]/
@@ -79,19 +85,79 @@ export const findImportGaps = (lines: Array<string>): Array<number> => {
   return gaps
 }
 
+// The indexes where a module-level regex block needs a blank line inserted, to stand apart from
+// the statements around it. A comment above a regex belongs to its block.
+export const findRegexBlockGaps = (lines: Array<string>): Array<number> => {
+  const gaps: Array<number> = []
+
+  const isNeighbour = (line: string | undefined): boolean => {
+    if (!line?.trim()) {
+      return false
+    }
+
+    return !regexConstRegex.test(line) && !line.startsWith('//')
+  }
+
+  for (const [index, line] of lines.entries()) {
+    if (!regexConstRegex.test(line)) {
+      continue
+    }
+
+    let end = index
+
+    while (end + 1 < lines.length && continuationRegex.test(lines[end + 1])) {
+      end += 1
+    }
+
+    if (isNeighbour(lines[index - 1])) {
+      gaps.push(index)
+    }
+
+    if (isNeighbour(lines[end + 1])) {
+      gaps.push(end + 1)
+    }
+  }
+
+  return gaps
+}
+
 // Biome keeps blank lines as they are, and its GritQL plugins see neither comments nor blank lines
-// outside a function body, so these two formatting skill rules are checked on the text.
+// outside a function body, so these formatting and testing skill rules are checked on the text.
 export const findStyleProblems = (files: Array<SourceFile>): Array<string> => {
   const problems: Array<string> = []
 
   for (const file of files) {
     const lines = file.text.split('\n')
+    const isTest = testPathRegex.test(file.path)
     // A line inside a template literal is a string, such as CSS in a markup fixture.
     let isInTemplate = false
 
+    if (misnamedTestRegex.test(file.path)) {
+      problems.push(`${file.path} name the test file *.test.ts beside its source`)
+    }
+
     for (const [index, line] of lines.entries()) {
-      if (!isInTemplate && blockCommentRegex.test(line.trim())) {
+      const trimmed = line.trim()
+
+      if (!isInTemplate && blockCommentRegex.test(trimmed)) {
         problems.push(`${file.path}:${index + 1} write the comment as a run of // lines`)
+      }
+
+      if (!isInTemplate && trimmed.startsWith('/**')) {
+        const end = lines.slice(index).findIndex((other) => other.includes('*/'))
+        const jsdoc = lines.slice(index, end === -1 ? undefined : index + end + 1).join('\n')
+
+        if (!jsdocTagRegex.test(jsdoc)) {
+          problems.push(
+            `${file.path}:${index + 1} keep JSDoc for @deprecated or @internal, write the rest as // lines`,
+          )
+        }
+      }
+
+      if (isTest && expectErrorRegex.test(line)) {
+        problems.push(
+          `${file.path}:${index + 1} write the directive as // @ts-expect-error: This is for testing purposes.`,
+        )
       }
 
       if ((line.match(backtickRegex) ?? []).length % 2 === 1) {
@@ -101,6 +167,10 @@ export const findStyleProblems = (files: Array<SourceFile>): Array<string> => {
 
     for (const index of findImportGaps(lines)) {
       problems.push(`${file.path}:${index + 1} leave a blank line after the imports`)
+    }
+
+    for (const index of findRegexBlockGaps(lines)) {
+      problems.push(`${file.path}:${index + 1} leave a blank line around the regex block`)
     }
   }
 

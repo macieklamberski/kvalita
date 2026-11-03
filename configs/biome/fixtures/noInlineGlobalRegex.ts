@@ -1,5 +1,7 @@
 declare const value: string
+
 const spaceRegex = /\s+/g
+
 const collapsed = value.replace(/\s+/g, ' ') // flag
 const swapped = value.replaceAll(/-/gi, '+') // flag
 const numbers = [...value.matchAll(/\d+/g)] // flag

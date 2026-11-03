@@ -1,7 +1,9 @@
 declare const value: string
+
 const specialRegex = /[.*+?^${}()|[\]\\]/g
 const globRegex = /[.+?^${}()|[\]\\]/g
 const quoteRegex = /['"\\]/g
+
 const escaped = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // flag
 const escapedAll = value.replaceAll(/[-/\\^$*+?.()|[\]{}]/g, '\\$&') // flag
 const escapedNative = RegExp.escape(value) // flag

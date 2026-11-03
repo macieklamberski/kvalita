@@ -7,6 +7,7 @@ const configsDir = import.meta.dir
 const pluginsDir = join(configsDir, 'plugins')
 const root = join(configsDir, '../..')
 const biome = join(root, 'node_modules/.bin/biome')
+
 const gritRegex = /\.grit$/
 const flagRegex = /\/\/ flag$/
 

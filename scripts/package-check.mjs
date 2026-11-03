@@ -21,6 +21,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 const defaultFloor = 18
+
 const majorRegex = /\d+/
 const ownerRegex = /node_modules\/((?:@[^/]+\/)?[^/]+)\//g
 
