@@ -5,7 +5,10 @@
   "overrides": [
     {
       "includes": ["src/**"],
-      "plugins": ["./node_modules/kvalita/configs/biome/plugins/useExportedReturnType.grit"],
+      "plugins": [
+        "./node_modules/kvalita/configs/biome/plugins/useExportedReturnType.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noInlineParamType.grit"
+      ],
       "linter": {
         "rules": {
           "nursery": {
