@@ -218,6 +218,7 @@
       },
       "suspicious": {
         "noConditionalExpect": "error",
+        "noConstantBinaryExpressions": "error",
         "noDuplicatedSpreadProps": "error",
         "noEmptySource": "error",
         "noFocusedTests": "error",
@@ -233,7 +234,8 @@
         "noVar": "error",
         "useArraySortCompare": "error",
         "useAwait": "error",
-        "useErrorMessage": "error"
+        "useErrorMessage": "error",
+        "useStaticResponseMethods": "error"
       },
       "performance": {
         "noDelete": "error",
@@ -244,23 +246,44 @@
         "noScriptUrl": "error"
       },
       "nursery": {
+        "noAccidentalBitwiseOperators": "error",
+        "noArgumentsCallerOrCallee": "error",
         "noArraySortForMinMax": "error",
         "noBaseToString": "error",
+        "noBooleanSortComparator": "error",
         "noDanglingUnderscore": "error",
+        "noDoubleComparison": "error",
+        "noEagerArrayMethodsInLoops": "error",
+        "noExtendNative": "error",
         "noFloatingPromises": "error",
+        "noImpliedEval": "error",
+        "noInvalidThis": "error",
         "noMeaninglessVoidOperator": "error",
         "noMisusedPromises": "error",
+        "noNegationInEqualityCheck": "error",
+        "noNestedSwitch": "error",
+        "noNewRequire": "error",
+        "noObjectConstructor": "error",
+        "noOctal": "error",
         "noPathConcat": "error",
+        "noReturnInFinally": "error",
+        "noSelfImport": "error",
+        "noThisOutsideOfClass": "error",
+        "noUselessAssignment": "error",
+        "noUselessCall": "error",
         "noUselessDateGetTime": "error",
         "noUselessSplice": "error",
+        "noXorAsExponentiation": "error",
         "useAwaitThenable": "off",
         "useBetterDomTraversing": "error",
+        "useCapitalizedConstructors": "error",
         "useConsistentFunctionStyle": {
           "level": "error",
           "options": {
             "style": "expression"
           }
         },
+        "useConsistentUnicodeBom": "error",
         "useExhaustiveSwitchCases": "error",
         "useFlatMathMinMax": "error",
         "useIncludes": "error",
@@ -273,8 +296,10 @@
             "ignoreIfStatements": true
           }
         },
+        "usePromiseRejectErrors": "error",
         "useRegexpExec": "error",
         "useStringStartsEndsWith": "error",
+        "useUnaryMinus": "error",
         "useValidTestTitle": "error"
       }
     }
