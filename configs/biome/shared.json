@@ -182,6 +182,7 @@
         "useFragmentSyntax": "error",
         "useGlobalThis": "error",
         "useImportsFirst": "error",
+        "useNodejsImportProtocol": "error",
         "useNumberNamespace": "error",
         "useObjectSpread": "error",
         "useReduceTypeParameter": "error",
