@@ -27,7 +27,6 @@ const ownerRegex = /node_modules\/((?:@[^/]+\/)?[^/]+)\//g
 const readPackage = (packageDir) => {
   const path = join(packageDir, 'package.json')
 
-  // biome-ignore lint/nursery/noUnsafeReturn: Plain JavaScript run without dependencies, so the manifest has no type to give.
   return JSON.parse(readFileSync(path, 'utf8'))
 }
 
