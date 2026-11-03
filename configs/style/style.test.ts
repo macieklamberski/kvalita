@@ -111,15 +111,16 @@ describe('findStyleProblems', () => {
     expect(findStyleProblems(value)).toEqual(expected)
   })
 
-  it('should flag a ts-expect-error without the fixed phrase in a test file', () => {
+  it('should flag a ts-expect-error without a reason sentence in a test file', () => {
     const value: Array<SourceFile> = [
       {
         path: 'src/a.test.ts',
-        text: '// @ts-expect-error: This is for testing purposes.\nparse(1)\n// @ts-expect-error\nparse(2)\n',
+        text: '// @ts-expect-error: This is for testing purposes.\nparse(1)\n// @ts-expect-error: The stub answers one hook.\nparse(2)\n// @ts-expect-error\nparse(3)\n// @ts-expect-error testing a bad type\nparse(4)\n',
       },
     ]
     const expected = [
-      'src/a.test.ts:3 write the directive as // @ts-expect-error: This is for testing purposes.',
+      'src/a.test.ts:5 give the directive its reason as a sentence, // @ts-expect-error: This is for testing purposes.',
+      'src/a.test.ts:7 give the directive its reason as a sentence, // @ts-expect-error: This is for testing purposes.',
     ]
 
     expect(findStyleProblems(value)).toEqual(expected)

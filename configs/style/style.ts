@@ -14,7 +14,8 @@ const continuationRegex = /^(\s|[)\]}])/
 const jsdocTagRegex = /@(deprecated|internal)\b/
 const testPathRegex = /\.(test|spec)\.[cm]?[jt]sx?$|\/__tests__\//
 const misnamedTestRegex = /\.spec\.[cm]?[jt]sx?$|\/__tests__\//
-const expectErrorRegex = /^\s*\/\/\s*@ts-expect-error(?!: This is for testing purposes\.)/
+// A reason is a sentence after a colon, such as the stock one, This is for testing purposes.
+const expectErrorRegex = /^\s*\/\/\s*@ts-expect-error(?!: [A-Z].*\.\s*$)/
 const importStartRegex = /^import\s/
 const reexportStartRegex = /^export\s+(type\s+)?[*{]/
 const moduleEndRegex = /(^import\s+|\bfrom\s*)['"][^'"]*['"]/
@@ -156,7 +157,7 @@ export const findStyleProblems = (files: Array<SourceFile>): Array<string> => {
 
       if (isTest && expectErrorRegex.test(line)) {
         problems.push(
-          `${file.path}:${index + 1} write the directive as // @ts-expect-error: This is for testing purposes.`,
+          `${file.path}:${index + 1} give the directive its reason as a sentence, // @ts-expect-error: This is for testing purposes.`,
         )
       }
 
