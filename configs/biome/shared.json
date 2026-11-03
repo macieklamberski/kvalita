@@ -31,7 +31,8 @@
     "./node_modules/kvalita/configs/biome/plugins/useShouldTitle.grit",
     "./node_modules/kvalita/configs/biome/plugins/useThrowingConst.grit",
     "./node_modules/kvalita/configs/biome/plugins/useToBeUndefined.grit",
-    "./node_modules/kvalita/configs/biome/plugins/noInlineGlobalRegex.grit"
+    "./node_modules/kvalita/configs/biome/plugins/noInlineGlobalRegex.grit",
+    "./node_modules/kvalita/configs/biome/plugins/noInlineReturnType.grit"
   ],
   "overrides": [
     {
@@ -67,7 +68,10 @@
         "./node_modules/kvalita/configs/biome/plugins/noShouldDescribe.grit",
         "./node_modules/kvalita/configs/biome/plugins/noTypedEachParams.grit",
         "./node_modules/kvalita/configs/biome/plugins/noExpectExpected.grit",
-        "./node_modules/kvalita/configs/biome/plugins/noTestFileImport.grit"
+        "./node_modules/kvalita/configs/biome/plugins/noTestFileImport.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noTestLoop.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useThrowingRejects.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useCategoryLabel.grit"
       ],
       "linter": {
         "rules": {
@@ -101,7 +105,8 @@
       "plugins": [
         "./node_modules/kvalita/configs/biome/plugins/noKeyInObject.grit",
         "./node_modules/kvalita/configs/biome/plugins/useTopLevelLiteralList.grit",
-        "./node_modules/kvalita/configs/biome/plugins/useTypedEmptyCollection.grit"
+        "./node_modules/kvalita/configs/biome/plugins/useTypedEmptyCollection.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noErrorMessageCompare.grit"
       ]
     }
   ],

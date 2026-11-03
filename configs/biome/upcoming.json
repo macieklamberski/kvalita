@@ -1,23 +1,11 @@
 {
   "$schema": "https://biomejs.dev/schemas/latest/schema.json",
   "root": false,
-  "plugins": ["./node_modules/kvalita/configs/biome/plugins/noInlineReturnType.grit"],
+  "plugins": [],
   "overrides": [
     {
       "includes": ["**/*.test.ts", "**/*.test.tsx"],
-      "plugins": [
-        "./node_modules/kvalita/configs/biome/plugins/noTestLoop.grit",
-        "./node_modules/kvalita/configs/biome/plugins/useThrowingRejects.grit",
-        "./node_modules/kvalita/configs/biome/plugins/useCategoryLabel.grit"
-      ]
-    },
-    {
-      "includes": ["**/*.ts", "**/*.tsx", "!**/*.test.ts", "!**/*.test.tsx"],
-      "plugins": ["./node_modules/kvalita/configs/biome/plugins/noErrorMessageCompare.grit"]
-    },
-    {
-      "includes": ["src/**"],
-      "plugins": ["./node_modules/kvalita/configs/biome/plugins/noInlineParamType.grit"]
+      "plugins": []
     }
   ]
 }
