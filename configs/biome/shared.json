@@ -63,7 +63,11 @@
         "./node_modules/kvalita/configs/biome/plugins/useToBeForPrimitives.grit",
         "./node_modules/kvalita/configs/biome/plugins/useToEqualForObjects.grit",
         "./node_modules/kvalita/configs/biome/plugins/useValueBeforeExpected.grit",
-        "./node_modules/kvalita/configs/biome/plugins/useValueName.grit"
+        "./node_modules/kvalita/configs/biome/plugins/useValueName.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noShouldDescribe.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noTypedEachParams.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noExpectExpected.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noTestFileImport.grit"
       ],
       "linter": {
         "rules": {
@@ -73,6 +77,21 @@
           "suspicious": {
             "noDuplicateTestHooks": "error",
             "noExportsInTest": "error"
+          },
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "vitest": {
+                    "message": "Import the test runner from bun:test."
+                  },
+                  "@jest/globals": {
+                    "message": "Import the test runner from bun:test."
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -178,6 +197,12 @@
         },
         "useDefaultParameterLast": "error",
         "useErrorCause": "error",
+        "useExportType": {
+          "level": "error",
+          "options": {
+            "style": "separatedType"
+          }
+        },
         "useForOf": "error",
         "useFragmentSyntax": "error",
         "useGlobalThis": "error",
@@ -185,6 +210,12 @@
         "useNodejsImportProtocol": "error",
         "useNumberNamespace": "error",
         "useObjectSpread": "error",
+        "useReadonlyClassProperties": {
+          "level": "error",
+          "options": {
+            "checkAllProperties": true
+          }
+        },
         "useReduceTypeParameter": "error",
         "useSelfClosingElements": "error",
         "useShorthandAssign": "error",

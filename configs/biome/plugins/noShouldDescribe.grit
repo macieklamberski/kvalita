@@ -1,0 +1,7 @@
+language js
+
+`$describe($title, $callback)` where {
+  $describe <: r"describe(?:\..*)?",
+  $title <: r"['\"`][Ss]hould\b.*",
+  register_diagnostic(span=$title, message="Name the describe after the function or the case: a should sentence is an `it` title.")
+}

@@ -1,0 +1,8 @@
+language js
+
+`$each($table)($title, $callback)` where {
+  $each <: r"(?:it|test|describe)\.each",
+  $callback <: JsArrowFunctionExpression(parameters=$parameters),
+  $parameters <: contains TsTypeAnnotation() as $annotation,
+  register_diagnostic(span=$annotation, message="Drop the annotation: the table's type flows into the `.each` callback.")
+}
