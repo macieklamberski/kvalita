@@ -1,0 +1,9 @@
+language js
+
+or {
+  `expect($subject).toBeDefined()`,
+  `expect($subject).not.toBeDefined()`
+} as $call where {
+  not $subject <: r"(?s).*\bgetBy\w*\(.*",
+  register_diagnostic(span=$call, message="Assert the value itself, `toEqual(expected)` or `toBe(...)`, or its absence with `toBeUndefined()`.")
+}

@@ -1,0 +1,6 @@
+language js
+
+JsArrowFunctionExpression(return_type_annotation=$annotation) where {
+  $annotation <: TsReturnTypeAnnotation(ty=TsObjectType()),
+  register_diagnostic(span=$annotation, message="Name the return type: `type ParsedFeed = { … }`, then `(): ParsedFeed =>`.")
+}

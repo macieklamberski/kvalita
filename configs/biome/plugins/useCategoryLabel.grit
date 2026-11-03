@@ -1,0 +1,11 @@
+language js
+
+`describe($title, $callback)` where {
+  $title <: r"(?i)['\"`](?:happy paths?|sad paths?|edge cases?)\b.*['\"`]",
+  not $title <: or {
+    `'happy paths'`,
+    `'sad paths'`,
+    `'edge cases'`
+  },
+  register_diagnostic(span=$title, message="Name the category exactly: 'happy paths', 'sad paths' or 'edge cases'.")
+}
