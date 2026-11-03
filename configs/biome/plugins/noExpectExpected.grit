@@ -1,0 +1,5 @@
+language js
+
+`expect(expected)` as $call where {
+  register_diagnostic(span=$call, message="Assert on the result: `expected` is the matcher's argument, `expect(result).toEqual(expected)`.")
+}
