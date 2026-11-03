@@ -97,6 +97,41 @@ describe('findStyleProblems', () => {
     expect(findStyleProblems(value)).toEqual(expected)
   })
 
+  it('should keep a regex whose value starts on the next line in its block', () => {
+    const value: Array<SourceFile> = [
+      {
+        path: 'src/a.ts',
+        text: '// Routes.\nconst episodeRegex =\n  /^\\/podcast\\/(\\d+)$/\nconst showRegex = /^\\/show$/\n\nexport const a = 1\n',
+      },
+    ]
+
+    expect(findStyleProblems(value)).toEqual([])
+  })
+
+  it('should flag a regex whose comment touches the statement above', () => {
+    const value: Array<SourceFile> = [
+      {
+        path: 'src/a.ts',
+        text: "const names = ['a']\n// Only these names.\nconst nameRegex = new RegExp(names.join('|'))\n\nexport const a = 1\n",
+      },
+    ]
+    const expected = ['src/a.ts:2 leave a blank line around the regex block']
+
+    expect(findStyleProblems(value)).toEqual(expected)
+  })
+
+  it('should flag a commented statement touching the regex block above', () => {
+    const value: Array<SourceFile> = [
+      {
+        path: 'src/a.ts',
+        text: "const spaceRegex = /\\s+/\n// Structural classes.\nconst classes = ['a', 'b']\n",
+      },
+    ]
+    const expected = ['src/a.ts:2 leave a blank line around the regex block']
+
+    expect(findStyleProblems(value)).toEqual(expected)
+  })
+
   it('should flag JSDoc without a deprecated or internal tag', () => {
     const value: Array<SourceFile> = [
       {

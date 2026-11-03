@@ -9,7 +9,8 @@ export type SourceFile = {
 const sourceRegex = /\.[cm]?[jt]sx?$/
 const blockCommentRegex = /^\/\*(?!\*)/
 const backtickRegex = /(?<!\\)`/g
-const regexConstRegex = /^(export )?const \w+Regex(: RegExp)? = (\/|new RegExp)/
+// The value may start on the line after the name.
+const regexDeclarationRegex = /^(export )?const \w+Regex(: RegExp)? =\s+(\/|new RegExp\b)/
 const continuationRegex = /^(\s|[)\]}])/
 const jsdocTagRegex = /@(deprecated|internal)\b/
 const testPathRegex = /\.(test|spec)\.[cm]?[jt]sx?$|\/__tests__\//
@@ -86,36 +87,95 @@ export const findImportGaps = (lines: Array<string>): Array<number> => {
   return gaps
 }
 
-// The indexes where a module-level regex block needs a blank line inserted, to stand apart from
-// the statements around it. A comment above a regex belongs to its block.
-export const findRegexBlockGaps = (lines: Array<string>): Array<number> => {
-  const gaps: Array<number> = []
+export type Statement = {
+  // The first line, its leading comments included.
+  first: number
+  last: number
+  isRegex: boolean
+  // Whether a blank line separates it from the statement before it.
+  isApart: boolean
+}
 
-  const isNeighbour = (line: string | undefined): boolean => {
-    if (!line?.trim()) {
-      return false
-    }
-
-    return !regexConstRegex.test(line) && !line.startsWith('//')
-  }
+// The module-level statements of a file. A statement starts at column 0 and runs over indented
+// lines, closing brackets and template literal content. A comment run belongs to the statement
+// below it.
+export const findStatements = (lines: Array<string>): Array<Statement> => {
+  const statements: Array<Statement> = []
+  let current: Statement | undefined
+  let commentStart: number | undefined
+  let hasBlank = true
+  let isInTemplate = false
 
   for (const [index, line] of lines.entries()) {
-    if (!regexConstRegex.test(line)) {
+    const trimmed = line.trim()
+    const wasInTemplate = isInTemplate
+
+    if ((line.match(backtickRegex) ?? []).length % 2 === 1) {
+      isInTemplate = !isInTemplate
+    }
+
+    if (wasInTemplate) {
+      if (current) {
+        current.last = index
+      }
+
       continue
     }
 
-    let end = index
-
-    while (end + 1 < lines.length && continuationRegex.test(lines[end + 1])) {
-      end += 1
+    if (!trimmed) {
+      current = undefined
+      commentStart = undefined
+      hasBlank = true
+      continue
     }
 
-    if (isNeighbour(lines[index - 1])) {
-      gaps.push(index)
+    const isComment =
+      trimmed.startsWith('//') ||
+      trimmed.startsWith('/*') ||
+      (commentStart !== undefined && trimmed.startsWith('*'))
+
+    if (isComment && (!continuationRegex.test(line) || commentStart !== undefined)) {
+      current = undefined
+
+      if (commentStart === undefined) {
+        commentStart = index
+      }
+
+      continue
     }
 
-    if (isNeighbour(lines[end + 1])) {
-      gaps.push(end + 1)
+    if (continuationRegex.test(line) && current) {
+      current.last = index
+      continue
+    }
+
+    const declaration = lines.slice(index, index + 2).join(' ')
+
+    current = {
+      first: commentStart ?? index,
+      last: index,
+      isRegex: regexDeclarationRegex.test(declaration),
+      isApart: hasBlank,
+    }
+    statements.push(current)
+    commentStart = undefined
+    hasBlank = false
+  }
+
+  return statements
+}
+
+// The indexes where a module-level regex block needs a blank line inserted, to stand apart from
+// the statements around it. A comment above a regex belongs to its block.
+export const findRegexBlockGaps = (lines: Array<string>): Array<number> => {
+  const statements = findStatements(lines)
+  const gaps: Array<number> = []
+
+  for (const [index, statement] of statements.entries()) {
+    const previous = statements[index - 1]
+
+    if (previous && !statement.isApart && previous.isRegex !== statement.isRegex) {
+      gaps.push(statement.first)
     }
   }
 
