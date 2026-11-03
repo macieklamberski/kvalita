@@ -1,0 +1,6 @@
+language js
+
+`expect($subject).rejects` where {
+  not $subject <: r"throwing\w*\(\)",
+  register_diagnostic(span=$subject, message="Name the throwing call: `const throwing = () => fn()`, then `expect(throwing()).rejects`.")
+}

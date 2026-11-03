@@ -1,0 +1,15 @@
+language js
+
+`try { $attempt } catch ($error) { $handler }` where {
+  $handler <: contains or {
+    `$error.message === $_`,
+    `$error.message !== $_`,
+    `$_ === $error.message`,
+    `$_ !== $error.message`,
+    `$error.message.includes($_)`,
+    `$error.message.startsWith($_)`,
+    `$error.message.endsWith($_)`,
+    `$error.message.match($_)`
+  } as $compare,
+  register_diagnostic(span=$compare, message="Tell the error by its class with `instanceof`, not by its message: throw an error class the caller can check.")
+}
