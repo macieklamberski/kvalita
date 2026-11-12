@@ -7,7 +7,10 @@ language js
   $subject <: not JsArrowFunctionExpression(),
   $subject <: not JsFunctionExpression(),
   or {
-    $subject <: r"(?s).*\?\..*",
+    // One optional chain on a plain name or member chain stays, `options?.method`, but not a second
+    // one or one that follows a call.
+    $subject <: r"(?s).*\?\..*\?\..*",
+    $subject <: r"(?s).*\)\s*\?\..*",
     $subject <: contains JsCallExpression(callee=JsCallExpression()),
     $subject <: contains JsCallExpression(callee=$callee) where {
       or {
@@ -22,5 +25,5 @@ language js
       }
     }
   },
-  register_diagnostic(span=$call, message="Name the value in a `const` for what it holds before asserting on it: a call on a call's result or an optional chain inside `expect()` hides which step failed.")
+  register_diagnostic(span=$call, message="Name the value in a `const` for what it holds before asserting on it: a call on a call's result, an optional chain after a call or two optional chains inside `expect()` hide which step failed.")
 }
