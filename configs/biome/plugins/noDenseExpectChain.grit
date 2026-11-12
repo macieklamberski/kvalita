@@ -1,6 +1,29 @@
 language js
 
 `expect($subject)` as $call where {
-  $subject <: r"(?s).*\?\..*\?\..*",
-  register_diagnostic(span=$call, message="Name the value before asserting on it: two optional chains inside `expect()` hide which step was missing.")
+  // An object literal bundles several values into one assertion, and a function subject is
+  // useThrowingConst's to name.
+  $subject <: not JsObjectExpression(),
+  $subject <: not JsArrowFunctionExpression(),
+  $subject <: not JsFunctionExpression(),
+  or {
+    // One optional chain on a plain name or member chain stays, `options?.method`, but not a second
+    // one or one that follows a call.
+    $subject <: r"(?s).*\?\..*\?\..*",
+    $subject <: r"(?s).*\)\s*\?\..*",
+    $subject <: contains JsCallExpression(callee=JsCallExpression()),
+    $subject <: contains JsCallExpression(callee=$callee) where {
+      or {
+        $callee <: JsStaticMemberExpression(object=$result),
+        $callee <: JsComputedMemberExpression(object=$result)
+      },
+      // A call on a call's result, also behind a non-null assertion or an awaited call.
+      $result <: or {
+        JsCallExpression(),
+        TsNonNullAssertionExpression(expression=JsCallExpression()),
+        JsParenthesizedExpression(expression=JsAwaitExpression(argument=JsCallExpression()))
+      }
+    }
+  },
+  register_diagnostic(span=$call, message="Name the value in a `const` for what it holds before asserting on it: a call on a call's result, an optional chain after a call or two optional chains inside `expect()` hide which step failed.")
 }
