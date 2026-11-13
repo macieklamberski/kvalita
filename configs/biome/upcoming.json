@@ -9,7 +9,7 @@
     },
     {
       "includes": ["**", "!**/*.test.ts", "!**/*.test.tsx"],
-      "plugins": ["./node_modules/kvalita/configs/biome/plugins/noBareNewUrl.grit"]
+      "plugins": []
     }
   ]
 }

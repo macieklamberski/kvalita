@@ -17,6 +17,7 @@
         "./node_modules/kvalita/configs/biome/plugins/useDecodePercent.grit",
         "./node_modules/kvalita/configs/biome/plugins/useTrousseUrlArgs.grit",
         "./node_modules/kvalita/configs/biome/plugins/useParseUrl.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noBareNewUrl.grit",
         "./node_modules/kvalita/configs/biome/plugins/useSubdomainOf.grit",
         "./node_modules/kvalita/configs/biome/plugins/useStripWww.grit",
         "./node_modules/kvalita/configs/biome/plugins/useGetPathSegments.grit",
