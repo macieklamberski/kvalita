@@ -1,0 +1,10 @@
+language js
+
+// A bare `new URL` throws on bad input, so a caller either wraps it in a `try` or crashes on the
+// first malformed link.
+or {
+  `new URL($_)`,
+  `new URL($_, $_)`
+} as $parse where {
+  register_diagnostic(span=$parse, message="Parse with parseUrl from trousse, which returns undefined for bad input instead of throwing, then guard for undefined: parseUrl(value) or parseUrl(value, base).")
+}
