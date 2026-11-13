@@ -9,7 +9,12 @@
     },
     {
       "includes": ["**", "!**/*.test.ts", "!**/*.test.tsx"],
-      "plugins": ["./node_modules/kvalita/configs/biome/plugins/noBareNewUrl.grit"]
+      "plugins": [
+        "./node_modules/kvalita/configs/biome/plugins/noBareNewUrl.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useTypeofGuard.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useNullishGuard.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useIsValidDate.grit"
+      ]
     }
   ]
 }

@@ -1,0 +1,5 @@
+language js
+
+`Number.isNaN($date.getTime())` as $check where {
+  register_diagnostic(span=$check, message="Test a Date with isValidDate from trousse, which also rejects a non-Date: isValidDate(date).")
+}

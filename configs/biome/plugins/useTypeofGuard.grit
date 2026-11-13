@@ -1,0 +1,14 @@
+language js
+
+or {
+  `typeof $value === 'string'`,
+  `typeof $value !== 'string'`,
+  `typeof $value === 'number'`,
+  `typeof $value !== 'number'`,
+  `typeof $value === 'boolean'`,
+  `typeof $value !== 'boolean'`,
+  `typeof $value === 'function'`,
+  `typeof $value !== 'function'`
+} as $check where {
+  register_diagnostic(span=$check, message="Narrow with isString, isNumber, isBoolean or isFunction from trousse: isString(value).")
+}

@@ -1,0 +1,12 @@
+language js
+
+or {
+  `$value == null`,
+  `$value != null`,
+  `$value === null || $value === undefined`,
+  `$value === undefined || $value === null`,
+  `$value !== null && $value !== undefined`,
+  `$value !== undefined && $value !== null`
+} as $check where {
+  register_diagnostic(span=$check, message="Test for null or undefined with isNullish or isPresent from trousse: isPresent(value).")
+}
