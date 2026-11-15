@@ -1,0 +1,124 @@
+language js
+
+// A folded value searched by hand is a trousse matcher: an indexOf against a literal is
+// includesAnyOf or, at 0, startsWithAnyOf, a some over a literal list of affixes is the affix
+// matcher, and a some over the words of the value is anyWordMatchesAnyOf. A runtime pattern can be
+// '', which the matchers never match, so only literals and literal lists are flagged.
+or {
+  or {
+    `$value.toLowerCase().indexOf($pattern) !== -1`,
+    `$value.toLowerCase().indexOf($pattern) === -1`,
+    `$value.toLowerCase().indexOf($pattern) >= 0`,
+    `$value.toLowerCase().indexOf($pattern) > -1`,
+    `$value.toLowerCase().indexOf($pattern) < 0`,
+    `$value?.toLowerCase().indexOf($pattern) !== -1`,
+    `$value?.toLowerCase().indexOf($pattern) === -1`,
+    `$value?.toLowerCase().indexOf($pattern) >= 0`,
+    `$value?.toLowerCase().indexOf($pattern) > -1`,
+    `$value?.toLowerCase().indexOf($pattern) < 0`,
+    `$value.toUpperCase().indexOf($pattern) !== -1`,
+    `$value.toUpperCase().indexOf($pattern) === -1`,
+    `$value.toUpperCase().indexOf($pattern) >= 0`,
+    `$value.toUpperCase().indexOf($pattern) > -1`,
+    `$value.toUpperCase().indexOf($pattern) < 0`,
+    `$value?.toUpperCase().indexOf($pattern) !== -1`,
+    `$value?.toUpperCase().indexOf($pattern) === -1`,
+    `$value?.toUpperCase().indexOf($pattern) >= 0`,
+    `$value?.toUpperCase().indexOf($pattern) > -1`,
+    `$value?.toUpperCase().indexOf($pattern) < 0`,
+    `$value.toLocaleLowerCase().indexOf($pattern) !== -1`,
+    `$value.toLocaleLowerCase().indexOf($pattern) === -1`,
+    `$value.toLocaleLowerCase().indexOf($pattern) >= 0`,
+    `$value.toLocaleLowerCase().indexOf($pattern) > -1`,
+    `$value.toLocaleLowerCase().indexOf($pattern) < 0`,
+    `$value?.toLocaleLowerCase().indexOf($pattern) !== -1`,
+    `$value?.toLocaleLowerCase().indexOf($pattern) === -1`,
+    `$value?.toLocaleLowerCase().indexOf($pattern) >= 0`,
+    `$value?.toLocaleLowerCase().indexOf($pattern) > -1`,
+    `$value?.toLocaleLowerCase().indexOf($pattern) < 0`,
+    `$value.toLocaleUpperCase().indexOf($pattern) !== -1`,
+    `$value.toLocaleUpperCase().indexOf($pattern) === -1`,
+    `$value.toLocaleUpperCase().indexOf($pattern) >= 0`,
+    `$value.toLocaleUpperCase().indexOf($pattern) > -1`,
+    `$value.toLocaleUpperCase().indexOf($pattern) < 0`,
+    `$value?.toLocaleUpperCase().indexOf($pattern) !== -1`,
+    `$value?.toLocaleUpperCase().indexOf($pattern) === -1`,
+    `$value?.toLocaleUpperCase().indexOf($pattern) >= 0`,
+    `$value?.toLocaleUpperCase().indexOf($pattern) > -1`,
+    `$value?.toLocaleUpperCase().indexOf($pattern) < 0`
+  } as $call where {
+    or { $pattern <: string(), $pattern <: JsTemplateExpression() },
+    register_diagnostic(span=$call, message="Match the literal in any case with includesAnyOf from trousse: includesAnyOf(type, 'xml').")
+  },
+  or {
+    `$value.toLowerCase().indexOf($pattern) === 0`,
+    `$value.toLowerCase().indexOf($pattern) !== 0`,
+    `$value?.toLowerCase().indexOf($pattern) === 0`,
+    `$value?.toLowerCase().indexOf($pattern) !== 0`,
+    `$value.toUpperCase().indexOf($pattern) === 0`,
+    `$value.toUpperCase().indexOf($pattern) !== 0`,
+    `$value?.toUpperCase().indexOf($pattern) === 0`,
+    `$value?.toUpperCase().indexOf($pattern) !== 0`,
+    `$value.toLocaleLowerCase().indexOf($pattern) === 0`,
+    `$value.toLocaleLowerCase().indexOf($pattern) !== 0`,
+    `$value?.toLocaleLowerCase().indexOf($pattern) === 0`,
+    `$value?.toLocaleLowerCase().indexOf($pattern) !== 0`,
+    `$value.toLocaleUpperCase().indexOf($pattern) === 0`,
+    `$value.toLocaleUpperCase().indexOf($pattern) !== 0`,
+    `$value?.toLocaleUpperCase().indexOf($pattern) === 0`,
+    `$value?.toLocaleUpperCase().indexOf($pattern) !== 0`
+  } as $call where {
+    or { $pattern <: string(), $pattern <: JsTemplateExpression() },
+    register_diagnostic(span=$call, message="Match the literal prefix in any case with startsWithAnyOf from trousse: startsWithAnyOf(url, 'http').")
+  },
+  or {
+    `$list.some(($pattern) => $value.toLowerCase().startsWith($pattern))`,
+    `$list.some(($pattern) => $value?.toLowerCase().startsWith($pattern))`,
+    `$list.some(($pattern) => $value.toUpperCase().startsWith($pattern))`,
+    `$list.some(($pattern) => $value?.toUpperCase().startsWith($pattern))`,
+    `$list.some(($pattern) => $value.toLocaleLowerCase().startsWith($pattern))`,
+    `$list.some(($pattern) => $value?.toLocaleLowerCase().startsWith($pattern))`,
+    `$list.some(($pattern) => $value.toLocaleUpperCase().startsWith($pattern))`,
+    `$list.some(($pattern) => $value?.toLocaleUpperCase().startsWith($pattern))`,
+    `$list.some(($pattern) => $value.toLowerCase().endsWith($pattern))`,
+    `$list.some(($pattern) => $value?.toLowerCase().endsWith($pattern))`,
+    `$list.some(($pattern) => $value.toUpperCase().endsWith($pattern))`,
+    `$list.some(($pattern) => $value?.toUpperCase().endsWith($pattern))`,
+    `$list.some(($pattern) => $value.toLocaleLowerCase().endsWith($pattern))`,
+    `$list.some(($pattern) => $value?.toLocaleLowerCase().endsWith($pattern))`,
+    `$list.some(($pattern) => $value.toLocaleUpperCase().endsWith($pattern))`,
+    `$list.some(($pattern) => $value?.toLocaleUpperCase().endsWith($pattern))`,
+    `$list.some(($pattern) => $value.toLowerCase().includes($pattern))`,
+    `$list.some(($pattern) => $value?.toLowerCase().includes($pattern))`,
+    `$list.some(($pattern) => $value.toUpperCase().includes($pattern))`,
+    `$list.some(($pattern) => $value?.toUpperCase().includes($pattern))`,
+    `$list.some(($pattern) => $value.toLocaleLowerCase().includes($pattern))`,
+    `$list.some(($pattern) => $value?.toLocaleLowerCase().includes($pattern))`,
+    `$list.some(($pattern) => $value.toLocaleUpperCase().includes($pattern))`,
+    `$list.some(($pattern) => $value?.toLocaleUpperCase().includes($pattern))`
+  } as $call where {
+    $list <: or { JsArrayExpression(), JsIdentifierExpression() where { $program <: contains `const $list = $items` where { $items <: JsArrayExpression() } } },
+    register_diagnostic(span=$call, message="Match the literal affixes in any case with startsWithAnyOf, endsWithAnyOf or includesAnyOf from trousse: startsWithAnyOf(url, prefixes).")
+  },
+  or {
+    `$value.toLowerCase().split($separator).some(($word) => $list.includes($word))`,
+    `$value.toLowerCase().split($separator).some(($word) => $set.has($word))`,
+    `$value?.toLowerCase().split($separator).some(($word) => $list.includes($word))`,
+    `$value?.toLowerCase().split($separator).some(($word) => $set.has($word))`,
+    `$value.toUpperCase().split($separator).some(($word) => $list.includes($word))`,
+    `$value.toUpperCase().split($separator).some(($word) => $set.has($word))`,
+    `$value?.toUpperCase().split($separator).some(($word) => $list.includes($word))`,
+    `$value?.toUpperCase().split($separator).some(($word) => $set.has($word))`,
+    `$value.toLocaleLowerCase().split($separator).some(($word) => $list.includes($word))`,
+    `$value.toLocaleLowerCase().split($separator).some(($word) => $set.has($word))`,
+    `$value?.toLocaleLowerCase().split($separator).some(($word) => $list.includes($word))`,
+    `$value?.toLocaleLowerCase().split($separator).some(($word) => $set.has($word))`,
+    `$value.toLocaleUpperCase().split($separator).some(($word) => $list.includes($word))`,
+    `$value.toLocaleUpperCase().split($separator).some(($word) => $set.has($word))`,
+    `$value?.toLocaleUpperCase().split($separator).some(($word) => $list.includes($word))`,
+    `$value?.toLocaleUpperCase().split($separator).some(($word) => $set.has($word))`
+  } as $call where {
+    $separator <: r"/\\s\+/",
+    register_diagnostic(span=$call, message="Match the words of the value with anyWordMatchesAnyOf from trousse, which splits on whitespace and folds case: anyWordMatchesAnyOf(title, words).")
+  }
+}

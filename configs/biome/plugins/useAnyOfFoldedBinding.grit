@@ -1,24 +1,52 @@
 language js
 
-// A value folded into a binding only to compare it with literals is isAnyOf, as the inline compare
-// useAnyOf flags is: `const page = script.toLowerCase()` then `page === 'opac-search'`. A binding
-// with any other use, a lookup key or a returned value, holds the folded value on purpose.
+// A value folded into a binding only to compare it with literals, to check it against a literal
+// list or affix, or to hand it to a trousse matcher, is the matcher's job, as the inline forms
+// useAnyOf, useCaseFoldedAffix and noFoldBeforeMatcher flag are: `const page = script.toLowerCase()`
+// then `page === 'opac-search'`. A binding with any other use, a lookup key or a returned value,
+// holds the folded value on purpose. The check stays inside one function.
 JsFunctionBody() as $body where {
   $body <: contains or {
     `const $name = $value.toLowerCase()`,
+    `const $name = $value.toLowerCase().trim()`,
     `const $name = $value?.toLowerCase()`,
+    `const $name = $value?.toLowerCase().trim()`,
     `const $name = $value.toUpperCase()`,
-    `const $name = $value?.toUpperCase()`
+    `const $name = $value.toUpperCase().trim()`,
+    `const $name = $value?.toUpperCase()`,
+    `const $name = $value?.toUpperCase().trim()`,
+    `const $name = $value.toLocaleLowerCase()`,
+    `const $name = $value.toLocaleLowerCase().trim()`,
+    `const $name = $value?.toLocaleLowerCase()`,
+    `const $name = $value?.toLocaleLowerCase().trim()`,
+    `const $name = $value.toLocaleUpperCase()`,
+    `const $name = $value.toLocaleUpperCase().trim()`,
+    `const $name = $value?.toLocaleUpperCase()`,
+    `const $name = $value?.toLocaleUpperCase().trim()`
   } as $binding,
+  not $value <: r"(?s).*\b(?:tagName|nodeName|localName)$",
   not $body <: contains JsIdentifierExpression() as $use where {
     $use <: `$name`,
     not $use <: within or {
       `$name === $literal` where { $literal <: string() },
       `$name !== $literal` where { $literal <: string() },
       `$literal === $name` where { $literal <: string() },
-      `$literal !== $name` where { $literal <: string() }
+      `$literal !== $name` where { $literal <: string() },
+      `isAnyOf($name, $patterns)`,
+      `getAnyOf($name, $patterns)`,
+      `includesAnyOf($name, $patterns)`,
+      `startsWithAnyOf($name, $patterns)`,
+      `endsWithAnyOf($name, $patterns)`,
+      `anyWordMatchesAnyOf($name, $patterns)`,
+      `isSameText($name, $other)`,
+      `isSameText($other, $name)`,
+      `$list.includes($name)` where { $list <: or { JsArrayExpression(), JsIdentifierExpression() } },
+      `$set.has($name)` where { $program <: contains `const $set = new Set($items)` where { $items <: JsArrayExpression() } },
+      `$name.startsWith($affix)` where { or { $affix <: string(), $affix <: JsTemplateExpression() } },
+      `$name.endsWith($affix)` where { or { $affix <: string(), $affix <: JsTemplateExpression() } },
+      `$name.includes($affix)` where { or { $affix <: string(), $affix <: JsTemplateExpression() } }
     }
   },
   $body <: contains JsIdentifierExpression() as $first where { $first <: `$name` },
-  register_diagnostic(span=$binding, message="Match the value as written with isAnyOf from trousse, which folds case and trims, in place of folding it into a binding only to compare it: isAnyOf(script, 'opac-search').")
+  register_diagnostic(span=$binding, message="Pass the value as written to isAnyOf or another trousse matcher, which fold case themselves, in place of folding it into a binding first: isAnyOf(script, 'opac-search').")
 }

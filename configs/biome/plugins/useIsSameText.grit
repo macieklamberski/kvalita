@@ -11,7 +11,9 @@ or {
   $right <: JsCallExpression(),
   or {
     and { $left <: r"[\s\S]*\.toLowerCase\(\)", $right <: r"[\s\S]*\.toLowerCase\(\)" },
-    and { $left <: r"[\s\S]*\.toUpperCase\(\)", $right <: r"[\s\S]*\.toUpperCase\(\)" }
+    and { $left <: r"[\s\S]*\.toUpperCase\(\)", $right <: r"[\s\S]*\.toUpperCase\(\)" },
+    and { $left <: r"[\s\S]*\.toLocaleLowerCase\(\)", $right <: r"[\s\S]*\.toLocaleLowerCase\(\)" },
+    and { $left <: r"[\s\S]*\.toLocaleUpperCase\(\)", $right <: r"[\s\S]*\.toLocaleUpperCase\(\)" }
   },
   not and { $left <: r"[\s\S]*\?\.[\s\S]*", $right <: r"[\s\S]*\?\.[\s\S]*" },
   register_diagnostic(span=$compare, message="Compare the two values with isSameText from trousse, which folds case and trims: isSameText(left, right).")

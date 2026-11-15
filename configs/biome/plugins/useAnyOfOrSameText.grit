@@ -1,22 +1,95 @@
 language js
 
-// A folded value compared with a binding that is not folded itself is a fixed word, which isAnyOf
-// reads, or another value, which isSameText compares. A compare of two folded values belongs to
-// useIsSameText, and one with a literal to useAnyOf.
+// A folded value compared with a binding or a property that is not folded itself is a fixed word,
+// which isAnyOf reads, or another value, which isSameText compares. A compare of two folded values
+// belongs to useIsSameText, and one with a literal to useAnyOf, except a value folded and then
+// trimmed, which useAnyOf does not see. A locale compare that ignores case is isSameText too.
 or {
-  `$value.toLowerCase() === $other`,
-  `$value.toLowerCase() !== $other`,
-  `$other === $value.toLowerCase()`,
-  `$other !== $value.toLowerCase()`,
-  `$value?.toLowerCase() === $other`,
-  `$value?.toLowerCase() !== $other`,
-  `$other === $value?.toLowerCase()`,
-  `$other !== $value?.toLowerCase()`
-} as $compare where {
-  $other <: JsIdentifierExpression(),
-  not $other <: `undefined`,
-  // A value against itself, `name.toLowerCase() !== name`, asks whether it is already folded.
-  not $other <: $value,
-  not $value <: r"(?s).*\b(?:tagName|nodeName|localName)$",
-  register_diagnostic(span=$compare, message="Match a fixed word with isAnyOf, or compare two values with isSameText, both from trousse and both folding case: isAnyOf(name, key).")
+  or {
+    `$value.toLowerCase() === $other`,
+    `$value.toLowerCase() !== $other`,
+    `$other === $value.toLowerCase()`,
+    `$other !== $value.toLowerCase()`,
+    `$value?.toLowerCase() === $other`,
+    `$value?.toLowerCase() !== $other`,
+    `$other === $value?.toLowerCase()`,
+    `$other !== $value?.toLowerCase()`,
+    `$value.toUpperCase() === $other`,
+    `$value.toUpperCase() !== $other`,
+    `$other === $value.toUpperCase()`,
+    `$other !== $value.toUpperCase()`,
+    `$value?.toUpperCase() === $other`,
+    `$value?.toUpperCase() !== $other`,
+    `$other === $value?.toUpperCase()`,
+    `$other !== $value?.toUpperCase()`,
+    `$value.toLocaleLowerCase() === $other`,
+    `$value.toLocaleLowerCase() !== $other`,
+    `$other === $value.toLocaleLowerCase()`,
+    `$other !== $value.toLocaleLowerCase()`,
+    `$value?.toLocaleLowerCase() === $other`,
+    `$value?.toLocaleLowerCase() !== $other`,
+    `$other === $value?.toLocaleLowerCase()`,
+    `$other !== $value?.toLocaleLowerCase()`,
+    `$value.toLocaleUpperCase() === $other`,
+    `$value.toLocaleUpperCase() !== $other`,
+    `$other === $value.toLocaleUpperCase()`,
+    `$other !== $value.toLocaleUpperCase()`,
+    `$value?.toLocaleUpperCase() === $other`,
+    `$value?.toLocaleUpperCase() !== $other`,
+    `$other === $value?.toLocaleUpperCase()`,
+    `$other !== $value?.toLocaleUpperCase()`
+  } as $compare where {
+    $other <: or { JsIdentifierExpression(), JsStaticMemberExpression() },
+    not $other <: `undefined`,
+    // A value against itself, `name.toLowerCase() !== name`, asks whether it is already folded.
+    not $other <: $value,
+    not $value <: r"(?s).*\b(?:tagName|nodeName|localName)$",
+    register_diagnostic(span=$compare, message="Match a fixed word with isAnyOf, or compare two values with isSameText, both from trousse and both folding case and trimming: isAnyOf(name, key).")
+  },
+  or {
+    `$value.toLowerCase().trim() === $other`,
+    `$value.toLowerCase().trim() !== $other`,
+    `$other === $value.toLowerCase().trim()`,
+    `$other !== $value.toLowerCase().trim()`,
+    `$value?.toLowerCase().trim() === $other`,
+    `$value?.toLowerCase().trim() !== $other`,
+    `$other === $value?.toLowerCase().trim()`,
+    `$other !== $value?.toLowerCase().trim()`,
+    `$value.toUpperCase().trim() === $other`,
+    `$value.toUpperCase().trim() !== $other`,
+    `$other === $value.toUpperCase().trim()`,
+    `$other !== $value.toUpperCase().trim()`,
+    `$value?.toUpperCase().trim() === $other`,
+    `$value?.toUpperCase().trim() !== $other`,
+    `$other === $value?.toUpperCase().trim()`,
+    `$other !== $value?.toUpperCase().trim()`,
+    `$value.toLocaleLowerCase().trim() === $other`,
+    `$value.toLocaleLowerCase().trim() !== $other`,
+    `$other === $value.toLocaleLowerCase().trim()`,
+    `$other !== $value.toLocaleLowerCase().trim()`,
+    `$value?.toLocaleLowerCase().trim() === $other`,
+    `$value?.toLocaleLowerCase().trim() !== $other`,
+    `$other === $value?.toLocaleLowerCase().trim()`,
+    `$other !== $value?.toLocaleLowerCase().trim()`,
+    `$value.toLocaleUpperCase().trim() === $other`,
+    `$value.toLocaleUpperCase().trim() !== $other`,
+    `$other === $value.toLocaleUpperCase().trim()`,
+    `$other !== $value.toLocaleUpperCase().trim()`,
+    `$value?.toLocaleUpperCase().trim() === $other`,
+    `$value?.toLocaleUpperCase().trim() !== $other`,
+    `$other === $value?.toLocaleUpperCase().trim()`,
+    `$other !== $value?.toLocaleUpperCase().trim()`
+  } as $compare where {
+    $other <: or { string(), JsIdentifierExpression(), JsStaticMemberExpression() },
+    not $other <: $value,
+    not $value <: r"(?s).*\b(?:tagName|nodeName|localName)$",
+    register_diagnostic(span=$compare, message="Match the value with isAnyOf, or compare it with another value with isSameText, both from trousse and both folding case and trimming: isAnyOf(kind, 'video').")
+  },
+  or {
+    `$value.localeCompare($other, $locales, $options) === 0`,
+    `$value.localeCompare($other, $locales, $options) !== 0`
+  } as $compare where {
+    $options <: r"(?s).*sensitivity:\s*['\"](?:base|accent)['\"].*",
+    register_diagnostic(span=$compare, message="Compare the two values with isSameText from trousse, which folds case and trims, in place of a locale compare that ignores case: isSameText(left, right).")
+  }
 }

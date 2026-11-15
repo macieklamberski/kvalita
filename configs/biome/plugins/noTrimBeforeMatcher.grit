@@ -1,0 +1,20 @@
+language js
+
+// isAnyOf, getAnyOf and isSameText trim both sides themselves, so a value trimmed before one of
+// them is trimmed twice. The affix matchers do not trim, so a trim before them is left alone.
+or {
+  `isAnyOf($value.trim(), $patterns)`,
+  `getAnyOf($value.trim(), $patterns)`,
+  `isSameText($value.trim(), $other)`,
+  `isSameText($other, $value.trim())`,
+  `isAnyOf($value?.trim(), $patterns)`,
+  `getAnyOf($value?.trim(), $patterns)`,
+  `isSameText($value?.trim(), $other)`,
+  `isSameText($other, $value?.trim())`,
+  `isAnyOf($value, $pattern.trim())`,
+  `getAnyOf($value, $pattern.trim())`,
+  `isAnyOf($value, $pattern?.trim())`,
+  `getAnyOf($value, $pattern?.trim())`
+} as $call where {
+  register_diagnostic(span=$call, message="Pass the value as written: isAnyOf, getAnyOf and isSameText trim it themselves, as in isAnyOf(format, extensions).")
+}
