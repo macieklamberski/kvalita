@@ -97,7 +97,12 @@ or {
     `$list.some(($pattern) => $value.toLocaleUpperCase().includes($pattern))`,
     `$list.some(($pattern) => $value?.toLocaleUpperCase().includes($pattern))`
   } as $call where {
-    $list <: or { JsArrayExpression(), JsIdentifierExpression() where { $program <: contains `const $list = $items` where { $items <: JsArrayExpression() } } },
+    $list <: or {
+      JsArrayExpression(),
+      JsIdentifierExpression() where {
+        $program <: contains `const $list = $items` where { $items <: JsArrayExpression() }
+      }
+    },
     register_diagnostic(span=$call, message="Match the literal affixes in any case with startsWithAnyOf, endsWithAnyOf or includesAnyOf from trousse: startsWithAnyOf(url, prefixes).")
   },
   or {

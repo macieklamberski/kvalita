@@ -39,7 +39,10 @@ or {
     `$other === $value?.toLocaleUpperCase()`,
     `$other !== $value?.toLocaleUpperCase()`
   } as $compare where {
-    $other <: or { JsIdentifierExpression(), JsStaticMemberExpression() },
+    $other <: or {
+      JsIdentifierExpression(),
+      JsStaticMemberExpression()
+    },
     not $other <: `undefined`,
     // A value against itself, `name.toLowerCase() !== name`, asks whether it is already folded.
     not $other <: $value,
@@ -80,7 +83,11 @@ or {
     `$other === $value?.toLocaleUpperCase().trim()`,
     `$other !== $value?.toLocaleUpperCase().trim()`
   } as $compare where {
-    $other <: or { string(), JsIdentifierExpression(), JsStaticMemberExpression() },
+    $other <: or {
+      string(),
+      JsIdentifierExpression(),
+      JsStaticMemberExpression()
+    },
     not $other <: $value,
     not $value <: r"(?s).*\b(?:tagName|nodeName|localName)$",
     register_diagnostic(span=$compare, message="Match the value with isAnyOf, or compare it with another value with isSameText, both from trousse and both folding case and trimming: isAnyOf(kind, 'video').")

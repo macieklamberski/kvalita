@@ -40,10 +40,21 @@ JsFunctionBody() as $body where {
       `anyWordMatchesAnyOf($name, $patterns)`,
       `isSameText($name, $other)`,
       `isSameText($other, $name)`,
-      `$list.includes($name)` where { $list <: or { JsArrayExpression(), JsIdentifierExpression() } },
-      `$set.has($name)` where { $program <: contains `const $set = new Set($items)` where { $items <: JsArrayExpression() } },
-      `$name.startsWith($affix)` where { or { $affix <: string(), $affix <: JsTemplateExpression() } },
-      `$name.endsWith($affix)` where { or { $affix <: string(), $affix <: JsTemplateExpression() } },
+      `$list.includes($name)` where {
+        $list <: or {
+          JsArrayExpression(),
+          JsIdentifierExpression()
+        }
+      },
+      `$set.has($name)` where {
+        $program <: contains `const $set = new Set($items)` where { $items <: JsArrayExpression() }
+      },
+      `$name.startsWith($affix)` where {
+        or { $affix <: string(), $affix <: JsTemplateExpression() }
+      },
+      `$name.endsWith($affix)` where {
+        or { $affix <: string(), $affix <: JsTemplateExpression() }
+      },
       `$name.includes($affix)` where { or { $affix <: string(), $affix <: JsTemplateExpression() } }
     }
   },
