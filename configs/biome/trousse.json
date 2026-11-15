@@ -34,7 +34,14 @@
         "./node_modules/kvalita/configs/biome/plugins/useTruthyUrlGuard.grit",
         "./node_modules/kvalita/configs/biome/plugins/useTypeofGuard.grit",
         "./node_modules/kvalita/configs/biome/plugins/useNullishGuard.grit",
-        "./node_modules/kvalita/configs/biome/plugins/useIsValidDate.grit"
+        "./node_modules/kvalita/configs/biome/plugins/useIsValidDate.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noFoldBeforeMatcher.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noTrimBeforeMatcher.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useAnyOfCaseInsensitiveRegex.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useAnyOfFoldedBinding.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useAnyOfOrSameText.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useCaseFoldedSearch.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useGetAnyOf.grit"
       ]
     }
   ]
