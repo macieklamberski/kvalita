@@ -1,0 +1,51 @@
+language js
+
+// A case-insensitive regex holding only literal text is a trousse matcher, chosen by its anchors:
+// both for isAnyOf, the start for startsWithAnyOf, the end for endsWithAnyOf, neither for
+// includesAnyOf. An alternation such as /^(embed|watch)$/i belongs to useAnyOf.
+or {
+  `$regex.test($value)` as $call where {
+    or {
+      $regex <: r"/\^(?:[\w-]|\\[./-])+\$/[a-hj-z]*i[a-hj-z]*",
+      $regex <: JsIdentifierExpression() where {
+        $program <: contains `const $regex = $literal` where {
+          $literal <: r"/\^(?:[\w-]|\\[./-])+\$/[a-hj-z]*i[a-hj-z]*"
+        }
+      }
+    },
+    register_diagnostic(span=$call, message="Match the literal in any case with isAnyOf from trousse in place of a case-insensitive regex: isAnyOf(route, 'embed').")
+  },
+  `$regex.test($value)` as $call where {
+    or {
+      $regex <: r"/\^(?:[\w-]|\\[./-])+/[a-hj-z]*i[a-hj-z]*",
+      $regex <: JsIdentifierExpression() where {
+        $program <: contains `const $regex = $literal` where {
+          $literal <: r"/\^(?:[\w-]|\\[./-])+/[a-hj-z]*i[a-hj-z]*"
+        }
+      }
+    },
+    register_diagnostic(span=$call, message="Match the literal prefix in any case with startsWithAnyOf from trousse in place of a case-insensitive regex: startsWithAnyOf(url, 'http').")
+  },
+  `$regex.test($value)` as $call where {
+    or {
+      $regex <: r"/(?:[\w-]|\\[./-])+\$/[a-hj-z]*i[a-hj-z]*",
+      $regex <: JsIdentifierExpression() where {
+        $program <: contains `const $regex = $literal` where {
+          $literal <: r"/(?:[\w-]|\\[./-])+\$/[a-hj-z]*i[a-hj-z]*"
+        }
+      }
+    },
+    register_diagnostic(span=$call, message="Match the literal suffix in any case with endsWithAnyOf from trousse in place of a case-insensitive regex: endsWithAnyOf(path, '.xml').")
+  },
+  `$regex.test($value)` as $call where {
+    or {
+      $regex <: r"/(?:[\w-]|\\[./-])+/[a-hj-z]*i[a-hj-z]*",
+      $regex <: JsIdentifierExpression() where {
+        $program <: contains `const $regex = $literal` where {
+          $literal <: r"/(?:[\w-]|\\[./-])+/[a-hj-z]*i[a-hj-z]*"
+        }
+      }
+    },
+    register_diagnostic(span=$call, message="Match the literal in any case with includesAnyOf from trousse in place of a case-insensitive regex: includesAnyOf(type, 'xml').")
+  }
+}

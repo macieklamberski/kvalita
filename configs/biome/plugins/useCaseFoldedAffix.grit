@@ -6,14 +6,37 @@ or {
   `$value.toLowerCase().startsWith($pattern)`,
   `$value.toLowerCase().endsWith($pattern)`,
   `$value.toLowerCase().includes($pattern)`,
+  `$value.toUpperCase().startsWith($pattern)`,
+  `$value.toUpperCase().endsWith($pattern)`,
+  `$value.toUpperCase().includes($pattern)`,
+  `$value.toLocaleLowerCase().startsWith($pattern)`,
+  `$value.toLocaleLowerCase().endsWith($pattern)`,
+  `$value.toLocaleLowerCase().includes($pattern)`,
+  `$value.toLocaleUpperCase().startsWith($pattern)`,
+  `$value.toLocaleUpperCase().endsWith($pattern)`,
+  `$value.toLocaleUpperCase().includes($pattern)`,
   `$value?.toLowerCase().startsWith($pattern)`,
   `$value?.toLowerCase().endsWith($pattern)`,
-  `$value?.toLowerCase().includes($pattern)`
+  `$value?.toLowerCase().includes($pattern)`,
+  `$value?.toUpperCase().startsWith($pattern)`,
+  `$value?.toUpperCase().endsWith($pattern)`,
+  `$value?.toUpperCase().includes($pattern)`,
+  `$value?.toLocaleLowerCase().startsWith($pattern)`,
+  `$value?.toLocaleLowerCase().endsWith($pattern)`,
+  `$value?.toLocaleLowerCase().includes($pattern)`,
+  `$value?.toLocaleUpperCase().startsWith($pattern)`,
+  `$value?.toLocaleUpperCase().endsWith($pattern)`,
+  `$value?.toLocaleUpperCase().includes($pattern)`
 } as $call where {
   or {
     $pattern <: string(),
     $pattern <: JsTemplateExpression(),
-    $pattern <: `$text.toLowerCase()` where {
+    $pattern <: or {
+      `$text.toLowerCase()`,
+      `$text.toUpperCase()`,
+      `$text.toLocaleLowerCase()`,
+      `$text.toLocaleUpperCase()`
+    } where {
       $text <: or {
         string(),
         JsTemplateExpression()

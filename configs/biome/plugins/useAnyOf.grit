@@ -4,15 +4,25 @@ language js
 // useIsSameText.
 or {
   or {
+    `$value.toLocaleLowerCase() === $literal`,
     `$value.toLowerCase() === $literal`,
+    `$value.toLocaleLowerCase() !== $literal`,
     `$value.toLowerCase() !== $literal`,
+    `$literal === $value.toLocaleLowerCase()`,
     `$literal === $value.toLowerCase()`,
+    `$literal !== $value.toLocaleLowerCase()`,
     `$literal !== $value.toLowerCase()`,
+    `$value.toLocaleUpperCase() === $literal`,
     `$value.toUpperCase() === $literal`,
+    `$value.toLocaleUpperCase() !== $literal`,
     `$value.toUpperCase() !== $literal`,
+    `$literal === $value.toLocaleUpperCase()`,
     `$literal === $value.toUpperCase()`,
+    `$literal !== $value.toLocaleUpperCase()`,
     `$literal !== $value.toUpperCase()`,
+    `$list.includes($value.toLocaleLowerCase())`,
     `$list.includes($value.toLowerCase())`,
+    `$list.includes($value.toLocaleUpperCase())`,
     `$list.includes($value.toUpperCase())`
   } as $compare where {
     or { $literal <: string(), $list <: JsArrayExpression(), $list <: JsIdentifierExpression() },
@@ -20,38 +30,68 @@ or {
     register_diagnostic(span=$compare, message="Match the value with isAnyOf from trousse, which folds case and trims: isAnyOf(value, 'embed').")
   },
   or {
+    `$set.has($value.toLocaleLowerCase())` where {
+      $program <: contains `const $set = new Set($items)` where { $items <: JsArrayExpression() }
+    },
     `$set.has($value.toLowerCase())` where {
+      $program <: contains `const $set = new Set($items)` where { $items <: JsArrayExpression() }
+    },
+    `$set.has($value?.toLocaleLowerCase())` where {
       $program <: contains `const $set = new Set($items)` where { $items <: JsArrayExpression() }
     },
     `$set.has($value?.toLowerCase())` where {
       $program <: contains `const $set = new Set($items)` where { $items <: JsArrayExpression() }
     },
+    `$value?.toLocaleLowerCase() === $literal` where { $literal <: string() },
     `$value?.toLowerCase() === $literal` where { $literal <: string() },
+    `$value?.toLocaleLowerCase() !== $literal` where { $literal <: string() },
     `$value?.toLowerCase() !== $literal` where { $literal <: string() },
+    `$literal === $value?.toLocaleLowerCase()` where { $literal <: string() },
     `$literal === $value?.toLowerCase()` where { $literal <: string() },
+    `$literal !== $value?.toLocaleLowerCase()` where { $literal <: string() },
     `$literal !== $value?.toLowerCase()` where { $literal <: string() },
+    `$value?.toLocaleUpperCase() === $literal` where { $literal <: string() },
     `$value?.toUpperCase() === $literal` where { $literal <: string() },
+    `$value?.toLocaleUpperCase() !== $literal` where { $literal <: string() },
     `$value?.toUpperCase() !== $literal` where { $literal <: string() },
+    `$literal === $value?.toLocaleUpperCase()` where { $literal <: string() },
     `$literal === $value?.toUpperCase()` where { $literal <: string() },
+    `$literal !== $value?.toLocaleUpperCase()` where { $literal <: string() },
     `$literal !== $value?.toUpperCase()` where { $literal <: string() },
+    `$list.includes($value?.toLocaleLowerCase())` where {
+      or { $list <: JsArrayExpression(), $list <: JsIdentifierExpression() }
+    },
     `$list.includes($value?.toLowerCase())` where {
+      or { $list <: JsArrayExpression(), $list <: JsIdentifierExpression() }
+    },
+    `$list.includes($value?.toLocaleUpperCase())` where {
       or { $list <: JsArrayExpression(), $list <: JsIdentifierExpression() }
     },
     `$list.includes($value?.toUpperCase())` where {
       or { $list <: JsArrayExpression(), $list <: JsIdentifierExpression() }
     },
+    `$list?.includes($value.toLocaleLowerCase())` where { $list <: JsIdentifierExpression() },
     `$list?.includes($value.toLowerCase())` where { $list <: JsIdentifierExpression() },
+    `$list?.includes($value?.toLocaleLowerCase())` where { $list <: JsIdentifierExpression() },
     `$list?.includes($value?.toLowerCase())` where { $list <: JsIdentifierExpression() },
+    `$list?.includes($value.toLocaleUpperCase())` where { $list <: JsIdentifierExpression() },
     `$list?.includes($value.toUpperCase())` where { $list <: JsIdentifierExpression() },
+    `$list?.includes($value?.toLocaleUpperCase())` where { $list <: JsIdentifierExpression() },
     `$list?.includes($value?.toUpperCase())` where { $list <: JsIdentifierExpression() },
+    `$list.some(($item) => $item === $value.toLocaleLowerCase())`,
     `$list.some(($item) => $item === $value.toLowerCase())`,
+    `$list.some(($item) => $item === $value?.toLocaleLowerCase())`,
     `$list.some(($item) => $item === $value?.toLowerCase())`,
+    `$list?.some(($item) => $item === $value.toLocaleLowerCase())`,
     `$list?.some(($item) => $item === $value.toLowerCase())`,
+    `$list?.some(($item) => $item === $value?.toLocaleLowerCase())`,
     `$list?.some(($item) => $item === $value?.toLowerCase())`,
     `$list.some($callback)` where {
       $callback <: JsArrowFunctionExpression(body=JsFunctionBody(statements=[
         JsReturnStatement(argument=or {
+          `$item === $value.toLocaleLowerCase()`,
           `$item === $value.toLowerCase()`,
+          `$item === $value?.toLocaleLowerCase()`,
           `$item === $value?.toLowerCase()`
         }),
       ]))
@@ -59,7 +99,9 @@ or {
     `$list?.some($callback)` where {
       $callback <: JsArrowFunctionExpression(body=JsFunctionBody(statements=[
         JsReturnStatement(argument=or {
+          `$item === $value.toLocaleLowerCase()`,
           `$item === $value.toLowerCase()`,
+          `$item === $value?.toLocaleLowerCase()`,
           `$item === $value?.toLowerCase()`
         }),
       ]))

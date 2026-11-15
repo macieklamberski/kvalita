@@ -56,3 +56,9 @@ const isSomeBlockMaybe = maybeRoutes?.some((item) => { // flag
 const isMaybeKey = kind?.toUpperCase() === text
 const hasMaybeTag = maybeRoutes?.includes(element?.tagName.toLowerCase())
 const isMaybeSameUpper = kind?.toUpperCase() === text.toUpperCase()
+const isLocaleEmbed = route.toLocaleLowerCase() === 'embed' // flag
+const isLocaleUpperListed = routes.includes(route.toLocaleUpperCase()) // flag
+const isLocaleOptional = kind?.toLocaleLowerCase() !== 'video' // flag
+const hasLocaleLiteral = set.has(route.toLocaleLowerCase()) // flag
+const isLocaleSome = list.some((item) => item === kind?.toLocaleLowerCase()) // flag
+const isLocaleArg = route.toLocaleLowerCase('tr') === 'embed'

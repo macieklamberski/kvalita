@@ -12,3 +12,6 @@ const isRaw = left === right
 const isMixed = left.toLowerCase() === right.toUpperCase()
 const isJoined = prefix + left.toLowerCase() === right.toLowerCase()
 const isBothOptional = user.name?.toLowerCase() === other?.toLowerCase()
+const isLocaleSame = left.toLocaleLowerCase() === right.toLocaleLowerCase() // flag
+const isLocaleUpper = left.toLocaleUpperCase() !== right.toLocaleUpperCase() // flag
+const isLocaleMixed = left.toLocaleLowerCase() === right.toLowerCase()
