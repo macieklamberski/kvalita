@@ -2,12 +2,23 @@ language js
 
 // A case-insensitive regex holding only literal text is a trousse matcher, chosen by its anchors:
 // both for isAnyOf, the start for startsWithAnyOf, the end for endsWithAnyOf, neither for
-// includesAnyOf. An alternation such as /^(embed|watch)$/i belongs to useAnyOf.
+// includesAnyOf. An alternation such as /^(embed|watch)$/i belongs to useAnyOf. A constant the
+// file also hands to replace, exec, match, split or search stays a regex, since a matcher cannot
+// do that other job.
 or {
   `$regex.test($value)` as $call where {
     or {
       $regex <: r"/\^(?:[\w-]|\\[./-])+\$/[a-hj-z]*i[a-hj-z]*",
       $regex <: JsIdentifierExpression() where {
+        not $program <: contains or {
+          `$_.replace($regex, $_)`,
+          `$_.replaceAll($regex, $_)`,
+          `$regex.exec($_)`,
+          `$_.match($regex)`,
+          `$_.matchAll($regex)`,
+          `$_.split($regex)`,
+          `$_.search($regex)`
+        },
         $program <: contains `const $regex = $literal` where {
           $literal <: r"/\^(?:[\w-]|\\[./-])+\$/[a-hj-z]*i[a-hj-z]*"
         }
@@ -19,6 +30,15 @@ or {
     or {
       $regex <: r"/\^(?:[\w-]|\\[./-])+/[a-hj-z]*i[a-hj-z]*",
       $regex <: JsIdentifierExpression() where {
+        not $program <: contains or {
+          `$_.replace($regex, $_)`,
+          `$_.replaceAll($regex, $_)`,
+          `$regex.exec($_)`,
+          `$_.match($regex)`,
+          `$_.matchAll($regex)`,
+          `$_.split($regex)`,
+          `$_.search($regex)`
+        },
         $program <: contains `const $regex = $literal` where {
           $literal <: r"/\^(?:[\w-]|\\[./-])+/[a-hj-z]*i[a-hj-z]*"
         }
@@ -30,6 +50,15 @@ or {
     or {
       $regex <: r"/(?:[\w-]|\\[./-])+\$/[a-hj-z]*i[a-hj-z]*",
       $regex <: JsIdentifierExpression() where {
+        not $program <: contains or {
+          `$_.replace($regex, $_)`,
+          `$_.replaceAll($regex, $_)`,
+          `$regex.exec($_)`,
+          `$_.match($regex)`,
+          `$_.matchAll($regex)`,
+          `$_.split($regex)`,
+          `$_.search($regex)`
+        },
         $program <: contains `const $regex = $literal` where {
           $literal <: r"/(?:[\w-]|\\[./-])+\$/[a-hj-z]*i[a-hj-z]*"
         }
@@ -41,6 +70,15 @@ or {
     or {
       $regex <: r"/(?:[\w-]|\\[./-])+/[a-hj-z]*i[a-hj-z]*",
       $regex <: JsIdentifierExpression() where {
+        not $program <: contains or {
+          `$_.replace($regex, $_)`,
+          `$_.replaceAll($regex, $_)`,
+          `$regex.exec($_)`,
+          `$_.match($regex)`,
+          `$_.matchAll($regex)`,
+          `$_.split($regex)`,
+          `$_.search($regex)`
+        },
         $program <: contains `const $regex = $literal` where {
           $literal <: r"/(?:[\w-]|\\[./-])+/[a-hj-z]*i[a-hj-z]*"
         }
