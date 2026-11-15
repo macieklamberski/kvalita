@@ -9,7 +9,11 @@
     },
     {
       "includes": ["**", "!**/*.test.ts", "!**/*.test.tsx"],
-      "plugins": []
+      "plugins": [
+        "./node_modules/kvalita/configs/biome/plugins/noFoldBeforeMatcher.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useAnyOfFoldedBinding.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useAnyOfOrSameText.grit"
+      ]
     }
   ]
 }

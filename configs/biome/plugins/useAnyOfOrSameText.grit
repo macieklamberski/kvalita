@@ -1,0 +1,22 @@
+language js
+
+// A folded value compared with a binding that is not folded itself is a fixed word, which isAnyOf
+// reads, or another value, which isSameText compares. A compare of two folded values belongs to
+// useIsSameText, and one with a literal to useAnyOf.
+or {
+  `$value.toLowerCase() === $other`,
+  `$value.toLowerCase() !== $other`,
+  `$other === $value.toLowerCase()`,
+  `$other !== $value.toLowerCase()`,
+  `$value?.toLowerCase() === $other`,
+  `$value?.toLowerCase() !== $other`,
+  `$other === $value?.toLowerCase()`,
+  `$other !== $value?.toLowerCase()`
+} as $compare where {
+  $other <: JsIdentifierExpression(),
+  not $other <: `undefined`,
+  // A value against itself, `name.toLowerCase() !== name`, asks whether it is already folded.
+  not $other <: $value,
+  not $value <: r"(?s).*\b(?:tagName|nodeName|localName)$",
+  register_diagnostic(span=$compare, message="Match a fixed word with isAnyOf, or compare two values with isSameText, both from trousse and both folding case: isAnyOf(name, key).")
+}

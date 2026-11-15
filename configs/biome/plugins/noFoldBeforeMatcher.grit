@@ -1,0 +1,17 @@
+language js
+
+// The trousse matchers fold case themselves, so a value folded before one of them is folded twice.
+or {
+  `isAnyOf($value.toLowerCase(), $patterns)`,
+  `isAnyOf($value?.toLowerCase(), $patterns)`,
+  `getAnyOf($value.toLowerCase(), $patterns)`,
+  `getAnyOf($value?.toLowerCase(), $patterns)`,
+  `includesAnyOf($value.toLowerCase(), $patterns)`,
+  `includesAnyOf($value?.toLowerCase(), $patterns)`,
+  `startsWithAnyOf($value.toLowerCase(), $patterns)`,
+  `startsWithAnyOf($value?.toLowerCase(), $patterns)`,
+  `endsWithAnyOf($value.toLowerCase(), $patterns)`,
+  `endsWithAnyOf($value?.toLowerCase(), $patterns)`
+} as $call where {
+  register_diagnostic(span=$call, message="Pass the value as written: the trousse matchers fold case themselves, as in includesAnyOf(href, uris).")
+}
