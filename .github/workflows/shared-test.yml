@@ -17,6 +17,7 @@ on:
 jobs:
   test:
     runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
+    timeout-minutes: 15
     # A newer push to the same pull request cancels this job. Other events get a group of their own,
     # so every push to a branch still runs in full.
     concurrency:
