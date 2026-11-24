@@ -1,9 +1,10 @@
 // Helpers for the shared package workflow, which installs a package the way npm publishes it and
 // loads every entry point it exports on each supported Node version.
 //
-// node package-check.mjs versions <package-dir>
-//   Prints the Node majors to test as a JSON array: every even major from the floor in
-//   engines.node, or 18 when it is not set, up to the latest release.
+// node package-check.mjs load <package-dir> <consumer-dir>
+//   Loads every entry point in <consumer-dir>/entries on the newest release of each Node major to
+//   test: every even major from the floor in engines.node, or 18 when it is not set, up to the
+//   latest release.
 // node package-check.mjs peers <package-dir>
 //   Prints each optional peer dependency as name@range, one per line. npm skips optional peers,
 //   but an entry point built on one needs it installed to load.
@@ -17,7 +18,8 @@
 //   Runs tsc on one TypeScript setup, failing only on errors in it or in the package's own types.
 
 import { spawnSync } from 'node:child_process'
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 const defaultFloor = 18
@@ -41,23 +43,89 @@ const getFloor = (range) => {
   return Math.min(...majors.filter((major) => !Number.isNaN(major)))
 }
 
-const getVersions = async (packageDir) => {
+// The newest stable release of each major to test, oldest major first. The index lists releases
+// newest first, so the first match for a major is its newest.
+const getReleases = async (packageDir) => {
   const floor = getFloor(readPackage(packageDir).engines?.node)
   const response = await fetch('https://nodejs.org/dist/index.json')
   const releases = await response.json()
-  // The index lists a pre-release such as `v27.0.0-alpha.0.0.0` before setup-node can install it.
+  // The index lists a pre-release such as `v27.0.0-alpha.0.0.0` before its first stable release.
   const stable = releases.filter((release) => !release.version.includes('-'))
   const latest = Math.max(...stable.map((release) => Number(release.version.match(majorRegex)[0])))
-  const versions = []
+  const majors = []
 
   // Odd majors never become LTS, so only the latest one is worth testing.
   for (let major = floor; major <= latest; major++) {
     if (major % 2 === 0 || major === latest) {
-      versions.push(major)
+      majors.push(major)
     }
   }
 
-  return versions
+  return majors.map((major) => {
+    const { version } = stable.find((release) => release.version.startsWith(`v${major}.`))
+
+    return { major, version, latest: major === latest }
+  })
+}
+
+// Downloads a Linux build of the release and returns the path to its node binary.
+const installNode = async (version) => {
+  const arch = process.arch === 'arm64' ? 'arm64' : 'x64'
+  const url = `https://nodejs.org/dist/${version}/node-${version}-linux-${arch}.tar.xz`
+  const dir = join(tmpdir(), `node-${version}`)
+  const response = await fetch(url)
+
+  if (!response.ok) {
+    throw new Error(`Could not download ${url}: ${response.status}`)
+  }
+
+  mkdirSync(dir, { recursive: true })
+
+  const { status } = spawnSync('tar', ['-xJ', '-C', dir, '--strip-components', '1'], {
+    input: Buffer.from(await response.arrayBuffer()),
+    stdio: ['pipe', 'inherit', 'inherit'],
+  })
+
+  if (status !== 0) {
+    throw new Error(`Could not unpack ${url}`)
+  }
+
+  return join(dir, 'bin', 'node')
+}
+
+// The latest major runs without the ESM fallbacks older majors lack, so it cannot hide their
+// failures.
+const latestFlags = ['--no-experimental-detect-module', '--no-experimental-require-module']
+
+const loadEntries = async (packageDir, consumerDir) => {
+  const files = readdirSync(join(consumerDir, 'entries')).sort()
+  let passed = true
+
+  for (const { major, version, latest } of await getReleases(packageDir)) {
+    const node = await installNode(version)
+
+    console.log(`::group::Node.js ${version}`)
+
+    for (const file of files) {
+      const path = join('entries', file)
+      const { status } = spawnSync(node, [...(latest ? latestFlags : []), path], {
+        cwd: consumerDir,
+        stdio: ['ignore', 'ignore', 'inherit'],
+      })
+
+      if (status === 0) {
+        console.log(`ok ${path}`)
+        continue
+      }
+
+      console.log(`::error::${path} failed to load on Node.js ${major}`)
+      passed = false
+    }
+
+    console.log('::endgroup::')
+  }
+
+  return passed
 }
 
 // Every condition name used anywhere in an export target, including nested ones like node.import.
@@ -294,10 +362,8 @@ const getOptionalPeers = (packageDir) => {
 
 const [command, packageDir, consumerDir, flag] = process.argv.slice(2)
 
-if (command === 'versions') {
-  const versions = await getVersions(packageDir)
-
-  console.log(JSON.stringify(versions))
+if (command === 'load') {
+  process.exit((await loadEntries(packageDir, consumerDir)) ? 0 : 1)
 } else if (command === 'peers') {
   for (const peer of getOptionalPeers(packageDir)) {
     console.log(peer)
@@ -310,7 +376,7 @@ if (command === 'versions') {
   process.exit(typecheck(packageDir, consumerDir) ? 0 : 1)
 } else {
   console.error(
-    'Usage: package-check.mjs versions|peers <package-dir> | entries|setups|typecheck <package-dir> <dir>',
+    'Usage: package-check.mjs peers <package-dir> | load|entries|setups|typecheck <package-dir> <dir>',
   )
   process.exit(1)
 }

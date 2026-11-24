@@ -20,44 +20,8 @@ on:
         default: false
 
 jobs:
-  versions:
-    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
-    outputs:
-      versions: ${{ steps.versions.outputs.versions }}
-      latest: ${{ steps.versions.outputs.latest }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: Checkout kvalita
-        uses: actions/checkout@v7
-        with:
-          repository: macieklamberski/kvalita
-          ref: ${{ job.workflow_sha }}
-          path: .kvalita
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: 24
-
-      - name: List Node.js versions
-        id: versions
-        run: |
-          versions=$(node .kvalita/scripts/package-check.mjs versions .)
-          echo "versions=$versions" >> "$GITHUB_OUTPUT"
-          echo "latest=$(echo "$versions" | jq '.[-1]')" >> "$GITHUB_OUTPUT"
-
   package:
-    name: package (Node ${{ matrix.node }})
-    needs: versions
     runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        node: ${{ fromJSON(needs.versions.outputs.versions) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -98,29 +62,9 @@ jobs:
           npm install --install-links --ignore-scripts "$GITHUB_WORKSPACE" "${peers[@]}"
           node "$GITHUB_WORKSPACE/.kvalita/scripts/package-check.mjs" entries "$GITHUB_WORKSPACE" .
 
-      - name: Setup Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v7
-        with:
-          node-version: ${{ matrix.node }}
-
-      # On the latest Node, the fallbacks older versions lack are turned off: syntax detection, which
-      # loads ESM files Node would otherwise treat as CommonJS, and require() of ESM files.
-      - name: Load every entry point
+      - name: Load every entry point on each Node.js version
         working-directory: ${{ runner.temp }}/consumer
-        env:
-          FLAGS: ${{ matrix.node == needs.versions.outputs.latest && '--no-experimental-detect-module --no-experimental-require-module' || '' }}
-        run: |
-          node --version
-          status=0
-          for file in entries/*; do
-            if node $FLAGS "$file" > /dev/null; then
-              echo "ok $file"
-            else
-              echo "::error::$file failed to load"
-              status=1
-            fi
-          done
-          exit $status
+        run: node "$GITHUB_WORKSPACE/.kvalita/scripts/package-check.mjs" load "$GITHUB_WORKSPACE" .
 
   # Type-checks every entry point under each TypeScript module resolution, from ESM and CommonJS
   # consumers, and bundles every entry point with Vite.
