@@ -17,6 +17,11 @@ on:
 jobs:
   lint:
     runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
+    # A newer push to the same pull request cancels this job. Other events get a group of their own,
+    # so every push to a branch still runs in full.
+    concurrency:
+      group: ${{ github.workflow }}-lint-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+      cancel-in-progress: true
     steps:
       - name: Checkout
         uses: actions/checkout@v7
