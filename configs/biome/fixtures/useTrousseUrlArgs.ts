@@ -32,3 +32,24 @@ const added = addMissingProtocol(query) // flag
 const read = getQueryParam(url, 'v')
 declare const maybePage: number | undefined
 const maybeCounted = composeQuery({ page: maybePage?.toString() }) // flag
+declare const maybeUrl: URL | undefined
+declare const getQueryParams: typeof getQueryParamValues
+const readScene = (scene: string | undefined) => {
+  const params = new URLSearchParams(scene) // flag
+  return [getQueryParam(params, 'sc'), getQueryParam(params, 'chsm')]
+}
+const readRaw = (scene: string | undefined) => {
+  const params = new URLSearchParams(scene)
+  return getQueryParam(params, 'sc', { decodeValues: false })
+}
+const readMixed = (scene: string | undefined) => {
+  const params = new URLSearchParams(scene)
+  return [getQueryParam(params, 'sc'), params.get('chsm')]
+}
+const readComputed = (scene: string) => {
+  const params = new URLSearchParams(scene.replaceAll(';', '&'))
+  return getQueryParam(params, 'sc')
+}
+const named = getQueryParams(maybeUrl?.search ?? '', ['v']) // flag
+const searched = getQueryParam(url.search, 'v') // flag
+const hashed = getQueryParam(url.hash, 'v')

@@ -1,31 +1,66 @@
 language js
 
 // A compare against the page's own location stays raw, and a host-or-subdomain test is left to
-// useSubdomainOf.
+// useSubdomainOf. A regex, isAnyOf or a fixed Set tested on the hostname is isHostOf too, which
+// differs only in matching a trailing-dot host. A bare host binding is left alone, since it may
+// test the host's shape rather than name it, and `.host` keeps the port, which isHostOf drops.
 or {
-  `$left === $right`,
-  `$left !== $right`,
-  `$_.includes($right)`,
-  `$_?.includes($right)`
-} as $compare where {
   or {
-    $left <: or {
-      `$_.hostname`,
-      `$_.host`,
-      `$_?.hostname`,
-      `$_?.host`
+    `$left === $right`,
+    `$left !== $right`,
+    `$_.includes($right)`,
+    `$_?.includes($right)`
+  } as $compare where {
+    or {
+      $left <: or {
+        `$_.hostname`,
+        `$_.host`,
+        `$_?.hostname`,
+        `$_?.host`
+      },
+      $right <: or {
+        `$_.hostname`,
+        `$_.host`,
+        `$_?.hostname`,
+        `$_?.host`
+      }
     },
-    $right <: or {
-      `$_.hostname`,
-      `$_.host`,
-      `$_?.hostname`,
-      `$_?.host`
-    }
+    not $compare <: within or {
+      `$_ === $_ || $_.endsWith($_)`,
+      `$_ !== $_ && !$_.endsWith($_)`
+    },
+    not $compare <: contains `location`,
+    register_diagnostic(span=$compare, message="Compare the host with isHostOf from trousse, which folds case and ignores a trailing dot: isHostOf(url, 'example.com').")
   },
-  not $compare <: contains `location`,
-  not $compare <: within or {
-    `$_ === $_ || $_.endsWith($_)`,
-    `$_ !== $_ && !$_.endsWith($_)`
+  or {
+    `$regex.test($_.hostname)`,
+    `$regex.test($_?.hostname)`
+  } as $compare where {
+    $regex <: or {
+      JsRegexLiteralExpression(),
+      JsIdentifierExpression() where {
+        $program <: contains `const $regex = $literal` where {
+          $literal <: JsRegexLiteralExpression()
+        }
+      }
+    },
+    not $compare <: contains `location`,
+    register_diagnostic(span=$compare, message="Test the host with isHostOf from trousse, which takes the regex and ignores a trailing dot: isHostOf(url, hostRegex). Only a regex that is exactly /(?:^|\\.)host$/ or /\\.host$/ becomes isHostOrSubdomainOf or isSubdomainOf with the bare host.")
   },
-  register_diagnostic(span=$compare, message="Compare the host with isHostOf from trousse, which folds case and ignores a trailing dot: isHostOf(url, 'example.com').")
+  or {
+    `isAnyOf($_.hostname, $_)`,
+    `isAnyOf($_?.hostname, $_)`
+  } as $compare where {
+    not $compare <: contains `location`,
+    register_diagnostic(span=$compare, message="Test the host with isHostOf from trousse, which takes the same patterns and ignores a trailing dot: isHostOf(url, hosts).")
+  },
+  or {
+    `$set.has($_.hostname)`,
+    `$set.has($_?.hostname)`
+  } as $compare where {
+    $set <: JsIdentifierExpression(),
+    $program <: contains `const $set = new Set($hosts)` where { $hosts <: JsArrayExpression() },
+    not $compare <: contains `location`,
+    register_diagnostic(span=$compare, message="Test the host with isHostOf from trousse and the hosts as an array in place of the Set, which folds case and ignores a trailing dot: isHostOf(url, hosts).")
+  }
 }

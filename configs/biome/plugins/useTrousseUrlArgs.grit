@@ -16,6 +16,45 @@ or {
     },
     register_diagnostic(span=$call, message="Pass the query string to the trousse reader as is, since it accepts a string: getQueryParam(query, 'v').")
   },
+  // A bound URLSearchParams read only through two-argument reader calls is the string itself. A
+  // reader given options stays, since a bound URLSearchParams has already decoded the values that
+  // decodeValues: false keeps raw from a string.
+  JsVariableDeclarator(id=$params, initializer=JsInitializerClause(expression=`new URLSearchParams($source)`)) as $declarator where {
+    $source <: JsIdentifierExpression(),
+    $declarator <: within JsFunctionBody() as $body,
+    $body <: contains `$reader($params, $_)` where {
+      $reader <: or {
+        `getQueryParam`,
+        `getQueryParams`,
+        `getQueryParamValues`,
+        `hasQueryParam`
+      }
+    },
+    not $body <: contains JsIdentifierExpression() as $use where {
+      $use <: $params,
+      not $use <: within `$reader($params, $_)` where {
+        $reader <: or {
+          `getQueryParam`,
+          `getQueryParams`,
+          `getQueryParamValues`,
+          `hasQueryParam`
+        }
+      }
+    },
+    register_diagnostic(span=$declarator, message="Pass the query string to the trousse reader as is and drop the URLSearchParams, since the reader accepts a string or undefined: getQueryParam(query, 'v').")
+  },
+  or {
+    `$reader($_?.search ?? '', $...)`,
+    `$reader($_.search, $...)`
+  } as $call where {
+    $reader <: or {
+      `getQueryParam`,
+      `getQueryParams`,
+      `getQueryParamValues`,
+      `hasQueryParam`
+    },
+    register_diagnostic(span=$call, message="Pass the url to the trousse reader as is, since it accepts a URL or undefined: getQueryParams(url, names).")
+  },
   `$reader($_, $_)?.trim()` as $call where {
     $reader <: or {
       `getQueryParam`,

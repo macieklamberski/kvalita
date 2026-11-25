@@ -19,3 +19,19 @@ const hasRuntime = type.toLowerCase().indexOf(prefix) !== -1
 const isRuntimeList = runtime.some((pattern) => url.toLowerCase().startsWith(pattern))
 const hasComma = title.toLowerCase().split(',').some((word) => words.includes(word))
 const position = type.toLowerCase().indexOf('xml')
+const markers = ['rss+xml', 'atom+xml']
+const casedMarkers = ['RSS+xml']
+declare const link: { type?: string }
+const readType = () => {
+  const folded = link.type?.trim().toLowerCase()
+  const isFeed = folded && markers.some((marker) => folded.includes(marker)) // flag
+  const isLiteral = folded && ['rss', 'atom'].some((marker) => folded.endsWith(marker)) // flag
+  const isCased = folded && casedMarkers.some((marker) => folded.includes(marker))
+  const isEmpty = folded && ['', 'rss'].some((marker) => folded.includes(marker))
+  const isRuntime = folded && runtime.some((marker) => folded.includes(marker))
+  return [isFeed, isLiteral, isCased, isEmpty, isRuntime]
+}
+const readRaw = () => {
+  const unfolded = link.type?.trim()
+  return unfolded && markers.some((marker) => unfolded.includes(marker))
+}

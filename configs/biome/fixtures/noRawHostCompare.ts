@@ -1,3 +1,5 @@
+import { isAnyOf } from 'trousse'
+
 declare const url: URL
 declare const link: URL
 declare const hosts: Array<string>
@@ -19,3 +21,22 @@ const isHostListed = maybeHosts?.includes(url.hostname) // flag
 const isMaybeLocal = maybeUrl?.host === location.host
 const isMaybeDomain = maybeUrl?.hostname === 'example.com' || maybeUrl?.hostname.endsWith('.example.com')
 const isMaybePath = maybeUrl?.pathname === '/feed'
+declare const hostname: string
+declare const label: Set<string>
+const fixedHosts = new Set(['example.com', 'example.org'])
+const runtimeHosts = new Set<string>()
+const hostRegex = /(?:^|\.)example\.com$/
+
+const isRegexHost = /^example\.com$/i.test(url.hostname) // flag
+const isNamedRegexHost = hostRegex.test(url.hostname) // flag
+const isMaybeRegexHost = hostRegex.test(maybeUrl?.hostname) // flag
+const isAnyHost = isAnyOf(url.hostname, hosts) // flag
+const isMaybeAnyHost = isAnyOf(maybeUrl?.hostname, hostRegex) // flag
+const isSetHost = fixedHosts.has(url.hostname) // flag
+const isMaybeSetHost = fixedHosts.has(maybeUrl?.hostname) // flag
+const isBareRegexHost = hostRegex.test(hostname)
+const isPortRegexHost = hostRegex.test(url.host)
+const isLocalRegexHost = hostRegex.test(location.hostname)
+const isRuntimeSetHost = runtimeHosts.has(url.hostname)
+const isParamSetHost = label.has(url.hostname)
+const isAnyPath = isAnyOf(url.pathname, '/feed')

@@ -1,0 +1,22 @@
+language js
+
+// A copy made by a lone spread and then cut by an unconditional delete in the same block is omit,
+// which does exactly that. A delete under an if or a loop, or a copy that adds fields, stays. omit
+// types its result as Omit<T, K>, so a key typed as a wide string collapses the fields.
+JsVariableDeclarator(id=$copy, initializer=JsInitializerClause(expression=JsObjectExpression(members=[
+  JsSpread()
+]))) as $declarator where {
+  $declarator <: within JsVariableStatement() as $statement,
+  $statement <: r"(?s)const\s.*",
+  $statement <: within or {
+    JsBlockStatement(statements=$statements),
+    JsFunctionBody(statements=$statements),
+    JsModule(items=$statements)
+  },
+  $statements <: some $statement,
+  $statements <: some JsExpressionStatement(expression=or {
+    `delete $copy[$_]`,
+    `delete $copy.$_`
+  }),
+  register_diagnostic(span=$declarator, message="Copy the object without the key with omit from trousse, which spreads it and deletes the keys, and keep the key a literal so the Omit type holds the other fields: omit(params, ['tail']).")
+}
