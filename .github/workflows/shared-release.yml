@@ -31,7 +31,9 @@ jobs:
       issues: write
       pull-requests: write
       id-token: write
-    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
+    # npm accepts a publish signed with provenance only from a GitHub-hosted runner, so the release
+    # stays off CI_RUNNER, which can point at a self-hosted one such as Ubicloud.
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout
