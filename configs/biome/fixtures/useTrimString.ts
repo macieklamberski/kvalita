@@ -28,3 +28,90 @@ const readOther = (raw: string) => {
 
   return other || undefined
 }
+const readGuarded = (raw: string) => {
+  const trimmed = raw.trim() // flag
+
+  if (!trimmed) {
+    return
+  }
+
+  return trimmed.split(',')
+}
+const readOptionalGuarded = (raw?: string) => {
+  const trimmed = raw?.trim() // flag
+
+  if (!trimmed) {
+    return
+  }
+
+  return trimmed.toUpperCase()
+}
+const readCompared = (raw: string) => {
+  const trimmed = raw.trim() // flag
+
+  if (trimmed === '') {
+    return 'empty'
+  }
+
+  return trimmed
+}
+const readLength = (raw: string) => {
+  const trimmed = raw.trim() // flag
+
+  if (trimmed.length === 0) {
+    return 0
+  }
+
+  return trimmed.length
+}
+const readCompound = (raw: string, key: string) => {
+  const trimmed = raw.trim() // flag
+
+  if (!key || !trimmed) {
+    return
+  }
+
+  return `${key}=${trimmed}`
+}
+const readSplit = (raw: string) => {
+  const trimmed = raw.trim()
+
+  return trimmed.split(',')
+}
+const readPrefixed = (raw: string) => {
+  const trimmed = raw.trim()
+
+  if (!trimmed.startsWith('http')) {
+    return
+  }
+
+  return trimmed
+}
+const readShort = (raw: string) => {
+  const trimmed = raw.trim()
+
+  if (trimmed.length < 3) {
+    return
+  }
+
+  return trimmed
+}
+const readOtherGuard = (raw: string, other: string) => {
+  const trimmed = raw.trim()
+
+  if (!other) {
+    return
+  }
+
+  return trimmed
+}
+const readPair = (rawKey: string, rawValue: string) => {
+  const key = rawKey.trim() // flag
+  const value = rawValue.trim() // flag
+
+  if (!key || !value) {
+    return
+  }
+
+  return `${key}=${value}`
+}

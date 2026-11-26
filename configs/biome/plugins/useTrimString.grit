@@ -4,18 +4,37 @@ language js
 // undefined for a nullish or non-string value. The one difference is a string of nothing but
 // U+0085: trim keeps it, since String#trim does not count it as whitespace, and trimString drops
 // it, since U+0085 is Unicode White_Space. A binding trimmed and then returned with
-// `|| undefined` in the same function is the same job split in two.
+// `|| undefined` in the same function is the same job split in two. So is a binding trimmed and
+// then tested for being empty by an if, where the guard stays and reads undefined in place of ''.
 or {
-  `$value.trim() || undefined`,
-  `$value?.trim() || undefined`,
-  `$trimmed || undefined` where {
-    $trimmed <: JsIdentifierExpression(),
-    $trimmed <: within JsFunctionBody() as $body,
-    $body <: contains or {
-      `const $trimmed = $value.trim()`,
-      `const $trimmed = $value?.trim()`
+  or {
+    `$value.trim() || undefined`,
+    `$value?.trim() || undefined`,
+    `$trimmed || undefined` where {
+      $trimmed <: JsIdentifierExpression(),
+      $trimmed <: within JsFunctionBody() as $body,
+      $body <: contains or {
+        `const $trimmed = $value.trim()`,
+        `const $trimmed = $value?.trim()`
+      }
     }
+  } as $check where {
+    register_diagnostic(span=$check, message="Trim the value with trimString from trousse, which gives undefined when nothing but whitespace is left: trimString(value).")
+  },
+  or {
+    `const $trimmed = $value.trim()`,
+    `const $trimmed = $value?.trim()`
+  } as $check where {
+    $check <: within JsFunctionBody() as $body,
+    $body <: contains JsIfStatement(test=$test) where {
+      $test <: contains or {
+        `!$trimmed`,
+        `$trimmed === ''`,
+        `$trimmed.length === 0`,
+        `!$trimmed.length`,
+        `$trimmed.length > 0`
+      }
+    },
+    register_diagnostic(span=$check, message="Trim the value with trimString from trousse, which gives undefined when nothing but whitespace is left, and keep the empty check after it as !trimmed: const trimmed = trimString(value).")
   }
-} as $check where {
-  register_diagnostic(span=$check, message="Trim the value with trimString from trousse, which gives undefined when nothing but whitespace is left: trimString(value).")
 }
