@@ -9,13 +9,7 @@
     },
     {
       "includes": ["**", "!**/*.test.ts", "!**/*.test.tsx"],
-      "plugins": [
-        "./node_modules/kvalita/configs/biome/plugins/useDecodeBase64.grit",
-        "./node_modules/kvalita/configs/biome/plugins/noTrousseNameShadow.grit",
-        "./node_modules/kvalita/configs/biome/plugins/useIsNonEmptyString.grit",
-        "./node_modules/kvalita/configs/biome/plugins/useGetOrigin.grit",
-        "./node_modules/kvalita/configs/biome/plugins/useOmit.grit"
-      ]
+      "plugins": []
     }
   ]
 }
