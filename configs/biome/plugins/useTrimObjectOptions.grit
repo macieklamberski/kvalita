@@ -1,0 +1,8 @@
+language js
+
+// trimObject takes its keep predicate in an options object, and the positional form is deprecated
+// until the next trousse major. A second argument that is not an object literal is the old form.
+`trimObject($object, $keep)` as $call where {
+  not $keep <: JsObjectExpression(),
+  register_diagnostic(span=$call, message="Pass the keep predicate to trimObject from trousse in an options object, since the positional form is deprecated: trimObject(object, { keep: Boolean }).")
+}

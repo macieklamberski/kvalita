@@ -39,7 +39,9 @@ JsFunctionBody() as $body where {
       `endsWithAnyOf($name, $patterns)`,
       `anyWordMatchesAnyOf($name, $patterns)`,
       `isSameText($name, $other)`,
+      `isLooseMatch($name, $other)`,
       `isSameText($other, $name)`,
+      `isLooseMatch($other, $name)`,
       `$list.includes($name)` where {
         $list <: or {
           JsArrayExpression(),

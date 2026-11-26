@@ -1,14 +1,41 @@
 language js
 
-// omitEmpty drops nullish and empty-string items, and gives undefined where none is left, so a
+// trimArray drops nullish and empty-string items, and gives undefined where none is left, so a
 // list checked for having no item but empty ones, or filtered of empty strings, is its job.
-// filter(Boolean) also drops 0 and false, so it is left alone.
+// filter(Boolean) also drops 0 and false, so it is left alone, unless the filtered list is given
+// up as undefined when empty, which is trimArray with keep set to Boolean.
 or {
-  `$list.every(($item) => !$item)`,
-  `$list.filter(($item) => $item !== '')`,
-  `$list.filter(($item) => isPresent($item) && $item !== '')`,
-  `$list.filter(($item) => $item !== undefined && $item !== '')`,
-  `$list.filter(($item) => $item != null && $item !== '')`
-} as $check where {
-  register_diagnostic(span=$check, message="Drop empty items with omitEmpty from trousse, which gives undefined when none is left: omitEmpty(list).")
+  or {
+    `$list.every(($item) => !$item)`,
+    `$list.filter(($item) => $item !== '')`,
+    `$list.filter(($item) => isPresent($item) && $item !== '')`,
+    `$list.filter(($item) => $item !== undefined && $item !== '')`,
+    `$list.filter(($item) => $item != null && $item !== '')`
+  } as $check where {
+    register_diagnostic(span=$check, message="Drop empty items with trimArray from trousse, which gives undefined when none is left: trimArray(list).")
+  },
+  JsFunctionBody() as $body where {
+    $body <: contains ( `const $kept = $list.filter($keep)` as $check where {
+      $keep <: or {
+        r"isPresent|Boolean",
+        `($item) => isPresent($item)`,
+        `($item) => $item !== undefined`,
+        `($item) => $item != null`
+      },
+      $body <: contains or {
+        JsIfStatement(test=$test, consequent=$guard) where {
+          $test <: or {
+            `$kept.length === 0`,
+            `!$kept.length`
+          },
+          $guard <: r"\{\s*return\s*\}"
+        },
+        JsReturnStatement(argument=or {
+          `$kept.length > 0 ? $kept : undefined`,
+          `$kept.length ? $kept : undefined`
+        })
+      },
+      register_diagnostic(span=$check, message="Drop the empty items with trimArray from trousse, which gives undefined when none is left, in place of a filter and an empty check: trimArray(list), or trimArray(list, { keep: Boolean }) for a truthy filter.")
+    })
+  }
 }

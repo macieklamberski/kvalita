@@ -1,0 +1,21 @@
+language js
+
+// A trimmed string with an empty result turned into undefined is trimString, which also gives
+// undefined for a nullish or non-string value. The one difference is a string of nothing but
+// U+0085: trim keeps it, since String#trim does not count it as whitespace, and trimString drops
+// it, since U+0085 is Unicode White_Space. A binding trimmed and then returned with
+// `|| undefined` in the same function is the same job split in two.
+or {
+  `$value.trim() || undefined`,
+  `$value?.trim() || undefined`,
+  `$trimmed || undefined` where {
+    $trimmed <: JsIdentifierExpression(),
+    $trimmed <: within JsFunctionBody() as $body,
+    $body <: contains or {
+      `const $trimmed = $value.trim()`,
+      `const $trimmed = $value?.trim()`
+    }
+  }
+} as $check where {
+  register_diagnostic(span=$check, message="Trim the value with trimString from trousse, which gives undefined when nothing but whitespace is left: trimString(value).")
+}
