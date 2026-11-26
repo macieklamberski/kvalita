@@ -105,6 +105,26 @@ or {
     },
     register_diagnostic(span=$call, message="Match the literal affixes in any case with startsWithAnyOf, endsWithAnyOf or includesAnyOf from trousse: startsWithAnyOf(url, prefixes).")
   },
+  // A some over a folded binding counts when the list is lowercase literals only: a runtime or
+  // empty pattern matches every value raw and none through a matcher, and an uppercase one never
+  // matches a lowercased value raw. The binding stays when it has other uses, only the some goes.
+  or {
+    `$list.some(($pattern) => $name.includes($pattern))`,
+    `$list.some(($pattern) => $name.startsWith($pattern))`,
+    `$list.some(($pattern) => $name.endsWith($pattern))`
+  } as $call where {
+    $name <: JsIdentifierExpression(),
+    $call <: within JsFunctionBody() as $body,
+    $body <: contains `const $name = $fold` where {
+      $fold <: r"(?s).*\.(?:toLowerCase|toLocaleLowerCase)\(\)(?:\.trim\(\))?"
+    },
+    or {
+      $list <: JsArrayExpression() as $items,
+      $list <: JsIdentifierExpression() where { $program <: contains `const $list = $items` }
+    },
+    $items <: r"(?s)\[\s*'[^'A-Z\\]+'(?:\s*,\s*'[^'A-Z\\]+')*\s*,?\s*\](?:\s+as\s+const)?",
+    register_diagnostic(span=$call, message="Match the lowercase literals with includesAnyOf, startsWithAnyOf or endsWithAnyOf from trousse, which fold the value themselves: includesAnyOf(type, markers).")
+  },
   or {
     `$value.toLowerCase().split($separator).some(($word) => $list.includes($word))`,
     `$value.toLowerCase().split($separator).some(($word) => $set.has($word))`,

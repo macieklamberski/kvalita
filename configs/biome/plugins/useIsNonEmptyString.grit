@@ -1,0 +1,30 @@
+language js
+
+// A trimmed value tested for being empty is isNonEmptyString, which also rejects a nullish or
+// non-string value. The differences are a string of nothing but U+FEFF, which trim strips and
+// isNonEmptyString keeps, since U+FEFF is not Unicode White_Space, and one of nothing but U+0085,
+// which trim keeps and isNonEmptyString rejects. A compare with '' is left to noEmptyStringTest,
+// and an optional chain compared with a length is true or false for undefined where
+// !isNonEmptyString is always true, so neither is matched here. In !!value.trim() the inner
+// negation is the match.
+or {
+  or {
+    `Boolean($value.trim())`,
+    `Boolean($value?.trim())`,
+    `$value.trim().length === 0`,
+    `$value.trim().length !== 0`,
+    `$value.trim().length > 0`,
+    `!$value.trim()`,
+    `!$value?.trim()`
+  } as $check where {
+    register_diagnostic(span=$check, message="Test for a string with text with isNonEmptyString from trousse: !isNonEmptyString(value). It is also true for a nullish or non-string value, so keep an isString guard where a missing value must not count as empty.")
+  },
+  or {
+    `$_.filter(($value) => $value.trim())`,
+    `$_.filter(($value) => $value?.trim())`,
+    `$_?.filter(($value) => $value.trim())`,
+    `$_?.filter(($value) => $value?.trim())`
+  } as $check where {
+    register_diagnostic(span=$check, message="Keep the strings with text by passing isNonEmptyString from trousse to filter, which also drops a nullish or non-string value: lines.filter(isNonEmptyString).")
+  }
+}

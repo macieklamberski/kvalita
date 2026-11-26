@@ -1,14 +1,32 @@
 language js
 
 // A template counts when an interpolation follows a query or fragment name and `=`, so a path
-// template or a fixed query stays out.
+// template or a fixed query stays out. A URLSearchParams bound from an object literal counts when
+// the file only fills it with set and writes it after a `?`, since any other use such as append,
+// a read or a request body is work composeQuery cannot do.
 or {
-  JsTemplateExpression() as $query where { $query <: r"(?s)`[^`]*[?&#][\w][\w.\[\]-]*=\$\{.*" },
-  `new URLSearchParams($_).toString()` as $query,
-  `new URLSearchParams($_)` as $query where {
-    $query <: within JsTemplateExpression(),
-    not $query <: within `new URLSearchParams($_).toString()`
+  or {
+    JsTemplateExpression() as $query where { $query <: r"(?s)`[^`]*[?&#][\w][\w.\[\]-]*=\$\{.*" },
+    `new URLSearchParams($_).toString()` as $query,
+    `new URLSearchParams($_)` as $query where {
+      $query <: within JsTemplateExpression(),
+      not $query <: within `new URLSearchParams($_).toString()`
+    }
+  } as $query where {
+    register_diagnostic(span=$query, message="Build the query with composeQuery or composeFragment from trousse instead of a hand-written template or a URLSearchParams: composeQuery({ v: id }).")
+  },
+  JsVariableDeclarator(id=$params, initializer=JsInitializerClause(expression=`new URLSearchParams($fields)`)) as $declarator where {
+    $fields <: JsObjectExpression(),
+    $declarator <: within JsVariableStatement() as $statement,
+    $statement <: r"(?s)const\s.*",
+    $program <: contains JsTemplateExpression(elements=[
+      ..., JsTemplateChunkElement() as $chunk, JsTemplateElement(expression=$params), ...
+    ]) where { $chunk <: r"(?s).*\?" },
+    not $program <: contains JsIdentifierExpression() as $use where {
+      $use <: $params,
+      not $use <: within `$params.set($_, $_)`,
+      not $use <: within JsTemplateElement(expression=JsIdentifierExpression())
+    },
+    register_diagnostic(span=$declarator, message="Build the query with composeQuery from trousse, which writes the ? itself, and spread an optional key in, since it takes no undefined: `${url}${composeQuery({ v: id, ...(cursor ? { cursor } : {}) })}`.")
   }
-} as $query where {
-  register_diagnostic(span=$query, message="Build the query with composeQuery or composeFragment from trousse instead of a hand-written template or a URLSearchParams: composeQuery({ v: id }).")
 }

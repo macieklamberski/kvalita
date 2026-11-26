@@ -1,6 +1,43 @@
 language js
 
-JsTryStatement() as $try where {
-  $try <: `try { return JSON.parse($value) } catch { $fallback }`,
-  register_diagnostic(span=$try, message="Parse with parseJson from trousse, which returns undefined for invalid JSON: parseJson(value) ?? fallback.")
+// A try that exists to catch JSON.parse is parseJson. When the parse opens the try and the catch
+// falls back to a constant, the try may still guard a later statement that throws, which the
+// plugin cannot see, so the message says to keep it then. A `?? ''` fed to JSON.parse is there
+// only to force the throw, and parseJson takes the nullish value itself.
+or {
+  JsTryStatement() as $try where {
+    $try <: `try { return JSON.parse($value) } catch { $fallback }`,
+    register_diagnostic(span=$try, message="Parse with parseJson from trousse, which returns undefined for invalid JSON: parseJson(value) ?? fallback.")
+  },
+  JsTryStatement(body=JsBlockStatement(statements=[
+    $first, ...
+  ]), catch_clause=JsCatchClause(body=$fallback)) as $try where {
+    or {
+      $first <: JsVariableStatement(declaration=JsVariableDeclaration(declarators=[
+        JsVariableDeclarator(initializer=JsInitializerClause(expression=$parse))
+      ])),
+      $first <: JsExpressionStatement(expression=JsAssignmentExpression(right=$parse)),
+      $first <: JsReturnStatement(argument=$parse)
+    },
+    $parse <: r"(?s)JSON\.parse\(.*",
+    not $parse <: contains `JSON.parse($_ ?? '')`,
+    not $try <: `try { return JSON.parse($_) } catch { $_ }`,
+    $fallback <: r"(?s)\{\s*(?:return(?:\s+(?:false|true|undefined|null|\[\]|\{\}|'[^']*'|-?\d+))?\s*)?\}",
+    register_diagnostic(span=$first, message="Parse with parseJson from trousse, which returns undefined for invalid JSON, and drop the try unless something else in it can throw: const message = parseJson(value).")
+  },
+  // A parse wrapped the same way as the undefined in the catch, such as Promise.resolve, is
+  // parseJson inside the wrapper. A snippet does not bind a member callee, so the try is spelled
+  // out as nodes.
+  JsTryStatement(body=JsBlockStatement(statements=[
+    JsReturnStatement(argument=`$wrap($parse)`)
+  ]), catch_clause=JsCatchClause(body=JsBlockStatement(statements=[
+    JsReturnStatement(argument=`$wrap(undefined)`)
+  ]))) as $try where {
+    $parse <: r"(?s)JSON\.parse\(.*",
+    not $parse <: contains `JSON.parse($_ ?? '')`,
+    register_diagnostic(span=$try, message="Parse with parseJson from trousse, which returns undefined for invalid JSON, inside the wrapper: return Promise.resolve(parseJson(value)).")
+  },
+  `JSON.parse($value ?? '')` as $parse where {
+    register_diagnostic(span=$parse, message="Parse with parseJson from trousse, which takes a nullish value and returns undefined for invalid JSON: parseJson(value).")
+  }
 }

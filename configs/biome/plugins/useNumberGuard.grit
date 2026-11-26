@@ -1,10 +1,20 @@
 language js
 
 or {
-  `isNumber($value) && Number.isInteger($value)`,
-  `typeof $value === 'number' && Number.isInteger($value)`,
-  `isNumber($value) && Number.isFinite($value)`,
-  `typeof $value === 'number' && Number.isFinite($value)`
-} as $check where {
-  register_diagnostic(span=$check, message="Narrow with isInteger or isFiniteNumber from trousse, which reject NaN and Infinity: isInteger(value).")
+  or {
+    `isNumber($value) && Number.isInteger($value)`,
+    `typeof $value === 'number' && Number.isInteger($value)`,
+    `isNumber($value) && Number.isFinite($value)`,
+    `typeof $value === 'number' && Number.isFinite($value)`
+  } as $check where {
+    register_diagnostic(span=$check, message="Narrow with isInteger or isFiniteNumber from trousse, which reject NaN and Infinity: isInteger(value).")
+  },
+  // Number.isFinite already rejects undefined and null, so a presence check before it adds nothing.
+  or {
+    `$value !== undefined && Number.isFinite($value)`,
+    `$value != null && Number.isFinite($value)`,
+    `isPresent($value) && Number.isFinite($value)`
+  } as $check where {
+    register_diagnostic(span=$check, message="Narrow with isFiniteNumber from trousse, which already rejects undefined and null: isFiniteNumber(value).")
+  }
 }

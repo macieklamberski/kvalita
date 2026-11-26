@@ -1,0 +1,8 @@
+language js
+
+// getOrigin takes no base, so a parse against one stays as it is. An opaque url such as data:
+// gives the string 'null' as its origin, where getOrigin returns undefined.
+`$parse?.origin` as $origin where {
+  $parse <: JsCallExpression(callee=`parseUrl`, arguments=JsCallArguments(args=[$_])),
+  register_diagnostic(span=$origin, message="Read the origin with getOrigin from trousse, which parses the value and returns undefined for an opaque origin in place of 'null': getOrigin(url).")
+}

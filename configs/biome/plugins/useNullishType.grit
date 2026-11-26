@@ -1,7 +1,21 @@
 language js
 
-TsUnionType(types=$types) as $union where {
-  $types <: some TsNullLiteralType(),
-  $types <: some TsUndefinedType(),
-  register_diagnostic(span=$union, message="Write a value that may be null or undefined as `Nullish<T>` from trousse.")
+// An optional member or parameter typed with a null union already admits undefined through the
+// marker, so `?: T | null` is `?: Nullish<T>` too. That holds while exactOptionalPropertyTypes is
+// off, which no project turns on. A null inside a nested type is not the member's own union.
+or {
+  TsUnionType(types=$types) as $union where {
+    $types <: some TsNullLiteralType(),
+    $types <: some TsUndefinedType(),
+    register_diagnostic(span=$union, message="Write a value that may be null or undefined as `Nullish<T>` from trousse.")
+  },
+  or {
+    TsPropertySignatureTypeMember(type_annotation=TsTypeAnnotation(ty=TsUnionType(types=$types))),
+    JsFormalParameter(type_annotation=TsTypeAnnotation(ty=TsUnionType(types=$types)))
+  } as $member where {
+    $member <: r"(?s)[^:]*\?\s*:.*",
+    $types <: some TsNullLiteralType(),
+    not $types <: some TsUndefinedType(),
+    register_diagnostic(span=$member, message="Write an optional value that may be null as `?: Nullish<T>` from trousse, since the optional marker already adds undefined: title?: Nullish<string>.")
+  }
 }

@@ -1,0 +1,12 @@
+language js
+
+// atob throws on bad input, so every caller wraps it in a try. The trousse decoders return
+// undefined instead, and the Url ones also read the - and _ of the url-safe alphabet.
+or {
+  `atob($_)`,
+  `globalThis.atob($_)`,
+  `Buffer.from($_, 'base64').toString($...)`,
+  `Buffer.from($_, 'base64url').toString($...)`
+} as $decode where {
+  register_diagnostic(span=$decode, message="Decode with decodeBase64Binary, decodeBase64UrlBinary, decodeBase64 or decodeBase64Url from trousse, which return undefined for bad input instead of throwing: decodeBase64Binary(value).")
+}

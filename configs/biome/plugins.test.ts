@@ -2,6 +2,7 @@ import { describe, expect, it } from 'bun:test'
 import { existsSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import * as trousse from 'trousse'
 
 const configsDir = import.meta.dir
 const pluginsDir = join(configsDir, 'plugins')
@@ -9,6 +10,7 @@ const root = join(configsDir, '../..')
 const biome = join(root, 'node_modules/.bin/biome')
 const gritRegex = /\.grit$/
 const flagRegex = /\/\/ flag$/
+const shadowNameRegex = /^ {4}`(\w+)`,?$/gm
 
 const byName = (left: string | undefined, right: string | undefined): number => {
   return (left ?? '').localeCompare(right ?? '')
@@ -113,6 +115,20 @@ const readFlaggedLines = (plugin: string): Array<number> => {
 describe('configs', () => {
   it('should register every plugin in the folder once and nothing else', () => {
     expect(registered.toSorted(byName)).toEqual(plugins.toSorted(byName))
+  })
+})
+
+// The locale helpers t and tx are left out of noTrousseNameShadow, since a one-letter name says
+// nothing about the job it does.
+const unshadowed = ['t', 'tx']
+
+describe('noTrousseNameShadow', () => {
+  it('should list every runtime export of trousse', () => {
+    const source = readFileSync(join(pluginsDir, 'noTrousseNameShadow.grit'), 'utf8')
+    const listed = [...source.matchAll(shadowNameRegex)].map((found) => found[1])
+    const exported = Object.keys(trousse).filter((name) => !unshadowed.includes(name))
+
+    expect(listed.toSorted(byName)).toEqual(exported.toSorted(byName))
   })
 })
 
