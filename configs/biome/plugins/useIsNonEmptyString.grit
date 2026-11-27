@@ -1,9 +1,8 @@
 language js
 
 // A trimmed value tested for being empty is isNonEmptyString, which also rejects a nullish or
-// non-string value. The differences are a string of nothing but U+FEFF, which trim strips and
-// isNonEmptyString keeps, since U+FEFF is not Unicode White_Space, and one of nothing but U+0085,
-// which trim keeps and isNonEmptyString rejects. A compare with '' is left to noEmptyStringTest,
+// non-string value. The one difference is a string of nothing but U+0085, which trim keeps and
+// isNonEmptyString rejects as Unicode White_Space. A compare with '' is left to noEmptyStringTest,
 // and an optional chain compared with a length is true or false for undefined where
 // !isNonEmptyString is always true, so neither is matched here. In !!value.trim() the inner
 // negation is the match.

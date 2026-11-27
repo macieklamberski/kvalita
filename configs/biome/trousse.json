@@ -42,7 +42,12 @@
         "./node_modules/kvalita/configs/biome/plugins/useAnyOfFoldedBinding.grit",
         "./node_modules/kvalita/configs/biome/plugins/useAnyOfOrSameText.grit",
         "./node_modules/kvalita/configs/biome/plugins/useCaseFoldedSearch.grit",
-        "./node_modules/kvalita/configs/biome/plugins/useGetAnyOf.grit"
+        "./node_modules/kvalita/configs/biome/plugins/useGetAnyOf.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useDecodeBase64.grit",
+        "./node_modules/kvalita/configs/biome/plugins/noTrousseNameShadow.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useIsNonEmptyString.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useGetOrigin.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useOmit.grit"
       ]
     }
   ]

@@ -51,7 +51,7 @@
     "kvalita": "file:.",
     "lefthook": "^2.2.2",
     "semantic-release": "^25.0.9",
-    "trousse": "^3.17.0",
+    "trousse": "^3.17.1",
     "typescript": "^7.0.2"
   }
 }
