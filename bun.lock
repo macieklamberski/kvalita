@@ -13,7 +13,7 @@
         "kvalita": "file:.",
         "lefthook": "^2.2.2",
         "semantic-release": "^25.0.9",
-        "trousse": "^3.17.1",
+        "trousse": "^3.19.0",
         "typescript": "^7.0.2",
       },
       "peerDependencies": {
@@ -626,7 +626,7 @@
 
     "traverse": ["traverse@0.6.8", "", {}, "sha512-aXJDbk6SnumuaZSANd21XAo15ucCDE38H4fkqiGsc3MhCK+wOlZvLP9cB/TvpHT0mOyWgC4Z8EwRlzqYSUzdsA=="],
 
-    "trousse": ["trousse@3.17.1", "", { "dependencies": { "entities": "^9.0.0" } }, "sha512-vFLWAsqMOTRSCbqYnftzZqbu4wU5hGgz4EtKljya1vAeIyHC4kJdqyA7qOlLiukz8trbZweaqyfQ77b1n+PqvA=="],
+    "trousse": ["trousse@3.19.0", "", { "dependencies": { "entities": "^9.0.0" } }, "sha512-ixLwSzFseFoD+k3Vu6v4mXMypHuQVm8CPBiB1H4uIPzZY/Mc+7WhPkfjBgtCBKNJSxnCRblMrPd8g75H9rytUg=="],
 
     "tunnel": ["tunnel@0.0.6", "", {}, "sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg=="],
 

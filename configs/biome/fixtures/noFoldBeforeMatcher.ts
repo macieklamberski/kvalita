@@ -6,6 +6,7 @@ declare const getAnyOf: (value: string | undefined, patterns: Array<string>) => 
 declare const includesAnyOf: (value: string | undefined, patterns: Array<string>) => boolean
 declare const startsWithAnyOf: (value: string | undefined, patterns: string | Array<string>) => boolean
 declare const isSameText: (value: string | undefined, other: string | undefined) => boolean
+declare const isLooseMatch: (value: string | undefined, other: string | undefined) => boolean
 declare const anyWordMatchesAnyOf: (value: string, patterns: Array<string>) => boolean
 declare const endsWithAnyOf: (value: string | undefined, patterns: Array<string>) => boolean
 const isIgnored = includesAnyOf(href.toLowerCase(), uris) // flag
@@ -18,6 +19,7 @@ const isRaw = includesAnyOf(href, uris)
 const isTrimmed = isAnyOf(href.trim(), 'embed')
 const isUpper = isAnyOf(href.toUpperCase(), 'EMBED') // flag
 const isSame = isSameText(href, text?.toLowerCase()) // flag
+const isLoose = isLooseMatch(href.toLowerCase(), text) // flag
 const hasWord = anyWordMatchesAnyOf(href.toUpperCase(), uris) // flag
 const isSameRaw = isSameText(href, text)
 declare const prefix: string

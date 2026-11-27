@@ -1,7 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/latest/schema.json",
   "root": false,
-  "plugins": [],
+  "plugins": ["./node_modules/kvalita/configs/biome/plugins/noDeprecatedTrousseName.grit"],
   "overrides": [
     {
       "includes": ["**/*.test.ts", "**/*.test.tsx"],
@@ -9,7 +9,10 @@
     },
     {
       "includes": ["**", "!**/*.test.ts", "!**/*.test.tsx"],
-      "plugins": []
+      "plugins": [
+        "./node_modules/kvalita/configs/biome/plugins/useTrimString.grit",
+        "./node_modules/kvalita/configs/biome/plugins/useTrimObjectOptions.grit"
+      ]
     }
   ]
 }

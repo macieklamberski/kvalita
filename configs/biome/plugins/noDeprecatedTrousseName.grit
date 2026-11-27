@@ -1,0 +1,26 @@
+language js
+
+// trousse renamed omitEmpty to trimArray and isSameText to isLooseMatch, and keeps the old names
+// as deprecated aliases until its next major. An import or re-export of an old name is matched,
+// which covers every call in the file.
+or {
+  JsShorthandNamedImportSpecifier(local_name=$name),
+  JsNamedImportSpecifier(name=$name),
+  JsExportNamedFromSpecifier(source_name=$name)
+} as $specifier where {
+  or {
+    $specifier <: within JsImport() as $statement,
+    $specifier <: within JsExportNamedFromClause() as $statement
+  },
+  $statement <: r"(?s).*\bfrom\s*['\"]trousse['\"].*",
+  or {
+    and {
+      $name <: r"omitEmpty",
+      register_diagnostic(span=$specifier, message="Import trimArray from trousse, the new name of the deprecated omitEmpty: trimArray(list).")
+    },
+    and {
+      $name <: r"isSameText",
+      register_diagnostic(span=$specifier, message="Import isLooseMatch from trousse, the new name of the deprecated isSameText: isLooseMatch(left, right).")
+    }
+  }
+}

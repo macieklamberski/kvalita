@@ -1,6 +1,6 @@
 language js
 
-// isSameText returns false when either side is missing, so a compare where both sides can be
+// isLooseMatch returns false when either side is missing, so a compare where both sides can be
 // undefined, and so equal, is left alone. Both sides fold the same way, since toLowerCase and
 // toUpperCase disagree on a few letters.
 or {
@@ -16,5 +16,5 @@ or {
     and { $left <: r"[\s\S]*\.toLocaleUpperCase\(\)", $right <: r"[\s\S]*\.toLocaleUpperCase\(\)" }
   },
   not and { $left <: r"[\s\S]*\?\.[\s\S]*", $right <: r"[\s\S]*\?\.[\s\S]*" },
-  register_diagnostic(span=$compare, message="Compare the two values with isSameText from trousse, which folds case and trims: isSameText(left, right).")
+  register_diagnostic(span=$compare, message="Compare the two values with isLooseMatch from trousse, which folds case and trims: isLooseMatch(left, right).")
 }

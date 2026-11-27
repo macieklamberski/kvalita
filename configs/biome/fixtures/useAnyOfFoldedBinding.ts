@@ -66,3 +66,9 @@ const readTag = (element: { tagName: string }) => {
   const tag = element.tagName.toLowerCase()
   return routes.includes(tag)
 }
+declare const isLooseMatch: (value: string | undefined, other: string | undefined) => boolean
+const readLoose = (title: string, other: string) => {
+  const folded = title.toLowerCase() // flag
+
+  return isLooseMatch(folded, other)
+}
