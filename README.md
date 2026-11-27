@@ -58,6 +58,8 @@ Create a `commitlint.json` file in your project root:
 }
 ```
 
+The config allows a single-line message only, with no body or footer, and rejects a `!` before the colon. A `!` or a `BREAKING CHANGE:` footer would release a major, so no commit can.
+
 ### [Semantic Release](https://github.com/semantic-release/semantic-release) Configuration
 
 Use the `--extends` flag in your CI workflow:
@@ -69,7 +71,7 @@ Use the `--extends` flag in your CI workflow:
 
 This configuration includes:
 - Branches: `main`, `rc` (prerelease), `beta` (prerelease), `alpha` (prerelease), and maintenance branches named `N.x` or `N.N.x`, which publish to the `release-N.x` dist-tag
-- `conventionalcommits` preset with `feat!:` syntax for breaking changes
+- `conventionalcommits` preset
 - [npm provenance](https://docs.npmjs.com/generating-provenance-statements) (requires `id-token: write` permission)
 
 ### [Lefthook](https://github.com/evilmartians/lefthook) Configuration

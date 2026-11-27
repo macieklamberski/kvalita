@@ -2,6 +2,9 @@
   "$schema": "https://json.schemastore.org/commitlintrc.json",
   "extends": ["@commitlint/config-conventional"],
   "rules": {
-    "subject-case": [2, "always", "sentence-case"]
+    "subject-case": [2, "always", "sentence-case"],
+    "body-empty": [2, "always"],
+    "footer-empty": [2, "always"],
+    "breaking-change-exclamation-mark": [2, "always"]
   }
 }
