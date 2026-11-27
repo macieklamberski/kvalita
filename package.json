@@ -15,6 +15,7 @@
     "configs",
     "!configs/biome/fixtures",
     "!configs/biome/plugins.test.ts",
+    "!configs/commitlint/breaking.test.ts",
     "!configs/dependabot/dependabot.test.ts",
     "!configs/layout/layout.test.ts"
   ],

@@ -58,6 +58,12 @@ Create a `commitlint.json` file in your project root:
 }
 ```
 
+The config rejects a breaking change, a `!` before the colon or a `BREAKING CHANGE:` footer, since either one releases a major. Set `KVALITA_ALLOW_BREAKING=1` for the commit that means it:
+
+```sh
+KVALITA_ALLOW_BREAKING=1 git commit -m "feat!: Drop the legacy export"
+```
+
 ### [Semantic Release](https://github.com/semantic-release/semantic-release) Configuration
 
 Use the `--extends` flag in your CI workflow:
